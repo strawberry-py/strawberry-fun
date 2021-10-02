@@ -1,0 +1,217 @@
+import aiohttp
+import random
+from typing import Optional, List, Dict
+
+import discord
+from discord.ext import commands
+
+from core import utils, i18n
+
+_ = i18n.Translator("modules/fun").translate
+
+
+class Random(commands.Cog):
+
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.command()
+    async def random(self, ctx, first: int, second: Optional[int] = 0):
+        """Generate random number within the interval"""
+        if first > second:
+            first, second = second, first
+
+        await ctx.reply(random.randint(first, second))
+
+    @commands.cooldown(rate=3, per=20.0, type=commands.BucketType.user)
+    @commands.command()
+    async def pick(self, ctx, *args):
+        """Pick an option"""
+        for i, arg in enumerate(args):
+            if arg.endswith("?"):
+                args = args[i + 1:]
+                break
+
+        if not len(args):
+            return
+
+        option: Optional[str] = utils.Text.sanitise(random.choice(args))
+        if option is not None:
+            await ctx.reply(option)
+
+    @commands.cooldown(rate=3, per=20.0, type=commands.BucketType.user)
+    @commands.command()
+    async def flip(self, ctx):
+        """Yes/No"""
+        choices: List[str] = [_(ctx, "Yes"), _(ctx, "No")]
+        await ctx.reply(random.choice(choices))
+
+    @commands.cooldown(rate=5, per=20, type=commands.BucketType.channel)
+    @commands.command(aliases=["unsplash"])
+    async def picsum(self, ctx, *, seed: Optional[str] = None):
+        """Get random image from picsum.photos"""
+        size: str = "900/600"
+        url: str = "https://picsum.photos/"
+        if seed:
+            url += "seed/" + seed + "/"
+        url += f"{size}.jpg?random={ctx.message.id}"
+
+        async with aiohttp.ClientSession() as session, session.get(url) as img_response:
+            if img_response.status != 200:
+                return await ctx.reply(f"E{img_response.status}")
+
+            image_id: str = str(img_response.url).split("/id/", 1)[1].split("/")[0]
+            async with session.get(f"https://picsum.photos/id/{image_id}/info") as response:
+                image_info = await response.json()
+
+        try:
+            image_url: str = image_info["url"]
+        except Exception:
+            image_url = discord.Embed.Empty
+
+        footer: str = "picsum.photos"
+        if seed:
+            footer += f" ({seed})"
+
+        embed: discord.Embed = utils.Discord.create_embed(
+            author=ctx.author,
+            description=image_url,
+            footer=footer,
+        )
+        embed.set_image(url=str(img_response.url))
+
+        await ctx.reply(embed=embed)
+
+    @commands.cooldown(rate=5, per=20, type=commands.BucketType.channel)
+    @commands.command()
+    async def cat(self, ctx):
+        """Get random image of a cat"""
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://api.thecatapi.com/v1/images/search") as response:
+                if response.status != 200:
+                    return await ctx.reply(_(
+                        ctx,
+                        "Command encountered an error (E{code}).".format(code=response.status)
+                    ))
+
+                json_response = await response.json()
+
+        embed: discord.Embed = utils.Discord.create_embed(
+            author=ctx.author,
+            footer="thecatapi.com",
+        )
+        embed.set_image(url=json_response[0]["url"])
+
+        await ctx.reply(embed=embed)
+
+    @commands.cooldown(rate=5, per=20, type=commands.BucketType.channel)
+    @commands.command()
+    async def dog(self, ctx):
+        """Get random image of a dog"""
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://api.thedogapi.com/v1/images/search") as response:
+                if response.status != 200:
+                    return await ctx.reply(_(
+                        ctx,
+                        "Command encountered an error (E{code}).".format(code=response.status)
+                    ))
+
+                json_response = await response.json()
+
+        embed: discord.Embed = utils.Discord.create_embed(
+            author=ctx.author,
+            footer="thedogapi.com",
+        )
+        embed.set_image(url=json_response[0]["url"])
+
+        await ctx.reply(embed=embed)
+
+    @commands.cooldown(rate=5, per=60, type=commands.BucketType.channel)
+    @commands.command()
+    async def xkcd(self, ctx, number: int = None):
+        """Get random xkcd comics
+
+        Arguments
+        ---------
+        number: Comics number. Omit to get random one.
+        """
+        # get maximal
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://xkcd.com/info.0.json") as response:
+                fetched = await response.json()
+
+                # get random
+                if number is None or number < 1 or number > fetched["num"]:
+                    number: int = random.randint(1, fetched["num"])
+                # fetch requested
+                if number != fetched["num"]:
+                    async with session.get(f"https://xkcd.com/{number}/info.0.json") as response:
+                        fetched = await response.json()
+
+        embed: discord.Embed = utils.Discord.create_embed(
+            author=ctx.author,
+            title=fetched["title"],
+            description="_" + fetched["alt"][:2046] + "_",
+            footer="xkcd.com",
+        )
+
+        embed.add_field(
+            name=(
+                f"{fetched['year']}"
+                f"-{str(fetched['month']).zfill(2)}"
+                f"-{str(fetched['day']).zfill(2)}"
+            ),
+            value=(
+                    f"https://xkcd.com/{number}\n"
+                    + f"https://www.explainxkcd.com/wiki/index.php/{number}"
+            ),
+            inline=False,
+        )
+        embed.set_image(url=fetched["img"])
+
+        await ctx.reply(embed=embed)
+
+    @commands.cooldown(rate=5, per=60, type=commands.BucketType.channel)
+    @commands.command()
+    async def dadjoke(self, ctx, *, keyword: Optional[str] = None):
+        """Get random dad joke
+
+        Arguments
+        ---------
+        keyword: search for a certain keyword in a joke
+        """
+        if keyword is not None and ("&" in keyword or "?" in keyword):
+            return await ctx.reply(_(ctx, "I didn't find a joke like that."))
+
+        params: Dict[str, str] = {"limit": "30"}
+        url: str = "https://icanhazdadjoke.com"
+        if keyword is not None:
+            params["term"] = keyword
+            url += "/search"
+        headers: Dict[str, str] = {"Accept": "application/json"}
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=headers, params=params) as response:
+                fetched = await response.json()
+
+        if keyword is not None:
+            res = fetched["results"]
+            if len(res) == 0:
+                return await ctx.reply(_(ctx, "I didn't find a joke like that."))
+            result = random.choice(res)
+        else:
+            result = fetched
+
+        embed: discord.Embed = utils.Discord.create_embed(
+            author=ctx.author,
+            description=result["joke"],
+            footer="icanhazdadjoke.com",
+            url="https://icanhazdadjoke.com/j/" + result["id"],
+        )
+
+        await ctx.reply(embed=embed)
+
+
+def setup(bot) -> None:
+    bot.add_cog(Random(bot))
