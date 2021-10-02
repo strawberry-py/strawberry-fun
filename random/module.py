@@ -1,5 +1,6 @@
 import aiohttp
 import random
+import re
 from typing import Optional, List, Dict
 
 import discord
@@ -200,6 +201,12 @@ class Random(commands.Cog):
             if len(res) == 0:
                 return await ctx.reply(_(ctx, "I didn't find a joke like that."))
             result = random.choice(res)
+            result["joke"] = re.sub(
+                f"(\\b\\w*{keyword}\\w*\\b)",
+                r"**\1**",
+                result["joke"],
+                flags=re.IGNORECASE
+            )
         else:
             result = fetched
 
