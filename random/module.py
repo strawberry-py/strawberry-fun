@@ -27,15 +27,13 @@ class Random(commands.Cog):
 
     @commands.cooldown(rate=3, per=20.0, type=commands.BucketType.user)
     @commands.command()
-    async def pick(self, ctx, *args):
+    async def pick(self, ctx, first: str, second: str, *args):
         """Pick an option"""
+        args = [first, second, *args]
         for i, arg in enumerate(args):
             if arg.endswith("?"):
                 args = args[i + 1:]
                 break
-
-        if not len(args):
-            return
 
         option: Optional[str] = utils.Text.sanitise(random.choice(args))
         if option is not None:
