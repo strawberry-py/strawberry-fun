@@ -91,8 +91,8 @@ class Random(commands.Cog):
                 if response.status != 200:
                     return await ctx.reply(_(
                         ctx,
-                        "Command encountered an error (E{code}).".format(code=response.status)
-                    ))
+                        "Command encountered an error (E{code})."
+                    ).format(code=response.status))
 
                 json_response = await response.json()
 
@@ -113,8 +113,8 @@ class Random(commands.Cog):
                 if response.status != 200:
                     return await ctx.reply(_(
                         ctx,
-                        "Command encountered an error (E{code}).".format(code=response.status)
-                    ))
+                        "Command encountered an error (E{code})."
+                    ).format(code=response.status))
 
                 json_response = await response.json()
 
