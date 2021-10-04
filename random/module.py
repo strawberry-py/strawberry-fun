@@ -35,6 +35,11 @@ class Random(commands.Cog):
                 args = args[i + 1:]
                 break
 
+        if len(args) < 2:
+            return await ctx.reply(
+                _(ctx, "You asked a question, but did not add enough options.")
+            )
+
         option: Optional[str] = utils.Text.sanitise(random.choice(args))
         if option is not None:
             await ctx.reply(option)
