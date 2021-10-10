@@ -1,0 +1,14 @@
+msgid You asked a question, but did not add enough options.
+msgstr Ptáš se na otázku, ale nemám dost možností k výběru.
+
+msgid Yes
+msgstr Ano
+
+msgid No
+msgstr Ne
+
+msgid Command encountered an error (E{code}).
+msgstr Při vykonávání příkazu došlo k chybě (E{code}).
+
+msgid I didn't find a joke like that.
+msgstr Takový vtip nebyl nalezen.
