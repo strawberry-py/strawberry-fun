@@ -12,7 +12,6 @@ _ = i18n.Translator("modules/fun").translate
 
 
 class Random(commands.Cog):
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -32,7 +31,7 @@ class Random(commands.Cog):
         args = [first, second, *args]
         for i, arg in enumerate(args):
             if arg.endswith("?"):
-                args = args[i + 1:]
+                args = args[i + 1 :]
                 break
 
         if len(args) < 2:
@@ -66,7 +65,9 @@ class Random(commands.Cog):
                 return await ctx.reply(f"E{img_response.status}")
 
             image_id: str = str(img_response.url).split("/id/", 1)[1].split("/")[0]
-            async with session.get(f"https://picsum.photos/id/{image_id}/info") as response:
+            async with session.get(
+                f"https://picsum.photos/id/{image_id}/info"
+            ) as response:
                 image_info = await response.json()
 
         try:
@@ -92,12 +93,16 @@ class Random(commands.Cog):
     async def cat(self, ctx):
         """Get random image of a cat"""
         async with aiohttp.ClientSession() as session:
-            async with session.get("https://api.thecatapi.com/v1/images/search") as response:
+            async with session.get(
+                "https://api.thecatapi.com/v1/images/search"
+            ) as response:
                 if response.status != 200:
-                    return await ctx.reply(_(
-                        ctx,
-                        "Command encountered an error (E{code})."
-                    ).format(code=response.status))
+                    await ctx.reply(
+                        _(ctx, "Command encountered an error (E{code}).").format(
+                            code=response.status
+                        )
+                    )
+                    return
 
                 json_response = await response.json()
 
@@ -114,12 +119,15 @@ class Random(commands.Cog):
     async def dog(self, ctx):
         """Get random image of a dog"""
         async with aiohttp.ClientSession() as session:
-            async with session.get("https://api.thedogapi.com/v1/images/search") as response:
+            async with session.get(
+                "https://api.thedogapi.com/v1/images/search"
+            ) as response:
                 if response.status != 200:
-                    return await ctx.reply(_(
-                        ctx,
-                        "Command encountered an error (E{code})."
-                    ).format(code=response.status))
+                    return await ctx.reply(
+                        _(ctx, "Command encountered an error (E{code}).").format(
+                            code=response.status
+                        )
+                    )
 
                 json_response = await response.json()
 
@@ -150,7 +158,9 @@ class Random(commands.Cog):
                     number: int = random.randint(1, fetched["num"])
                 # fetch requested
                 if number != fetched["num"]:
-                    async with session.get(f"https://xkcd.com/{number}/info.0.json") as response:
+                    async with session.get(
+                        f"https://xkcd.com/{number}/info.0.json"
+                    ) as response:
                         fetched = await response.json()
 
         embed: discord.Embed = utils.Discord.create_embed(
@@ -167,8 +177,8 @@ class Random(commands.Cog):
                 f"-{str(fetched['day']).zfill(2)}"
             ),
             value=(
-                    f"https://xkcd.com/{number}\n"
-                    + f"https://www.explainxkcd.com/wiki/index.php/{number}"
+                f"https://xkcd.com/{number}\n"
+                + f"https://www.explainxkcd.com/wiki/index.php/{number}"
             ),
             inline=False,
         )
@@ -208,7 +218,7 @@ class Random(commands.Cog):
                 f"(\\b\\w*{keyword}\\w*\\b)",
                 r"**\1**",
                 result["joke"],
-                flags=re.IGNORECASE
+                flags=re.IGNORECASE,
             )
         else:
             result = fetched
