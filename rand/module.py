@@ -11,13 +11,13 @@ from core import utils, i18n
 _ = i18n.Translator("modules/fun").translate
 
 
-class Random(commands.Cog):
+class Rand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
-    async def random(self, ctx, first: int, second: Optional[int] = 0):
+    async def random_(self, ctx, first: int, second: Optional[int] = 0):
         """Generate random number within the interval"""
         if first > second:
             first, second = second, first
@@ -234,4 +234,4 @@ class Random(commands.Cog):
 
 
 def setup(bot) -> None:
-    bot.add_cog(Random(bot))
+    bot.add_cog(Rand(bot))
