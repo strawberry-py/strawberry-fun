@@ -1,4 +1,4 @@
-import os
+import contextlib
 import random
 import requests
 import numpy as np
@@ -338,23 +338,16 @@ class Meme(commands.Cog):
         )
         await utils.Discord.delete_message(ctx.message)
 
-    ##
-    ## Logic
-    ##
-
     @staticmethod
     def uwuize(string: str) -> str:
         # Adapted from https://github.com/PhasecoreX/PCXCogs/blob/master/uwu/uwu.py
         result = []
 
         def uwuize_word(string: str) -> str:
-            try:
+            with contextlib.suppress(Exception):
                 if string.lower()[0] == "m" and len(string) > 2:
                     w = "W" if string[1].isupper() else "w"
                     string = string[0] + w + string[1:]
-            except Exception:
-                # this is how we handle emojis
-                pass
             string = string.replace("r", "w").replace("R", "W")
             string = string.replace("ř", "w").replace("Ř", "W")
             string = string.replace("l", "w").replace("L", "W")

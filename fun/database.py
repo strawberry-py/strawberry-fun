@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import datetime
-from typing import List, Optional
+from typing import Tuple
 
-from sqlalchemy import BigInteger, Column, DateTime, Integer, String
+from sqlalchemy import BigInteger, Column, Integer, String
 
 from database import database, session
 

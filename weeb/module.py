@@ -1,9 +1,11 @@
+import aiohttp
+from typing import Optional
+
 import discord
 from discord.ext import commands
 from discord.abc import PrivateChannel
-import aiohttp
-from typing import Optional
-from core import utils, text, logger, i18n
+
+from core import utils, i18n
 
 _ = i18n.Translator("modules/fun").translate
 
@@ -78,23 +80,32 @@ class Weeb(commands.Cog):
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
     async def sauce(self, ctx, doujin_id: Optional[int] = None):
-        """Give a magic number and you will get your sauce """
+        """Give a magic number and you will get your sauce"""
 
         if not self.is_channel_weeby(ctx.message):
             raise commands.MissingPermissions
         else:
             if not doujin_id:
                 await ctx.send(
-                    ">>> " + _(ctx, "Supply me with a magic number and i will give you what you desire")
+                    ">>> "
+                    + _(
+                        ctx,
+                        "Supply me with a magic number and i will give you what you desire",
+                    )
                 )
                 return
             async with ctx.typing():
                 try:
                     async with aiohttp.ClientSession() as session:
                         async with session.get(
-                                f"https://nhentai.net/api/gallery/{doujin_id}") as response:
+                            f"https://nhentai.net/api/gallery/{doujin_id}"
+                        ) as response:
                             if response.status != 200:
-                                return await ctx.reply(_(ctx, "Command encountered an error (E{code}).").format(code=response.status))
+                                return await ctx.reply(
+                                    _(
+                                        ctx, "Command encountered an error (E{code})."
+                                    ).format(code=response.status)
+                                )
                             dic = await response.json()
                             response.close()
                 except Exception as err:

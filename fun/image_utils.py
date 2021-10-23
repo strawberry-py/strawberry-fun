@@ -1,4 +1,4 @@
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageDraw
 from typing import Tuple, List, Union
 
 import numpy as np
@@ -194,8 +194,8 @@ class ImageUtils:
             thumbnail: Image.Image = frame.copy()
             thumbnail_rgba = thumbnail.convert(mode="RGBA")
             thumbnail_rgba.thumbnail(size=frame.size, reducing_gap=3.0)
-            converter = GifConverter(img_rgba=thumbnail_rgba)
-            thumbnail_p = converter.process()  # type: Image
+            converter = GifConverter(img_rgba=thumbnail_rgba)  # noqa: F821
+            thumbnail_p = converter.process()
             new_images.append(thumbnail_p)
 
         output_image = new_images[0]
@@ -222,5 +222,5 @@ class ImageUtils:
           durations: an int or list of ints that describe the frame durations
           save_file: A string, pathlib.Path or file object to save the file to.
         """
-        root_frame, save_args = create_animated_gif(images, duration)
+        root_frame, save_args = create_animated_gif(images, duration)  # noqa: F821
         root_frame.save(save_file, **save_args)
