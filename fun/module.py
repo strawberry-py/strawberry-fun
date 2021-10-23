@@ -1,6 +1,6 @@
+import aiohttp
 import contextlib
 import random
-import requests
 import numpy as np
 from io import BytesIO
 from PIL import Image, ImageDraw
@@ -62,30 +62,30 @@ class Meme(commands.Cog):
 
         async with ctx.typing():
             url = target.display_avatar.replace(size=256).url
-            response: requests.Response = requests.get(url)
-            avatar: Image = Image.open(BytesIO(response.content)).convert("RGBA")
+            async with aiohttp.ClientSession() as session:
+                response: aiohttp.ClientResponse = await session.get(url)
+                content: BytesIO = BytesIO(await response.read())
+                avatar: Image = Image.open(content).convert("RGBA")
 
-            frames = self.get_whip_frames(avatar)
+                frames = self.get_whip_frames(avatar)
 
-            with BytesIO() as image_binary:
-                frames[0].save(
-                    image_binary,
-                    format="GIF",
-                    save_all=True,
-                    append_images=frames[1:],
-                    duration=30,
-                    loop=0,
-                    transparency=0,
-                    disposal=2,
-                    optimize=False,
-                )
-                image_binary.seek(0)
-                await ctx.reply(
-                    file=discord.File(fp=image_binary, filename="whip.gif"),
-                    mention_author=False,
-                )
-
-            return
+                with BytesIO() as image_binary:
+                    frames[0].save(
+                        image_binary,
+                        format="GIF",
+                        save_all=True,
+                        append_images=frames[1:],
+                        duration=30,
+                        loop=0,
+                        transparency=0,
+                        disposal=2,
+                        optimize=False,
+                    )
+                    image_binary.seek(0)
+                    await ctx.reply(
+                        file=discord.File(fp=image_binary, filename="whip.gif"),
+                        mention_author=False,
+                    )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
@@ -103,28 +103,30 @@ class Meme(commands.Cog):
 
         async with ctx.typing():
             url = target.display_avatar.replace(size=256).url
-            response: requests.Response = requests.get(url)
-            avatar: Image = Image.open(BytesIO(response.content)).convert("RGBA")
+            async with aiohttp.ClientSession() as session:
+                response: aiohttp.ClientResponse = await session.get(url)
+                content: BytesIO = BytesIO(await response.read())
+                avatar: Image = Image.open(content).convert("RGBA")
 
-            frames = self.get_spank_frames(avatar)
+                frames = self.get_spank_frames(avatar)
 
-            with BytesIO() as image_binary:
-                frames[0].save(
-                    image_binary,
-                    format="GIF",
-                    save_all=True,
-                    append_images=frames[1:],
-                    duration=30,
-                    loop=0,
-                    transparency=0,
-                    disposal=2,
-                    optimize=False,
-                )
-                image_binary.seek(0)
-                await ctx.reply(
-                    file=discord.File(fp=image_binary, filename="spank.gif"),
-                    mention_author=False,
-                )
+                with BytesIO() as image_binary:
+                    frames[0].save(
+                        image_binary,
+                        format="GIF",
+                        save_all=True,
+                        append_images=frames[1:],
+                        duration=30,
+                        loop=0,
+                        transparency=0,
+                        disposal=2,
+                        optimize=False,
+                    )
+                    image_binary.seek(0)
+                    await ctx.reply(
+                        file=discord.File(fp=image_binary, filename="spank.gif"),
+                        mention_author=False,
+                    )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
@@ -142,28 +144,30 @@ class Meme(commands.Cog):
 
         async with ctx.typing():
             url = target.display_avatar.replace(size=256).url
-            response: requests.Response = requests.get(url)
-            avatar: Image = Image.open(BytesIO(response.content)).convert("RGBA")
+            async with aiohttp.ClientSession() as session:
+                response: aiohttp.ClientResponse = await session.get(url)
+                content: BytesIO = BytesIO(await response.read())
+                avatar: Image = Image.open(content).convert("RGBA")
 
-            frames = self.get_pet_frames(avatar)
+                frames = self.get_pet_frames(avatar)
 
-            with BytesIO() as image_binary:
-                frames[0].save(
-                    image_binary,
-                    format="GIF",
-                    save_all=True,
-                    append_images=frames[1:],
-                    duration=40,
-                    loop=0,
-                    transparency=0,
-                    disposal=2,
-                    optimize=False,
-                )
-                image_binary.seek(0)
-                await ctx.reply(
-                    file=discord.File(fp=image_binary, filename="pet.gif"),
-                    mention_author=False,
-                )
+                with BytesIO() as image_binary:
+                    frames[0].save(
+                        image_binary,
+                        format="GIF",
+                        save_all=True,
+                        append_images=frames[1:],
+                        duration=40,
+                        loop=0,
+                        transparency=0,
+                        disposal=2,
+                        optimize=False,
+                    )
+                    image_binary.seek(0)
+                    await ctx.reply(
+                        file=discord.File(fp=image_binary, filename="pet.gif"),
+                        mention_author=False,
+                    )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
@@ -181,28 +185,30 @@ class Meme(commands.Cog):
 
         async with ctx.typing():
             url = target.display_avatar.replace(size=256).url
-            response: requests.Response = requests.get(url)
-            avatar: Image = Image.open(BytesIO(response.content)).convert("RGBA")
+            async with aiohttp.ClientSession() as session:
+                response: aiohttp.ClientResponse = await session.get(url)
+                content: BytesIO = BytesIO(await response.read())
+                avatar: Image = Image.open(content).convert("RGBA")
 
-            frames = self.get_hyperpet_frames(avatar)
+                frames = self.get_hyperpet_frames(avatar)
 
-            with BytesIO() as image_binary:
-                frames[0].save(
-                    image_binary,
-                    format="GIF",
-                    save_all=True,
-                    append_images=frames[1:],
-                    duration=30,
-                    loop=0,
-                    transparency=0,
-                    disposal=2,
-                    optimize=False,
-                )
-                image_binary.seek(0)
-                await ctx.reply(
-                    file=discord.File(fp=image_binary, filename="hyperpet.gif"),
-                    mention_author=False,
-                )
+                with BytesIO() as image_binary:
+                    frames[0].save(
+                        image_binary,
+                        format="GIF",
+                        save_all=True,
+                        append_images=frames[1:],
+                        duration=30,
+                        loop=0,
+                        transparency=0,
+                        disposal=2,
+                        optimize=False,
+                    )
+                    image_binary.seek(0)
+                    await ctx.reply(
+                        file=discord.File(fp=image_binary, filename="hyperpet.gif"),
+                        mention_author=False,
+                    )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
@@ -223,28 +229,30 @@ class Meme(commands.Cog):
 
         async with ctx.typing():
             url = target.display_avatar.replace(size=256).url
-            response: requests.Response = requests.get(url)
-            avatar: Image = Image.open(BytesIO(response.content)).convert("RGBA")
+            async with aiohttp.ClientSession() as session:
+                response: aiohttp.ClientResponse = await session.get(url)
+                content: BytesIO = BytesIO(await response.read())
+                avatar: Image = Image.open(content).convert("RGBA")
 
-            frames = self.get_bonk_frames(avatar)
+                frames = self.get_bonk_frames(avatar)
 
-            with BytesIO() as image_binary:
-                frames[0].save(
-                    image_binary,
-                    format="GIF",
-                    save_all=True,
-                    append_images=frames[1:],
-                    duration=30,
-                    loop=0,
-                    transparency=0,
-                    disposal=2,
-                    optimize=False,
-                )
-                image_binary.seek(0)
-                await ctx.reply(
-                    file=discord.File(fp=image_binary, filename="bonk.gif"),
-                    mention_author=False,
-                )
+                with BytesIO() as image_binary:
+                    frames[0].save(
+                        image_binary,
+                        format="GIF",
+                        save_all=True,
+                        append_images=frames[1:],
+                        duration=30,
+                        loop=0,
+                        transparency=0,
+                        disposal=2,
+                        optimize=False,
+                    )
+                    image_binary.seek(0)
+                    await ctx.reply(
+                        file=discord.File(fp=image_binary, filename="bonk.gif"),
+                        mention_author=False,
+                    )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
