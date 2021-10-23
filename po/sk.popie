@@ -1,24 +1,3 @@
-msgid You asked a question, but did not add enough options.
-msgstr
-
-msgid Yes
-msgstr
-
-msgid No
-msgstr
-
-msgid Command encountered an error (E{code}).
-msgstr
-
-msgid I didn't find a joke like that.
-msgstr
-
-msgid Supply me with a magic number and i will give you what you desire
-msgstr
-
-msgid Number of pages
-msgstr
-
 msgid Characters
 msgstr
 
@@ -40,14 +19,29 @@ msgstr
 msgid Categories
 msgstr
 
-msgid Relations
-msgstr 
+msgid Number of pages
+msgstr
 
-msgid I have no information (E{sad})
+msgid Supply me with a magic number and i will give you what you desire
+msgstr
+
+msgid Command encountered an error (E{code}).
+msgstr
+
+msgid Relations
 msgstr
 
 msgid gave / got
 msgstr
 
-msgid {gave} / {got}
+msgid You asked a question, but did not add enough options.
+msgstr
+
+msgid Yes
+msgstr
+
+msgid No
+msgstr
+
+msgid I didn't find a joke like that.
 msgstr
