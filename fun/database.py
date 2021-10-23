@@ -9,11 +9,9 @@ from database import database, session
 
 
 class Relation(database.base):
-    """Relation.
-    Handles all relations between users.
-    """
+    """User relations are based on using hug, pet, whip, ..."""
 
-    __tablename__ = "fun_meme_relations"
+    __tablename__ = "fun_fun_relations"
 
     idx = Column(Integer, primary_key=True, autoincrement=True)
     guild_id = Column(BigInteger)
@@ -31,31 +29,29 @@ class Relation(database.base):
             guild_id=guild_id,
             sender_id=sender_id,
             receiver_id=receiver_id,
-            action=action
+            action=action,
         )
 
         session.add(relation)
         session.commit()
 
         return relation
-        
+
     def get_user_relation(guild_id: int, user_id: int, action: str) -> Tuple[int, int]:
-        
-        gave = session.query(Relation).filter_by(
-                    guild_id=guild_id,
-                    sender_id=user_id,
-                    action=action
-                ).count()
-            
-        got = session.query(Relation).filter_by(
-                    guild_id=guild_id,
-                    receiver_id=user_id,
-                    action=action
-                ).count()
-        
+        gave = (
+            session.query(Relation)
+            .filter_by(guild_id=guild_id, sender_id=user_id, action=action)
+            .count()
+        )
+
+        got = (
+            session.query(Relation)
+            .filter_by(guild_id=guild_id, receiver_id=user_id, action=action)
+            .count()
+        )
+
         return gave, got
 
-        
     def save(self):
         session.commit()
 
@@ -69,7 +65,6 @@ class Relation(database.base):
         return {
             "guild_id": self.guild_id,
             "sender_id": self.sender_id,
-            'receiver_id': self.receiver_id,
-            "action": self.action
+            "receiver_id": self.receiver_id,
+            "action": self.action,
         }
-

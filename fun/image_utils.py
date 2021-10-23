@@ -7,8 +7,8 @@ from collections import defaultdict
 from random import randrange
 from itertools import chain
 
-class ImageUtils:
 
+class ImageUtils:
     def round_image(frame_avatar: Image.Image) -> Image.Image:
         """Convert square avatar to circle"""
         frame_mask = Image.new("1", frame_avatar.size, 0)
@@ -16,7 +16,6 @@ class ImageUtils:
         draw.ellipse((0, 0) + frame_avatar.size, fill=255)
         frame_avatar.putalpha(frame_mask)
         return frame_avatar
-
 
     # Taken from https://stackoverflow.com/a/7274986
     # unutbu, September 2011 (https://stackoverflow.com/users/190597/unutbu)
@@ -41,7 +40,9 @@ class ImageUtils:
         rc[mask] = (maxc - r)[mask] / (maxc - minc)[mask]
         gc[mask] = (maxc - g)[mask] / (maxc - minc)[mask]
         bc[mask] = (maxc - b)[mask] / (maxc - minc)[mask]
-        hsv[..., 0] = np.select([r == maxc, g == maxc], [bc - gc, 2.0 + rc - bc], default=4.0 + gc - rc)
+        hsv[..., 0] = np.select(
+            [r == maxc, g == maxc], [bc - gc, 2.0 + rc - bc], default=4.0 + gc - rc
+        )
         hsv[..., 0] = (hsv[..., 0] / 6.0) % 1.0
         return hsv
 
@@ -66,14 +67,12 @@ class ImageUtils:
         rgb[..., 2] = np.select(conditions, [v, p, t, v, v, q], default=p)
         return rgb.astype("uint8")
 
-
     def shift_hue(arr, hout):
         arr = np.array(arr)
         hsv = ImageUtils.rgb_to_hsv(arr)
         hsv[..., 0] = hout
         rgb = ImageUtils.hsv_to_rgb(hsv)
         return rgb
-
 
     class GifConverter:
         # Sourced from https://gist.github.com/egocarib/ea022799cca8a102d14c54a22c45efe0
@@ -87,7 +86,9 @@ class ImageUtils:
             """Set transparent pixels to the color palette index 0."""
             self._transparent_pixels = set(
                 idx
-                for idx, alpha in enumerate(self._img_rgba.getchannel(channel="A").getdata())
+                for idx, alpha in enumerate(
+                    self._img_rgba.getchannel(channel="A").getdata()
+                )
                 if alpha <= self._alpha_treshold
             )
 
@@ -100,7 +101,8 @@ class ImageUtils:
                 if pal_idx not in self._transparent_pixels
             )
             self._img_p_parsedpalette = dict(
-                (idx, tuple(palette[idx * 3 : idx * 3 + 3])) for idx in self._img_p_used_palette_idxs
+                (idx, tuple(palette[idx * 3 : idx * 3 + 3]))
+                for idx in self._img_p_used_palette_idxs
             )
 
         def _get_similar_color_idx(self):
@@ -152,7 +154,8 @@ class ImageUtils:
             """Convert the pixels into their new values."""
             if self._palette_replaces["idx_from"]:
                 trans_table = bytearray.maketrans(
-                    bytes(self._palette_replaces["idx_from"]), bytes(self._palette_replaces["idx_to"])
+                    bytes(self._palette_replaces["idx_from"]),
+                    bytes(self._palette_replaces["idx_to"]),
                 )
                 self._img_p_data = self._img_p_data.translate(trans_table)
             for idx_pixel in self._transparent_pixels:
@@ -179,7 +182,6 @@ class ImageUtils:
             self._img_p.info["transparency"] = 0
             self._img_p.info["background"] = 0
             return self._img_p
-
 
     def create_animated_gif(
         images: List[Image.Image], duration: Union[int, List[int]]
@@ -208,8 +210,9 @@ class ImageUtils:
         )
         return output_image, save_kwargs
 
-
-    def save_gif(images: List[Image.Image], duration: Union[int, List[int]], save_file: str):
+    def save_gif(
+        images: List[Image.Image], duration: Union[int, List[int]], save_file: str
+    ):
         """Create a transparent GIF, with no problems with transparent pixel flashing
 
         Does not work with partial alpha, which gets discarded and replaced by solid colors.

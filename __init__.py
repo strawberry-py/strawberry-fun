@@ -1,3 +1,3 @@
 __name__ = "fun"
 __version__ = "0.0.1"
-__all__ = ("random", "weeb", )
+__all__ = ("fun", "random", "weeb")

@@ -41,7 +41,7 @@ class Meme(commands.Cog):
         if type(target) == discord.Role:
             Relation.add(ctx.guild.id, source.id, None, "hug")
         else:
-            Relation.add(ctx.guild.id, hugger.id, target.id, "hug")
+            Relation.add(ctx.guild.id, source.id, target.id, "hug")
 
         border: str = "***" if type(target) == discord.Role else "**"
         await ctx.send("(⊃・﹏・)⊃" + f" {border}{target.name}{border}")
@@ -297,7 +297,7 @@ class Meme(commands.Cog):
                 continue
 
             embed.add_field(
-                name="{prefix}{action}".format(prefix=config.prefix, action=action),
+                name=action,
                 value=f"{action_stats[0]} / {action_stats[1]}",
             )
 
