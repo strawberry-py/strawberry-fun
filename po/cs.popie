@@ -38,7 +38,7 @@ msgid Number of pages
 msgstr Počet stran
 
 msgid Supply me with a magic number and i will give you what you desire
-msgstr Dodej mi kouzelné číslo a já ti dám, co si přeješ
+msgstr Dodej mi kouzelné číslo a já ti dám, co si přeješ.
 
 msgid Relations
 msgstr Vztahy
@@ -47,28 +47,28 @@ msgid gave / got
 msgstr rozdáno / získáno
 
 msgid Seeking
-msgstr
+msgstr Hledám
 
 msgid Unknown User
-msgstr
+msgstr Neznámý uživatel
 
 msgid No items found
-msgstr
+msgstr Nebyly nalezeny žádné položky
 
 msgid The text is too long, the limit is 140 characters.
-msgstr
+msgstr Text je příliš dlouhý, limit je 140 znaků.
 
 msgid The item was added as #{idx}.
-msgstr
+msgstr Tato položka byla přidána jako #{idx}.
 
 msgid Item #{idx} does not exist.
-msgstr
+msgstr Položka #{idx} neexistuje.
 
 msgid You don't have permission to remove #{idx}.
-msgstr
+msgstr Nemáš oprávnění odstranit #{idx}.
 
 msgid The item was deleted.
-msgstr
+msgstr Položka byla vymazána.
 
 msgid All items were deleted.
-msgstr
+msgstr Všechny položky byly vymazány.
