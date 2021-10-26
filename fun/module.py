@@ -268,18 +268,23 @@ class Meme(commands.Cog):
 
         options = ["つ", "づ", "ノ"]
 
+        target_name: str
+        border: str
         if type(target) == discord.Role:
             Relation.add(ctx.guild.id, source.id, None, "slap")
+            target_name = target.name
+            border = "***"
         else:
             Relation.add(ctx.guild.id, source.id, target.id, "slap")
-
-        target: str = "*{}*" if type(target) == discord.Role else "{}"
+            target_name = target.display_name
+            border = "**"
 
         await ctx.reply(
-            "**{source}**{slap} {target}".format(
+            "{source} {slap} {border}{target}{border}".format(
                 source=utils.Text.sanitise(source.display_name),
                 slap=random.choice(options),
-                target=target.format(utils.Text.sanitise(target.name)),
+                border=border,
+                target=utils.Text.sanitise(target_name),
             ),
             mention_author=False,
         )
