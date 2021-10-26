@@ -45,3 +45,30 @@ msgstr Vztahy
 
 msgid gave / got
 msgstr rozdáno / získáno
+
+msgid Seeking
+msgstr
+
+msgid Unknown User
+msgstr
+
+msgid No items found
+msgstr
+
+msgid The text is too long, the limit is 140 characters.
+msgstr
+
+msgid The item was added as #{idx}.
+msgstr
+
+msgid Item #{idx} does not exist.
+msgstr
+
+msgid You don't have permission to remove #{idx}.
+msgstr
+
+msgid The item was deleted.
+msgstr
+
+msgid All items were deleted.
+msgstr

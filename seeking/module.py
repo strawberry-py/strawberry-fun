@@ -1,13 +1,14 @@
-from typing import List
+import contextlib
 
 from discord.ext import commands
 
 import database.config
-from core import check, i18n, utils
+from core import check, i18n, logger, utils
 
-from .database import Seeking as seeking
+from .database import Seeking as SeekingDB
 
 _ = i18n.Translator("modules/fun").translate
+guild_log = logger.Guild.logger()
 config = database.config.Config.get()
 
 
@@ -29,7 +30,7 @@ class Seeking(commands.Cog):
             author=ctx.author,
             title=_(ctx, "Seeking"),
         )
-        items = seeking.get_all(ctx.guild.id, ctx.channel.id)
+        items = SeekingDB.get_all(ctx.guild.id, ctx.channel.id)
 
         if items:
             template = "#{id} | {name}, {timestamp}"
@@ -40,7 +41,10 @@ class Seeking(commands.Cog):
                     if hasattr(member, "display_name")
                     else _(ctx, "Unknown User")
                 )
-                message_url = f"https://discord.com/channels/{item.guild_id}/{item.channel_id}/{item.message_id}"
+                message_url: str = (
+                    f"https://discord.com/channels/{item.guild_id}/"
+                    f"{item.channel_id}/{item.message_id}"
+                )
                 text = f"{item.text} | [link]({message_url})"
                 timestamp = utils.Time.id_to_datetime(item.message_id)
                 embed.add_field(
@@ -58,51 +62,54 @@ class Seeking(commands.Cog):
 
     @seeking.command(name="add")
     async def seeking_add(self, ctx, *, text: str):
-        """Announce that you're seeking something in under 140 characters
-        Arguments
-        ---------
-        text: Any text in the character limit
-        """
+        """Announce that you're seeking something in under 140 characters"""
         if len(text) > 140:
-            return await ctx.reply(
-                _(ctx, "The text is too long, you must fit up to 140 characters.")
+            await ctx.reply(
+                _(ctx, "The text is too long, the limit is 140 characters.")
             )
+            return
 
-        seeking.add(
+        item = SeekingDB.add(
             guild_id=ctx.guild.id,
             channel_id=ctx.channel.id,
             message_id=ctx.message.id,
             user_id=ctx.author.id,
             text=text,
         )
-        await ctx.reply(_(ctx, "The item was added."))
+        await ctx.reply(_(ctx, "The item was added as #{idx}.").format(idx=item.idx))
+        await guild_log.info(ctx.author, ctx.channel, f"New seeking item #{item.idx}.")
 
     @seeking.command(name="remove")
-    async def seeking_remove(self, ctx, *, ids: List[str]):
-        """Remove your item
-        Arguments
-        ---------
-        ids: space separated integers
+    async def seeking_remove(self, ctx, *, ids: str):
+        """Remove seeked items
+
+        :param ids: Space separated list of item IDs.
         """
-        rejected = []
-
-        for item_id in ids:
-            item = seeking.get(ctx.guild.id, ctx.channel.id, item_id)
+        for idx in ids.split(" "):
+            with contextlib.suppress(ValueError):
+                idx = int(idx)
+            item = SeekingDB.get(ctx.guild.id, ctx.channel.id, idx)
             if item is None:
-                rejected.append(item_id)
-                continue
+                await ctx.reply(_(ctx, "Item #{idx} does not exist.").format(idx=idx))
+                return
 
-            if item.user_id != ctx.author.id and ctx.author.id != 0:
-                rejected.append(item_id)
-                continue
+            if item.user_id != ctx.author.id:
+                await ctx.reply(
+                    _(ctx, "You don't have permission to remove #{idx}.").format(
+                        idx=idx
+                    )
+                )
+                return
 
-            seeking.remove(ctx.guild.id, ctx.channel.id, item_id)
+        for idx in ids:
+            SeekingDB.remove(ctx.guild.id, ctx.channel.id, int(idx))
 
-        await ctx.reply(_(ctx, "Done."))
-        if len(rejected):
-            await ctx.send(
-                ", ".join(f"`{utils.Text.sanitise(str(x))}`" for x in rejected[:2000])
-            )
+        if len(ids) == 1:
+            await ctx.reply(_(ctx, "The item was deleted."))
+        else:
+            await ctx.reply(_(ctx, "All items were deleted."))
+
+        await guild_log.info(ctx.author, ctx.channel, f"Seeking items deleted: {ids}.")
 
 
 def setup(bot) -> None:

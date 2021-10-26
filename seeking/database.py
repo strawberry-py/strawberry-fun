@@ -20,7 +20,7 @@ class Seeking(database.base):
     @staticmethod
     def add(
         guild_id: int, channel_id: int, message_id: int, user_id: int, text: str
-    ) -> "Seeking":
+    ) -> Seeking:
         query = Seeking(
             guild_id=guild_id,
             channel_id=channel_id,
@@ -49,14 +49,6 @@ class Seeking(database.base):
         )
         session.commit()
         return query
-
-    @staticmethod
-    def count_all(guild_id=guild_id, channel_id=channel_id) -> int:
-        _ = (
-            session.query(Seeking)
-            .filter_by(guild_id=guild_id, channel_id=channel_id)
-            .count()
-        )
 
     @staticmethod
     def get_all(guild_id: int, channel_id: int = None) -> List[Seeking]:
