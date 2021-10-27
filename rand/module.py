@@ -16,7 +16,7 @@ class Rand(commands.Cog):
         self.bot = bot
 
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
-    @commands.command()
+    @commands.command(name="random")
     async def random_(self, ctx, first: int, second: Optional[int] = 0):
         """Generate random number within the interval"""
         if first > second:
