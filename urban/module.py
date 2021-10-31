@@ -125,10 +125,6 @@ class Urban(commands.Cog):
         scrollable_embed.from_iter(ctx, embeds)
         await scrollable_embed.scroll(ctx)
 
-        await self.urban_pages(ctx, embeds)
-
-        return
-
 
 def setup(bot) -> None:
     bot.add_cog(Urban(bot))
