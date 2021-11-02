@@ -26,13 +26,17 @@ class Dhash(commands.Cog):
         self.embed_cache = {}
 
     def _in_repost_channel(self, message: discord.Message) -> bool:
-        channel = HashChannel.get(message.guild.id, message.channel.id)
-        if not channel:
+        if message.guild is None:
             return False
         if message.attachments is None or not len(message.attachments):
             return False
         if message.author.bot:
             return False
+
+        channel = HashChannel.get(message.guild.id, message.channel.id)
+        if not channel:
+            return False
+
         return True
 
     @commands.guild_only()
@@ -139,16 +143,10 @@ class Dhash(commands.Cog):
         await ctx.reply(message.format(channel=channel.mention))
 
     @commands.check(check.acl)
-    @commands.group()
-    async def repost(self, ctx):
-        """Scan for reposts"""
-        await utils.Discord.send_help(ctx)
-
-    @commands.check(check.acl)
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     @commands.bot_has_permissions(read_message_history=True)
     @dhash.command(name="history")
-    async def repost_history(self, ctx, limit: int):
+    async def dhash_history(self, ctx, limit: int):
         """Scan current channel for images and save them as hashes.
         limit: How many messages should be scanned. Negative to scan all.
         """
