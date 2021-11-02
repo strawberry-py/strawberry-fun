@@ -148,7 +148,7 @@ class Dhash(commands.Cog):
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     @commands.bot_has_permissions(read_message_history=True)
     @dhash.command(name="history")
-    async def repost_history(self, ctx, limit: int):
+    async def dhash_history(self, ctx, limit: int):
         """Scan current channel for images and save them as hashes.
         limit: How many messages should be scanned. Negative to scan all.
         """
