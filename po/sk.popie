@@ -40,6 +40,72 @@ msgstr
 msgid Supply me with a magic number and i will give you what you desire
 msgstr
 
+msgid {channel} is already hash channel.
+msgstr
+
+msgid Channel {channel} added as hash channel.
+msgstr
+
+msgid This server has no hash channels.
+msgstr
+
+msgid Hash channel {channel} removed.
+msgstr
+
+msgid {channel} is not hash channel.
+msgstr
+
+msgid **LOADING**
+msgstr
+
+msgid Downloaded **{count}** messages.
+msgstr
+
+msgid **SCANNING**
+msgstr
+
+mgsid Processed **{count}** out of **{total}** messages ({percent} %).
+msgstr
+
+msgid Calculated **{hashes}** hashes.
+msgstr
+
+msgid **COMPLETED**
+msgstr
+
+msgid Processed **{messages}** messages.
+msgstr
+
+msgid Calculated **{hashes}** image hashes in **{seconds}** seconds.
+msgstr
+
+msgid Message **`{message_id}`**
+msgstr
+
+msgid Messages has no associtated hashes.
+msgstr
+
+msgid **♻️ This is repost!**
+msgstr
+
+msgid **♻️ This is probably repost!**
+msgstr
+
+msgid 🤷🏻 This could be repost.
+msgstr
+
+msgid {name}, matching **{similarity}**!
+msgstr
+
+msgid Original
+msgstr
+
+msgid Hint
+msgstr
+
+msgid  _If image is repost, give it ♻️ reaction. If it's not, click here on ❎ and when we reach {limit} reactions, this message will be deleted._
+msgstr
+
 msgid Relations
 msgstr
 

@@ -40,6 +40,72 @@ msgstr Počet stran
 msgid Supply me with a magic number and i will give you what you desire
 msgstr Dodej mi kouzelné číslo a já ti dám, co si přeješ.
 
+msgid {channel} is already hash channel.
+msgstr {channel} je již nastaven jako hash kanál.
+
+msgid Channel {channel} added as hash channel.
+msgstr Kanál {channel} přidán jako hash kanál.
+
+msgid This server has no hash channels.
+msgstr Tento server nemá žádné hash kanály.
+
+msgid Hash channel {channel} removed.
+msgstr Hash kanál {channel} odstraněn.
+
+msgid {channel} is not hash channel.
+msgstr {channel} není hash kanál
+
+msgid **LOADING**
+msgstr **NAČÍTÁNÍ**
+
+msgid Downloaded **{count}** messages.
+msgstr Staženo **{count}** zpráv
+
+msgid **SCANNING**
+msgstr **SKENOVÁNÍ**
+
+mgsid Processed **{count}** out of **{total}** messages ({percent} %).
+msgstr Zpracováno **{count} z **{total} zpráv ({percent} %).
+
+msgid Calculated **{hashes}** hashes.
+msgstr Vypočítáno **{hashes}** hashů
+
+msgid **COMPLETED**
+msgstr **DOKONČENO**
+
+msgid Processed **{messages}** messages.
+msgstr Zpracováno **{messages}** zpráv.
+
+msgid Calculated **{hashes}** image hashes in **{seconds}** seconds.
+msgstr Vypočítáno **{hashes}** hashů obrázků za **{seconds}** sekund.
+
+msgid Message **`{message_id}`**
+msgstr Zpráva **`{message_id}`**
+
+msgid Messages has no associtated hashes.
+msgstr Ke zprávám nepatří žádné hashe
+
+msgid **♻️ This is repost!**
+msgstr **♻️ Toto je repost!**
+
+msgid **♻️ This is probably repost!**
+msgstr **♻️ Tohle je pravděpodobně repost!**
+
+msgid 🤷🏻 This could be repost.
+msgstr 🤷🏻 Tohle by mohl být repost
+
+msgid {name}, matching **{similarity}**!
+msgstr {name}, shoda **{similarity}**!
+
+msgid Original
+msgstr Originál
+
+msgid Hint
+msgstr Nápověda
+
+msgid  _If image is repost, give it ♻️ reaction. If it's not, click here on ❎ and when we reach {limit} reactions, this message will be deleted._
+msgstr _Pokud je obrázek repost, dej mu ♻️. Jestli není, klikni tady na ❎ a při {limit} takových reakcích se toto upozornění smaže._
+
 msgid Relations
 msgstr Vztahy
 
