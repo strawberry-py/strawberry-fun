@@ -26,13 +26,17 @@ class Dhash(commands.Cog):
         self.embed_cache = {}
 
     def _in_repost_channel(self, message: discord.Message) -> bool:
-        channel = HashChannel.get(message.guild.id, message.channel.id)
-        if not channel:
+        if message.guild is None:
             return False
         if message.attachments is None or not len(message.attachments):
             return False
         if message.author.bot:
             return False
+
+        channel = HashChannel.get(message.guild.id, message.channel.id)
+        if not channel:
+            return False
+
         return True
 
     @commands.guild_only()
