@@ -44,7 +44,8 @@ class Meme(commands.Cog):
             Relation.add(ctx.guild.id, source.id, target.id, "hug")
 
         border: str = "***" if type(target) == discord.Role else "**"
-        await ctx.send("(⊃・﹏・)⊃" + f" {border}{target.name}{border}")
+        hug_emoji: str = "(⊃・‿・)⊃" if random.randint(1, 20) < 20 else "⊃・﹏・)⊃"
+        await ctx.send(f"{hug_emoji} {border}{target.name}{border}")
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
