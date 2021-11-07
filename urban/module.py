@@ -5,7 +5,6 @@ from datetime import datetime
 import dateutil.parser as dparser
 from urllib import parse as url_parse
 
-from discord import Colour
 from discord.ext import commands
 
 from core import utils, i18n
@@ -46,8 +45,8 @@ class Urban(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @classmethod
-    def create_embeds(self, ctx, urban_list: list[UrbanItem]):
+    @staticmethod
+    def _create_embeds(ctx: commands.Context, urban_list: list[UrbanItem]):
         embed_list = []
 
         for item in urban_list:
@@ -60,7 +59,6 @@ class Urban(commands.Cog):
                 author=ctx.message.author,
                 title=item.word,
                 url=item.permalink,
-                color=Colour.from_rgb(227, 47, 86),
             )
             if item.definition != "":
                 embed.add_field(name="Definition", value=item.definition, inline=False)
@@ -72,7 +70,7 @@ class Urban(commands.Cog):
 
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
-    async def urban(self, ctx, search_term: Optional[str] = None):
+    async def urban(self, ctx: commands.Context, search_term: Optional[str] = None):
         """Urbandictionary from the comfort of your discord server"""
         if search_term is None:
             await ctx.send(
@@ -116,14 +114,13 @@ class Urban(commands.Cog):
                     urban_list.append(urban_item)
 
                 if urban_list != []:
-                    embeds = self.create_embeds(ctx, urban_list)
+                    embeds = self._create_embeds(ctx, urban_list)
                 else:
                     await ctx.reply("No results found.")
                     return
 
-        scrollable_embed = utils.ScrollableEmbed()
-        scrollable_embed.from_iter(ctx, embeds)
-        await scrollable_embed.scroll(ctx)
+        scrollable_embed = utils.ScrollableEmbed(ctx, embeds)
+        await scrollable_embed.scroll()
 
 
 def setup(bot) -> None:
