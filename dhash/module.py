@@ -469,7 +469,9 @@ class Dhash(commands.Cog):
             similarity=similarity,
         )
 
-        embed = utils.Discord.create_embed(title=level, description=description)
+        embed = utils.Discord.create_embed(
+            title=level, description=description, color=discord.Colour.orange()
+        )
 
         embed.add_field(
             name=_(tc, "Original"),
