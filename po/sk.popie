@@ -1,131 +1,131 @@
 msgid You asked a question, but did not add enough options.
-msgstr
+msgstr Opýtal si sa otázku, ale nemám na výber dostatok možností.
 
 msgid Yes
-msgstr
+msgstr Áno
 
 msgid No
-msgstr
+msgstr Nie
 
 msgid Command encountered an error (E{code}).
-msgstr
+msgstr Príkaz narazil na chybu (E{code}).
 
 msgid I didn't find a joke like that.
-msgstr
+msgstr Takýto vtip sa nenašiel.
 
 msgid Characters
-msgstr
+msgstr Znaky
 
 msgid Parodies
-msgstr
+msgstr Paródie
 
 msgid Tags
-msgstr
+msgstr Tagy
 
 msgid Artists
-msgstr
+msgstr Umelci
 
 msgid Groups
-msgstr
+msgstr Skupiny
 
 msgid Languages
-msgstr
+msgstr Jazyky
 
 msgid Categories
-msgstr
+msgstr Kategórie
 
 msgid Number of pages
-msgstr
+msgstr Počet strán
 
-msgid Supply me with a magic number and i will give you what you desire
-msgstr
+msgid Supply me with a magic number and i will give you what you desire.
+msgstr Daj mi čarovné číslo a ja ti dám to čo si praješ.
 
 msgid {channel} is already hash channel.
-msgstr
+msgstr Kanál {channel} je už nastavený ako hash kanál.
 
 msgid Channel {channel} added as hash channel with reaction limit **{reaction_limit}**.
-msgstr
+msgstr Kanál {channel} bol pridaný ako hash kanál s limitom **{reaction_limit}** reakcií.
 
 msgid {channel} is not hash channel.
-msgstr
+msgstr Kanál {channel} nie je hash kanál.
 
 msgid Reaction limit must be higher than 0.
-msgstr
+msgstr Limit reakcií musí byť vyšší než 0.
 
 msgid Changed reaction limit for {channel} to **{reaction_limit}**.
-msgstr
+msgstr V kanáli {channel} bol zmenený limit reakcií na **{reaction_limit}**.
 
 msgid This server has no hash channels.
-msgstr
+msgstr Tento server nemá žiadne hash kanály.
 
 msgid Hash channel {channel} removed.
-msgstr
+msgstr Hash kanál {channel} bol odstránený.
 
 msgid **LOADING**
-msgstr
+msgstr **NAČÍTAVANIE**
 
 msgid Downloaded **{count}** messages.
-msgstr
+msgstr Stiahnutých bolo **{count}** správ.
 
 msgid Message **`{message_id}`**
-msgstr
+msgstr Správa **`{message_id}`**
 
 msgid Messages has no associtated hashes.
-msgstr
+msgstr K správam nepatria žiadne hashe.
 
 msgid **♻ This is repost!**
-msgstr
+msgstr **♻ Toto je repost!**
 
 msgid **♻ This is probably repost!**
-msgstr
+msgstr **♻ Toto je pravdepodobne repost!**
 
 msgid 🤷🏻 This could be repost.
-msgstr
+msgstr 🤷 Toto môže byť repost.
 
 msgid {name}, matching **{similarity}**!
-msgstr
+msgstr {name}, zhoda **{similarity}**!
 
 msgid Original
-msgstr
+msgstr Originál
 
 msgid Hint
-msgstr
+msgstr Nápoveda
 
 msgid _If image is repost, give it ♻️ reaction. If it's not, click here on ❎ and when we reach {limit} reactions, this message will be deleted._
-msgstr
+msgstr _Pokiaľ je obrázok repost, daj mu reakciu ♻️. Ak nie je repost, klikni na ❎ a keď sa dosiahne limit {limit} reakcií, táto správa bude odstránená._
 
 msgid Relations
-msgstr
+msgstr Vzťahy
 
 msgid gave / got
-msgstr
+msgstr rozdané / získané
 
 msgid Seeking
-msgstr
+msgstr Hľadám
 
 msgid Unknown User
-msgstr
+msgstr Neznámy užívateľ
 
 msgid No items found
-msgstr
+msgstr Nenašli sa žiadne položky
 
 msgid The text is too long, the limit is 140 characters.
-msgstr
+msgstr Text je príliš dlhý, limit je 140 znakov.
 
 msgid The item was added as #{idx}.
-msgstr
+msgstr Položka bola pridaná ako #{idx}.
 
 msgid Item #{idx} does not exist.
-msgstr
+msgstr Položka #{idx} neexistuje.
 
 msgid You don't have permission to remove #{idx}.
-msgstr
+msgstr Nemáš oprávnenie na odstránenie #{idx}.
 
 msgid The item was deleted.
-msgstr
+msgstr Položka bola odstránená.
 
 msgid All items were deleted.
-msgstr
+msgstr Všetky položky boli odstránené.
 
 msgid Ask me what you want to know and I will answer.
-msgstr
+msgstr Opýtaj sa ma čo chceš vedieť a ja ti odpoviem.
