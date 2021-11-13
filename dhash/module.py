@@ -440,14 +440,14 @@ class Dhash(commands.Cog):
         original: The original attachment.
         distance: Hamming distance between the original and repost.
         """
-        tc = TranslationContext(message.guild.id, message.author.id)
+        utx = TranslationContext(message.guild.id, message.author.id)
 
         if distance <= LIMIT_FULL:
-            level = _(tc, "**♻ This is repost!**")
+            level = _(utx, "**♻ This is repost!**")
         elif distance <= LIMIT_HARD:
-            level = _(tc, "**♻ This is probably repost!**")
+            level = _(utx, "**♻ This is probably repost!**")
         else:
-            level = _(tc, "🤷🏻 This could be repost.")
+            level = _(utx, "🤷🏻 This could be repost.")
 
         await message.add_reaction("♻")
 
@@ -464,7 +464,7 @@ class Dhash(commands.Cog):
         except discord.errors.NotFound:
             link = "404 😿"
 
-        description = _(tc, "{name}, matching **{similarity}**!").format(
+        description = _(utx, "{name}, matching **{similarity}**!").format(
             name=discord.utils.escape_markdown(message.author.display_name),
             similarity=similarity,
         )
@@ -474,15 +474,15 @@ class Dhash(commands.Cog):
         )
 
         embed.add_field(
-            name=_(tc, "Original"),
+            name=_(utx, "Original"),
             value=link,
             inline=False,
         )
 
         embed.add_field(
-            name=_(tc, "Hint"),
+            name=_(utx, "Hint"),
             value=_(
-                tc,
+                utx,
                 "_If image is repost, give it ♻️ reaction. "
                 "If it's not, click here on ❎ and when we reach {limit} reactions, "
                 "this message will be deleted._",

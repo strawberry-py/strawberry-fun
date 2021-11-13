@@ -1,45 +1,3 @@
-msgid You asked a question, but did not add enough options.
-msgstr Ptáš se na otázku, ale nemám dost možností k výběru.
-
-msgid Yes
-msgstr Ano
-
-msgid No
-msgstr Ne
-
-msgid Command encountered an error (E{code}).
-msgstr Při vykonávání příkazu došlo k chybě (E{code}).
-
-msgid I didn't find a joke like that.
-msgstr Takový vtip nebyl nalezen.
-
-msgid Characters
-msgstr Charaktery
-
-msgid Parodies
-msgstr Parodie
-
-msgid Tags
-msgstr Tagy
-
-msgid Artists
-msgstr Umělci
-
-msgid Groups
-msgstr Skupiny
-
-msgid Languages
-msgstr Jazyky
-
-msgid Categories
-msgstr Kategorie
-
-msgid Number of pages
-msgstr Počet stran
-
-msgid Supply me with a magic number and i will give you what you desire
-msgstr Dodej mi kouzelné číslo a já ti dám, co si přeješ.
-
 msgid {channel} is already hash channel.
 msgstr {channel} je již nastaven jako hash kanál.
 
@@ -100,6 +58,21 @@ msgstr Vztahy
 msgid gave / got
 msgstr rozdáno / získáno
 
+msgid You asked a question, but did not add enough options.
+msgstr Ptáš se na otázku, ale nemám dost možností k výběru.
+
+msgid Yes
+msgstr Ano
+
+msgid No
+msgstr Ne
+
+msgid Command encountered an error (E{code}).
+msgstr Při vykonávání příkazu došlo k chybě (E{code}).
+
+msgid I didn't find a joke like that.
+msgstr Takový vtip nebyl nalezen.
+
 msgid Seeking
 msgstr Hledám
 
@@ -129,3 +102,30 @@ msgstr Všechny položky byly vymazány.
 
 msgid Ask me what you want to know and I will answer.
 msgstr Zeptej se mě na to, co chceš vědět a já ti odpovím.
+
+msgid Characters
+msgstr Charaktery
+
+msgid Parodies
+msgstr Parodie
+
+msgid Tags
+msgstr Tagy
+
+msgid Artists
+msgstr Umělci
+
+msgid Groups
+msgstr Skupiny
+
+msgid Languages
+msgstr Jazyky
+
+msgid Categories
+msgstr Kategorie
+
+msgid Number of pages
+msgstr Počet stran
+
+msgid Supply me with a magic number and i will give you what you desire
+msgstr Dodej mi kouzelné číslo a já ti dám, co si přeješ.
