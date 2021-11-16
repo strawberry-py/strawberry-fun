@@ -78,7 +78,7 @@ class Relation(database.base):
         got = (
             session.query(func.sum(Relation.value))
             .filter_by(guild_id=guild_id, receiver_id=user_id, action=action)
-            .group_by(Relation.sender_id)
+            .group_by(Relation.receiver_id)
             .scalar()
             or 0
         )
