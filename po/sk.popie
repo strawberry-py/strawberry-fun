@@ -82,6 +82,33 @@ msgstr Vzťahy
 msgid gave / got
 msgstr rozdané / získané
 
+msgid This server does not have defined any macros.
+msgstr
+
+msgid Macro name
+msgstr
+
+msgid Match
+msgstr
+
+msgid Invocations
+msgstr
+
+msgid Triggers
+msgstr
+
+msgid Macro could not be added:
+msgstr
+
+msgid Argument --{arg} must be specified.
+msgstr
+
+msgid Macro with that name already exists.
+msgstr
+
+msgid Macro **{name}** created.
+msgstr
+
 msgid You asked a question, but did not add enough options.
 msgstr Opýtal si sa otázku, ale nemám na výber dostatok možností.
 
