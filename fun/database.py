@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Tuple
+from typing import Tuple, Optional
 
-from sqlalchemy import BigInteger, Column, Integer, String
+from sqlalchemy import BigInteger, Column, Integer, String, func
 
 from database import database, session
 
@@ -17,6 +17,7 @@ class Relation(database.base):
     sender_id = Column(BigInteger)
     receiver_id = Column(BigInteger, nullable=True)
     action = Column(String)
+    value = Column(Integer)
 
     @staticmethod
     def add(guild_id: int, sender_id: int, receiver_id: int, action: str) -> Relation:
@@ -24,29 +25,62 @@ class Relation(database.base):
 
         :return: Relation.
         """
-        relation = Relation(
-            guild_id=guild_id,
-            sender_id=sender_id,
-            receiver_id=receiver_id,
-            action=action,
-        )
 
-        session.add(relation)
+        relation = Relation.get(guild_id, sender_id, receiver_id, action)
+
+        if not relation:
+            relation = Relation(
+                guild_id=guild_id,
+                sender_id=sender_id,
+                receiver_id=receiver_id,
+                action=action,
+                value=0,
+            )
+
+        relation.value += 1
+
+        session.merge(relation)
         session.commit()
 
         return relation
 
+    @staticmethod
+    def get(
+        guild_id: int, sender_id: int, receiver_id: int, action: str
+    ) -> Optional[Relation]:
+        """Get relation if exists.
+
+        :return: Optional[Relation]
+        """
+
+        query = (
+            session.query(Relation)
+            .filter_by(
+                guild_id=guild_id,
+                sender_id=sender_id,
+                receiver_id=receiver_id,
+                action=action,
+            )
+            .one_or_none()
+        )
+
+        return query
+
     def get_user_relation(guild_id: int, user_id: int, action: str) -> Tuple[int, int]:
         gave = (
-            session.query(Relation)
+            session.query(func.sum(Relation.value))
             .filter_by(guild_id=guild_id, sender_id=user_id, action=action)
-            .count()
+            .group_by(Relation.sender_id)
+            .scalar()
+            or 0
         )
 
         got = (
-            session.query(Relation)
+            session.query(func.sum(Relation.value))
             .filter_by(guild_id=guild_id, receiver_id=user_id, action=action)
-            .count()
+            .group_by(Relation.sender_id)
+            .scalar()
+            or 0
         )
 
         return gave, got
