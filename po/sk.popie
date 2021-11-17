@@ -25,6 +25,24 @@ msgstr **NAČÍTAVANIE**
 msgid Downloaded **{count}** messages.
 msgstr Stiahnutých bolo **{count}** správ.
 
+msgid **SCANNING**
+msgstr **SKENOVÁNÍ**
+
+msgid Processed **{count}** out of **{total}** messages ({percent} %).
+msgstr Spracovanie **{count}** z **{total}** správ ({percent} %).
+
+msgid Calculated **{hashes}** hashes.
+msgstr Vypočítaných **{hashes}** hashov.
+
+msgid **COMPLETED**
+msgstr **HOTOVO**
+
+msgid Processed **{messages}** messages.
+msgstr Spracovné **{messages}** správ.
+
+msgid Calculated **{hashes}** image hashes in **{seconds}** seconds.
+msgstr Vypočítaných **{hashes}** hashov za **{seconds}** sekúnd.
+
 msgid Message **`{message_id}`**
 msgstr Správa **`{message_id}`**
 
