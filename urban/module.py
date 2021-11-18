@@ -7,7 +7,7 @@ from urllib import parse as url_parse
 
 from nextcord.ext import commands
 
-from core import utils, i18n
+from pie import utils, i18n
 
 _ = i18n.Translator("modules/fun").translate
 
@@ -55,7 +55,7 @@ class Urban(commands.Cog):
             if len(item.example) > 1024:
                 item.example = item.example[0:1021] + "`…`"
 
-            embed = utils.Discord.create_embed(
+            embed = utils.discord.create_embed(
                 author=ctx.message.author,
                 title=item.word,
                 url=item.permalink,

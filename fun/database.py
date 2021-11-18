@@ -4,7 +4,7 @@ from typing import Tuple, Optional
 
 from sqlalchemy import BigInteger, Column, Integer, String, func
 
-from database import database, session
+from pie.database import database, session
 
 
 class Relation(database.base):

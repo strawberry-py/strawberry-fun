@@ -5,7 +5,7 @@ import nextcord
 from nextcord.ext import commands
 from nextcord.abc import PrivateChannel
 
-from core import utils, i18n
+from pie import utils, i18n
 
 _ = i18n.Translator("modules/fun").translate
 
@@ -53,7 +53,7 @@ class Weeb(commands.Cog):
         title = dic["title"]["pretty"]
         num_pages = dic["num_pages"]
 
-        embed: nextcord.Embed = utils.Discord.create_embed(
+        embed: nextcord.Embed = utils.discord.create_embed(
             author=ctx.message.author,
             title=title,
             url=url,

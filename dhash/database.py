@@ -4,7 +4,7 @@ from typing import Optional, List, Dict, Union
 
 from sqlalchemy import BigInteger, Column, Integer, String, UniqueConstraint
 
-from database import database, session
+from pie.database import database, session
 
 
 class ImageHash(database.base):

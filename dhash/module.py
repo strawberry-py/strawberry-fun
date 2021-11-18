@@ -6,7 +6,7 @@ from PIL import Image
 import nextcord
 from nextcord.ext import commands
 
-from core import utils, i18n, logger, check, TranslationContext
+from pie import utils, i18n, logger, check
 from .database import HashChannel, ImageHash
 
 _ = i18n.Translator("modules/fun").translate
@@ -43,7 +43,7 @@ class Dhash(commands.Cog):
     @commands.check(check.acl)
     @commands.group(name="dhash")
     async def dhash(self, ctx):
-        await utils.Discord.send_help(ctx)
+        await utils.discord.send_help(ctx)
 
     @commands.check(check.acl)
     @dhash.command(name="add")
@@ -350,7 +350,7 @@ class Dhash(commands.Cog):
                         ),
                         exception=exc,
                     )
-                return await utils.Discord.delete_message(message)
+                return await utils.discord.delete_message(message)
 
     # Helper functions
 
@@ -442,7 +442,7 @@ class Dhash(commands.Cog):
         original: The original attachment.
         distance: Hamming distance between the original and repost.
         """
-        utx = TranslationContext(message.guild.id, message.author.id)
+        utx = i18n.TranslationContext(message.guild.id, message.author.id)
 
         if distance <= LIMIT_FULL:
             level = _(utx, "**♻ This is repost!**")
@@ -473,7 +473,7 @@ class Dhash(commands.Cog):
             similarity=similarity,
         )
 
-        embed = utils.Discord.create_embed(
+        embed = utils.discord.create_embed(
             title=level, description=description, color=nextcord.Colour.orange()
         )
 

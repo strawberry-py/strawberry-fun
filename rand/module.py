@@ -6,7 +6,7 @@ from typing import Optional, List, Dict
 import nextcord
 from nextcord.ext import commands
 
-from core import utils, i18n
+from pie import utils, i18n
 
 _ = i18n.Translator("modules/fun").translate
 
@@ -79,7 +79,7 @@ class Rand(commands.Cog):
         if seed:
             footer += f" ({seed})"
 
-        embed: nextcord.Embed = utils.Discord.create_embed(
+        embed: nextcord.Embed = utils.discord.create_embed(
             author=ctx.author,
             description=image_url,
             footer=footer,
@@ -106,7 +106,7 @@ class Rand(commands.Cog):
 
                 json_response = await response.json()
 
-        embed: nextcord.Embed = utils.Discord.create_embed(
+        embed: nextcord.Embed = utils.discord.create_embed(
             author=ctx.author,
             footer="thecatapi.com",
         )
@@ -131,7 +131,7 @@ class Rand(commands.Cog):
 
                 json_response = await response.json()
 
-        embed: nextcord.Embed = utils.Discord.create_embed(
+        embed: nextcord.Embed = utils.discord.create_embed(
             author=ctx.author,
             footer="thedogapi.com",
         )
@@ -163,7 +163,7 @@ class Rand(commands.Cog):
                     ) as response:
                         fetched = await response.json()
 
-        embed: nextcord.Embed = utils.Discord.create_embed(
+        embed: nextcord.Embed = utils.discord.create_embed(
             author=ctx.author,
             title=fetched["title"],
             description="_" + fetched["alt"][:2046] + "_",
@@ -223,7 +223,7 @@ class Rand(commands.Cog):
         else:
             result = fetched
 
-        embed: nextcord.Embed = utils.Discord.create_embed(
+        embed: nextcord.Embed = utils.discord.create_embed(
             author=ctx.author,
             description=result["joke"],
             footer="icanhazdadjoke.com",

@@ -2,14 +2,14 @@ import contextlib
 
 from nextcord.ext import commands
 
-import database.config
-from core import check, i18n, logger, utils
+import pie.database.config
+from pie import check, i18n, logger, utils
 
 from .database import Seeking as SeekingDB
 
 _ = i18n.Translator("modules/fun").translate
 guild_log = logger.Guild.logger()
-config = database.config.Config.get()
+config = pie.database.config.Config.get()
 
 
 class Seeking(commands.Cog):
@@ -26,7 +26,7 @@ class Seeking(commands.Cog):
         if ctx.invoked_subcommand is not None:
             return
 
-        embed = utils.Discord.create_embed(
+        embed = utils.discord.create_embed(
             author=ctx.author,
             title=_(ctx, "Seeking"),
         )

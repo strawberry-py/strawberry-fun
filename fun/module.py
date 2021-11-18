@@ -10,14 +10,14 @@ from pathlib import Path
 import nextcord
 from nextcord.ext import commands
 
-import database.config
-from core import utils, i18n
+import pie.database.config
+from pie import utils, i18n
 
 from .database import Relation
 from .image_utils import ImageUtils
 
 _ = i18n.Translator("modules/fun").translate
-config = database.config.Config.get()
+config = pie.database.config.Config.get()
 
 DATA_DIR = Path(__file__).parent / "data"
 
@@ -295,12 +295,12 @@ class Meme(commands.Cog):
     @commands.command()
     async def relations(self, ctx, *, user: nextcord.User = None):
         """Get your information about hugs, pets, ..."""
-        await utils.Discord.delete_message(ctx.message)
+        await utils.discord.delete_message(ctx.message)
 
         if user is None:
             user = ctx.author
 
-        embed = utils.Discord.create_embed(
+        embed = utils.discord.create_embed(
             author=ctx.author,
             title=_(ctx, "Relations"),
             description=_(ctx, "gave / got"),
@@ -333,7 +333,7 @@ class Meme(commands.Cog):
             f"**{utils.Text.sanitise(ctx.author.display_name)}**\n>>> " + text
         )
 
-        await utils.Discord.delete_message(ctx.message)
+        await utils.discord.delete_message(ctx.message)
 
     @commands.command(aliases=["rcase", "randomise"])
     async def randomcase(self, ctx, *, message: str = None):
@@ -355,7 +355,7 @@ class Meme(commands.Cog):
         await ctx.send(
             f"**{utils.Text.sanitise(ctx.author.display_name)}**\n>>> " + text
         )
-        await utils.Discord.delete_message(ctx.message)
+        await utils.discord.delete_message(ctx.message)
 
     @staticmethod
     def uwuize(string: str) -> str:
