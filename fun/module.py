@@ -7,8 +7,8 @@ from PIL import Image, ImageDraw
 from typing import List, Union
 from pathlib import Path
 
-import discord
-from discord.ext import commands
+import nextcord
+from nextcord.ext import commands
 
 import database.config
 from core import utils, i18n
@@ -29,7 +29,7 @@ class Meme(commands.Cog):
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
-    async def hug(self, ctx, *, user: Union[discord.Member, discord.Role] = None):
+    async def hug(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
         """Hug someone"""
         if user is None:
             source = self.bot.user
@@ -38,19 +38,19 @@ class Meme(commands.Cog):
             source = ctx.author
             target = user
 
-        if type(target) == discord.Role:
+        if type(target) == nextcord.Role:
             Relation.add(ctx.guild.id, source.id, None, "hug")
         else:
             Relation.add(ctx.guild.id, source.id, target.id, "hug")
 
-        border: str = "***" if type(target) == discord.Role else "**"
+        border: str = "***" if type(target) == nextcord.Role else "**"
         hug_emoji: str = "(⊃・‿・)⊃" if random.randint(1, 20) < 20 else "⊃・﹏・)⊃"
         await ctx.send(f"{hug_emoji} {border}{target.name}{border}")
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
-    async def whip(self, ctx, *, user: discord.Member = None):
+    async def whip(self, ctx, *, user: nextcord.Member = None):
         """Whip someone"""
         if user is None:
             source = self.bot.user
@@ -84,14 +84,14 @@ class Meme(commands.Cog):
                     )
                     image_binary.seek(0)
                     await ctx.reply(
-                        file=discord.File(fp=image_binary, filename="whip.gif"),
+                        file=nextcord.File(fp=image_binary, filename="whip.gif"),
                         mention_author=False,
                     )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
-    async def spank(self, ctx, *, user: discord.Member = None):
+    async def spank(self, ctx, *, user: nextcord.Member = None):
         """Spank someone"""
         if user is None:
             source = self.bot.user
@@ -125,14 +125,14 @@ class Meme(commands.Cog):
                     )
                     image_binary.seek(0)
                     await ctx.reply(
-                        file=discord.File(fp=image_binary, filename="spank.gif"),
+                        file=nextcord.File(fp=image_binary, filename="spank.gif"),
                         mention_author=False,
                     )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
-    async def pet(self, ctx, *, user: discord.Member = None):
+    async def pet(self, ctx, *, user: nextcord.Member = None):
         """Pet someone"""
         if user is None:
             source = self.bot.user
@@ -166,14 +166,14 @@ class Meme(commands.Cog):
                     )
                     image_binary.seek(0)
                     await ctx.reply(
-                        file=discord.File(fp=image_binary, filename="pet.gif"),
+                        file=nextcord.File(fp=image_binary, filename="pet.gif"),
                         mention_author=False,
                     )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
-    async def hyperpet(self, ctx, *, user: discord.Member = None):
+    async def hyperpet(self, ctx, *, user: nextcord.Member = None):
         """Hyperpet someone"""
         if user is None:
             source = self.bot.user
@@ -207,14 +207,14 @@ class Meme(commands.Cog):
                     )
                     image_binary.seek(0)
                     await ctx.reply(
-                        file=discord.File(fp=image_binary, filename="hyperpet.gif"),
+                        file=nextcord.File(fp=image_binary, filename="hyperpet.gif"),
                         mention_author=False,
                     )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
-    async def bonk(self, ctx, *, user: discord.Member = None):
+    async def bonk(self, ctx, *, user: nextcord.Member = None):
         """Bonk someone
 
         member: Discord user. If none, the bot will bonk you.
@@ -251,14 +251,14 @@ class Meme(commands.Cog):
                     )
                     image_binary.seek(0)
                     await ctx.reply(
-                        file=discord.File(fp=image_binary, filename="bonk.gif"),
+                        file=nextcord.File(fp=image_binary, filename="bonk.gif"),
                         mention_author=False,
                     )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
-    async def slap(self, ctx, *, user: Union[discord.Member, discord.Role] = None):
+    async def slap(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
         """Slap someone"""
         if user is None:
             source = self.bot.user
@@ -271,7 +271,7 @@ class Meme(commands.Cog):
 
         target_name: str
         border: str
-        if type(target) == discord.Role:
+        if type(target) == nextcord.Role:
             Relation.add(ctx.guild.id, source.id, None, "slap")
             target_name = target.name
             border = "***"
@@ -293,7 +293,7 @@ class Meme(commands.Cog):
     @commands.guild_only()
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
     @commands.command()
-    async def relations(self, ctx, *, user: discord.User = None):
+    async def relations(self, ctx, *, user: nextcord.User = None):
         """Get your information about hugs, pets, ..."""
         await utils.Discord.delete_message(ctx.message)
 

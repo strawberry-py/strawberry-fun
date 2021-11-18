@@ -3,8 +3,8 @@ import dhash
 import time
 from io import BytesIO
 from PIL import Image
-import discord
-from discord.ext import commands
+import nextcord
+from nextcord.ext import commands
 
 from core import utils, i18n, logger, check, TranslationContext
 from .database import HashChannel, ImageHash
@@ -25,7 +25,7 @@ class Dhash(commands.Cog):
         self.bot = bot
         self.embed_cache = {}
 
-    def _in_repost_channel(self, message: discord.Message) -> bool:
+    def _in_repost_channel(self, message: nextcord.Message) -> bool:
         if message.guild is None:
             return False
         if message.attachments is None or not len(message.attachments):
@@ -48,7 +48,7 @@ class Dhash(commands.Cog):
     @commands.check(check.acl)
     @dhash.command(name="add")
     async def dhash_add(
-        self, ctx, channel: discord.TextChannel, reaction_limit: int = 5
+        self, ctx, channel: nextcord.TextChannel, reaction_limit: int = 5
     ):
         hash_channel = HashChannel.get(ctx.guild.id, channel.id)
         if hash_channel:
@@ -75,7 +75,9 @@ class Dhash(commands.Cog):
 
     @commands.check(check.acl)
     @dhash.command(name="limit")
-    async def dhash_limit(self, ctx, channel: discord.TextChannel, reaction_limit: int):
+    async def dhash_limit(
+        self, ctx, channel: nextcord.TextChannel, reaction_limit: int
+    ):
         hash_channel = HashChannel.get(ctx.guild.id, channel.id)
 
         if not hash_channel:
@@ -130,7 +132,7 @@ class Dhash(commands.Cog):
 
     @commands.check(check.acl)
     @dhash.command(name="remove", aliases=["rem"])
-    async def dhash_remove(self, ctx, channel: discord.TextChannel):
+    async def dhash_remove(self, ctx, channel: nextcord.TextChannel):
         if HashChannel.remove(ctx.guild.id, channel.id):
             message = _(ctx, "Hash channel {channel} removed.")
             await guild_log.info(
@@ -213,7 +215,7 @@ class Dhash(commands.Cog):
 
     @commands.check(check.acl)
     @dhash.command(name="compare", aliases=["messages"])
-    async def dhash_compare(self, ctx, messages: commands.Greedy[discord.Message]):
+    async def dhash_compare(self, ctx, messages: commands.Greedy[nextcord.Message]):
         """Display hashes of given messages.
         messages: Space separated list of messages.
         """
@@ -237,18 +239,18 @@ class Dhash(commands.Cog):
         await ctx.send("\n".join(text))
 
     @commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
+    async def on_message(self, message: nextcord.Message):
         if self._in_repost_channel(message):
             await self._check_message(message)
 
     @commands.Cog.listener()
-    async def on_raw_message_delete(self, payload: discord.RawMessageDeleteEvent):
+    async def on_raw_message_delete(self, payload: nextcord.RawMessageDeleteEvent):
         channel = HashChannel.get(payload.guild_id, payload.channel_id)
         if channel:
             ImageHash.delete_by_message(payload.guild_id, payload.message_id)
 
     @commands.Cog.listener()
-    async def on_message_delete(self, message: discord.Message):
+    async def on_message_delete(self, message: nextcord.Message):
         if not self._in_repost_channel(message):
             return
 
@@ -261,7 +263,7 @@ class Dhash(commands.Cog):
             try:
                 report = self.embed_cache[message.id]
                 await report.delete()
-            except discord.errors.HTTPException as exc:
+            except nextcord.errors.HTTPException as exc:
                 await bot_log.error(
                     message.author,
                     message,
@@ -285,7 +287,7 @@ class Dhash(commands.Cog):
 
             try:
                 await report.delete()
-            except discord.errors.HTTPException as exc:
+            except nextcord.errors.HTTPException as exc:
                 await bot_log.error(
                     message.author,
                     message,
@@ -339,7 +341,7 @@ class Dhash(commands.Cog):
                     )
 
                     await repost_message.remove_reaction("\u267B", self.bot.user)
-                except discord.errors.HTTPException as exc:
+                except nextcord.errors.HTTPException as exc:
                     return await bot_log.error(
                         message.author,
                         message,
@@ -352,7 +354,7 @@ class Dhash(commands.Cog):
 
     # Helper functions
 
-    async def _save_hashes(self, message: discord.Message):
+    async def _save_hashes(self, message: nextcord.Message):
         for attachment in message.attachments:
             if attachment.size > MAX_ATTACHMENT_SIZE * 1024:
                 continue
@@ -379,7 +381,7 @@ class Dhash(commands.Cog):
             )
             yield h
 
-    async def _check_message(self, message: discord.Message):
+    async def _check_message(self, message: nextcord.Message):
         """Check if message contains duplicate image."""
         image_hashes = [x async for x in self._save_hashes(message)]
 
@@ -433,7 +435,7 @@ class Dhash(commands.Cog):
             await self._report_duplicate(message, image_hash, distance)
 
     async def _report_duplicate(
-        self, message: discord.Message, original: ImageHash, distance: int
+        self, message: nextcord.Message, original: ImageHash, distance: int
     ):
         """Send report.
         message: The new message containing attachment repost.
@@ -459,18 +461,20 @@ class Dhash(commands.Cog):
         try:
             original_channel = message.guild.get_channel(original.channel_id)
             original_message = await original_channel.fetch_message(original.message_id)
-            author = discord.utils.escape_markdown(original_message.author.display_name)
+            author = nextcord.utils.escape_markdown(
+                original_message.author.display_name
+            )
             link = f"[**{author}**, {timestamp}]({original_message.jump_url})"
-        except discord.errors.NotFound:
+        except nextcord.errors.NotFound:
             link = "404 😿"
 
         description = _(utx, "{name}, matching **{similarity}**!").format(
-            name=discord.utils.escape_markdown(message.author.display_name),
+            name=nextcord.utils.escape_markdown(message.author.display_name),
             similarity=similarity,
         )
 
         embed = utils.Discord.create_embed(
-            title=level, description=description, color=discord.Colour.orange()
+            title=level, description=description, color=nextcord.Colour.orange()
         )
 
         embed.add_field(

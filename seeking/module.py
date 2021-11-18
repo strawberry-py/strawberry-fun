@@ -1,6 +1,6 @@
 import contextlib
 
-from discord.ext import commands
+from nextcord.ext import commands
 
 import database.config
 from core import check, i18n, logger, utils

@@ -1,9 +1,9 @@
 import aiohttp
 from typing import Optional
 
-import discord
-from discord.ext import commands
-from discord.abc import PrivateChannel
+import nextcord
+from nextcord.ext import commands
+from nextcord.abc import PrivateChannel
 
 from core import utils, i18n
 
@@ -53,11 +53,11 @@ class Weeb(commands.Cog):
         title = dic["title"]["pretty"]
         num_pages = dic["num_pages"]
 
-        embed: discord.Embed = utils.Discord.create_embed(
+        embed: nextcord.Embed = utils.Discord.create_embed(
             author=ctx.message.author,
             title=title,
             url=url,
-            color=discord.Colour.from_rgb(227, 47, 86),
+            color=nextcord.Colour.from_rgb(227, 47, 86),
         )
         embed.set_image(url=cover_url)
         embed.add_field(name=_(ctx, "Number of pages"), value=num_pages, inline=True)
