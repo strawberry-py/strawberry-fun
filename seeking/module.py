@@ -37,7 +37,7 @@ class Seeking(commands.Cog):
             for item in items:
                 member = ctx.guild.get_member(item.user_id)
                 name = (
-                    utils.Text.sanitise(member.display_name)
+                    utils.text.sanitise(member.display_name)
                     if hasattr(member, "display_name")
                     else _(ctx, "Unknown User")
                 )
@@ -46,12 +46,12 @@ class Seeking(commands.Cog):
                     f"{item.channel_id}/{item.message_id}"
                 )
                 text = f"{item.text} | [link]({message_url})"
-                timestamp = utils.Time.id_to_datetime(item.message_id)
+                timestamp = utils.time.id_to_datetime(item.message_id)
                 embed.add_field(
                     name=template.format(
                         id=item.idx,
                         name=name,
-                        timestamp=utils.Time.datetime(timestamp),
+                        timestamp=utils.time.format_datetime(timestamp),
                     ),
                     value=text,
                     inline=False,

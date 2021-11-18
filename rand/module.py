@@ -39,7 +39,7 @@ class Rand(commands.Cog):
                 _(ctx, "You asked a question, but did not add enough options.")
             )
 
-        option: Optional[str] = utils.Text.sanitise(random.choice(args))
+        option: Optional[str] = utils.text.sanitise(random.choice(args))
         if option is not None:
             await ctx.reply(option)
 

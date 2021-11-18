@@ -282,10 +282,10 @@ class Meme(commands.Cog):
 
         await ctx.reply(
             "{source} {slap} {border}{target}{border}".format(
-                source=utils.Text.sanitise(source.display_name),
+                source=utils.text.sanitise(source.display_name),
                 slap=random.choice(options),
                 border=border,
-                target=utils.Text.sanitise(target_name),
+                target=utils.text.sanitise(target_name),
             ),
             mention_author=False,
         )
@@ -328,9 +328,9 @@ class Meme(commands.Cog):
         if message is None:
             text = "OwO!"
         else:
-            text = utils.Text.sanitise(self.uwuize(message), limit=1900, escape=False)
+            text = utils.text.sanitise(self.uwuize(message), limit=1900, escape=False)
         await ctx.send(
-            f"**{utils.Text.sanitise(ctx.author.display_name)}**\n>>> " + text
+            f"**{utils.text.sanitise(ctx.author.display_name)}**\n>>> " + text
         )
 
         await utils.discord.delete_message(ctx.message)
@@ -351,9 +351,9 @@ class Meme(commands.Cog):
                     )
                 else:
                     text += letter
-                text = utils.Text.sanitise(text, limit=1960)
+                text = utils.text.sanitise(text, limit=1960)
         await ctx.send(
-            f"**{utils.Text.sanitise(ctx.author.display_name)}**\n>>> " + text
+            f"**{utils.text.sanitise(ctx.author.display_name)}**\n>>> " + text
         )
         await utils.discord.delete_message(ctx.message)
 

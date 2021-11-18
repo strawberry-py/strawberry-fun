@@ -454,7 +454,7 @@ class Dhash(commands.Cog):
         await message.add_reaction("♻")
 
         similarity = "{:.1f} %".format((1 - distance / 128) * 100)
-        timestamp = utils.Time.id_to_datetime(original.attachment_id).strftime(
+        timestamp = utils.time.id_to_datetime(original.attachment_id).strftime(
             "%Y-%m-%d %H:%M:%S"
         )
 
