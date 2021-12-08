@@ -291,6 +291,47 @@ class Meme(commands.Cog):
         )
 
     @commands.guild_only()
+    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.command()
+    async def lick(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
+        """Lick someone"""
+        if user is None:
+            source = self.bot.user
+            target = ctx.author
+        else:
+            source = ctx.author
+            target = user
+
+        Relation.add(ctx.guild.id, source.id, target.id, "lick")
+
+        async with ctx.typing():
+            url = target.display_avatar.replace(size=256).url
+            async with aiohttp.ClientSession() as session:
+                response: aiohttp.ClientResponse = await session.get(url)
+                content: BytesIO = BytesIO(await response.read())
+                avatar: Image = Image.open(content).convert("RGBA")
+
+                frames = self.get_lick_frames(avatar)
+
+                with BytesIO() as image_binary:
+                    frames[0].save(
+                        image_binary,
+                        format="GIF",
+                        save_all=True,
+                        append_images=frames[1:],
+                        duration=30,
+                        loop=0,
+                        transparency=0,
+                        disposal=2,
+                        optimize=False,
+                    )
+                    image_binary.seek(0)
+                    await ctx.reply(
+                        file=nextcord.File(fp=image_binary, filename="lick.gif"),
+                        mention_author=False,
+                    )
+
+    @commands.guild_only()
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
     @commands.command()
     async def relations(self, ctx, *, user: nextcord.User = None):
@@ -309,7 +350,16 @@ class Meme(commands.Cog):
         avatar_url: str = user.display_avatar.replace(size=256).url
         embed.set_thumbnail(url=avatar_url)
 
-        for action in ("hug", "pet", "hyperpet", "slap", "bonk", "spank", "whip"):
+        for action in (
+            "hug",
+            "pet",
+            "hyperpet",
+            "slap",
+            "bonk",
+            "spank",
+            "whip",
+            "lick",
+        ):
             action_stats = Relation.get_user_relation(ctx.guild.id, user.id, action)
 
             if action_stats[0] == 0 and action_stats[1] == 0:
@@ -506,6 +556,28 @@ class Meme(commands.Cog):
             frame.paste(
                 frame_avatar, (80 - deformation[i], 10 - deformation[i]), frame_avatar
             )
+            frames.append(frame)
+
+        return frames
+
+    @staticmethod
+    def get_lick_frames(avatar: Image.Image) -> List[Image.Image]:
+        """Get frames for the lick"""
+        frames = []
+        width, height = 270, 136
+        voffset = (0, 2, 1, 2)
+        hoffset = (-2, 0, 2, 0)
+
+        avatar = ImageUtils.round_image(avatar.resize((100, 100)))
+
+        for i in range(4):
+            img = ("01", "02", "03", "02")[i]
+            frame_avatar = avatar.resize((64, 64))
+            frame_object = Image.open(DATA_DIR / f"lick/{img}.png")
+
+            frame = Image.new("RGBA", (width, height), (54, 57, 63, 1))
+            frame.paste(frame_object, (10, 15), frame_object)
+            frame.paste(frame_avatar, (198 + voffset[i], 68 + hoffset[i]), frame_avatar)
             frames.append(frame)
 
         return frames
