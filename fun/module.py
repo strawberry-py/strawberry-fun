@@ -1,10 +1,11 @@
 import aiohttp
+import asyncio
 import contextlib
 import random
 import numpy as np
 from io import BytesIO
 from PIL import Image, ImageDraw
-from typing import List, Union
+from typing import List, Set, Tuple, Union
 from pathlib import Path
 
 import nextcord
@@ -26,6 +27,8 @@ class Meme(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+        self.pending_highfives: Set[Tuple[int, int]] = {*()}
+
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
@@ -45,7 +48,47 @@ class Meme(commands.Cog):
 
         border: str = "***" if type(target) == nextcord.Role else "**"
         hug_emoji: str = "(⊃・‿・)⊃" if random.randint(1, 20) < 20 else "⊃・﹏・)⊃"
-        await ctx.send(f"{hug_emoji} {border}{target.name}{border}")
+        target_name: str = utils.text.sanitise(target.display_name)
+        await ctx.send(f"{hug_emoji} {border}{target_name}{border}")
+
+    @commands.guild_only()
+    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.command()
+    async def highfive(self, ctx, *, user: Union[nextcord.Member, nextcord.Role]):
+        """Highfive someone
+
+        The user has to highfive you in under ten seconds.
+        """
+        source = ctx.author
+        target = user
+        target_name: str = utils.text.sanitise(target.display_name)
+        source_name: str = utils.text.sanitise(source.display_name)
+
+        if (target.id, source.id) not in self.pending_highfives:
+            self.pending_highfives.add((source.id, target.id))
+            await asyncio.sleep(10)
+            try:
+                self.pending_highfives.remove((source.id, target.id))
+            except KeyError:
+                # This failed, that means that the highfive was sucessful.
+                return
+            else:
+                # Highfive failed
+                await ctx.author.send(
+                    _(
+                        ctx,
+                        "**{user}** did not highfive you back on time in #{channel}.",
+                    ).format(user=target_name, channel=ctx.channel.name)
+                )
+                return
+
+        with contextlib.suppress(KeyError):
+            self.pending_highfives.remove((source.id, target.id))
+
+        # This is 'highfive-back' branch, the current target is the original initiator
+        Relation.add(ctx.guild.id, target.id, source.id, "highfive")
+
+        await ctx.send(f"**{target_name}** 人 **{source_name}**")
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
@@ -359,6 +402,7 @@ class Meme(commands.Cog):
             "spank",
             "whip",
             "lick",
+            "highfive",
         ):
             action_stats = Relation.get_user_relation(ctx.guild.id, user.id, action)
 

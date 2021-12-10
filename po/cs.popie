@@ -70,6 +70,9 @@ msgstr Nápověda
 msgid _If image is repost, give it ♻️ reaction. If it's not, click here on ❎ and when we reach {limit} reactions, this message will be deleted._
 msgstr _Pokud je obrázek repost, dej mu reakci ♻️. Pokud není, klikni na ❎ a po {limit} reakcích se tato zpráva smaže._
 
+msgid **{user}** did not highfive you back on time in #{channel}.
+msgstr Uživatel **{user}** ti v kanálu #{channel} nestihl na highfive odpovědět.
+
 msgid Relations
 msgstr Vztahy
 
