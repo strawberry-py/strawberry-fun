@@ -90,7 +90,7 @@ class Weeb(commands.Cog):
                     ">>> "
                     + _(
                         ctx,
-                        "Supply me with a magic number and i will give you what you desire",
+                        "Supply me with a magic number and I will give you what you desire",
                     )
                 )
                 return
