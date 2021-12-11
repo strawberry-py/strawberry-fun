@@ -83,7 +83,7 @@ class Meme(commands.Cog):
                 return
 
         with contextlib.suppress(KeyError):
-            self.pending_highfives.remove((source.id, target.id))
+            self.pending_highfives.remove((target.id, source.id))
 
         # This is 'highfive-back' branch, the current target is the original initiator
         Relation.add(ctx.guild.id, target.id, source.id, "highfive")
