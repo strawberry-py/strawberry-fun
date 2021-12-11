@@ -57,7 +57,7 @@ class Meme(commands.Cog):
     async def highfive(self, ctx, *, user: Union[nextcord.Member, nextcord.Role]):
         """Highfive someone
 
-        The user has to highfive you in under ten seconds.
+        The user has to highfive you in under twenty seconds.
         """
         source = ctx.author
         target = user
@@ -66,7 +66,7 @@ class Meme(commands.Cog):
 
         if (target.id, source.id) not in self.pending_highfives:
             self.pending_highfives.add((source.id, target.id))
-            await asyncio.sleep(10)
+            await asyncio.sleep(20)
             try:
                 self.pending_highfives.remove((source.id, target.id))
             except KeyError:
