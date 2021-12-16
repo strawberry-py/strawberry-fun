@@ -155,13 +155,15 @@ class Dhash(commands.Cog):
         if limit < 0:
             limit = None
 
+        gtx = i18n.TranslationContext(ctx.guild.id, None)
+
         async with ctx.typing():
             messages = await ctx.channel.history(limit=limit).flatten()
 
         status = await ctx.send(
-            _(ctx, "**LOADING**")
+            _(gtx, "**LOADING**")
             + "\n"
-            + _(ctx, "Downloaded **{count}** messages.").format(count=len(messages))
+            + _(gtx, "Downloaded **{count}** messages.").format(count=len(messages))
         )
 
         await asyncio.sleep(1)
@@ -173,14 +175,14 @@ class Dhash(commands.Cog):
             if i % 50 == 0:
                 await status.edit(
                     content=(
-                        _(ctx, "**SCANNING**")
+                        _(gtx, "**SCANNING**")
                         + "\n"
                         + _(
-                            ctx,
+                            gtx,
                             "Processed **{count}** out of **{total}** messages ({percent} %).",
                         )
                         + "\n"
-                        + _(ctx, "Calculated **{hashes}** hashes.")
+                        + _(gtx, "Calculated **{hashes}** hashes.")
                     ).format(
                         count=i,
                         total=len(messages),
@@ -198,12 +200,12 @@ class Dhash(commands.Cog):
 
         await status.edit(
             content=(
-                _(ctx, "**COMPLETED**")
+                _(gtx, "**COMPLETED**")
                 + "\n"
-                + _(ctx, "Processed **{messages}** messages.")
+                + _(gtx, "Processed **{messages}** messages.")
                 + "\n"
                 + _(
-                    ctx,
+                    gtx,
                     "Calculated **{hashes}** image hashes in **{seconds}** seconds.",
                 )
             ).format(
@@ -442,14 +444,14 @@ class Dhash(commands.Cog):
         original: The original attachment.
         distance: Hamming distance between the original and repost.
         """
-        utx = i18n.TranslationContext(message.guild.id, message.author.id)
+        gtx = i18n.TranslationContext(message.guild.id, None)
 
         if distance <= LIMIT_FULL:
-            level = _(utx, "**♻ This is repost!**")
+            level = _(gtx, "**♻ This is repost!**")
         elif distance <= LIMIT_HARD:
-            level = _(utx, "**♻ This is probably repost!**")
+            level = _(gtx, "**♻ This is probably repost!**")
         else:
-            level = _(utx, "🤷🏻 This could be repost.")
+            level = _(gtx, "🤷🏻 This could be repost.")
 
         await message.add_reaction("♻")
 
@@ -468,7 +470,7 @@ class Dhash(commands.Cog):
         except nextcord.errors.NotFound:
             link = "404 😿"
 
-        description = _(utx, "{name}, matching **{similarity}**!").format(
+        description = _(gtx, "{name}, matching **{similarity}**!").format(
             name=nextcord.utils.escape_markdown(message.author.display_name),
             similarity=similarity,
         )
@@ -478,15 +480,15 @@ class Dhash(commands.Cog):
         )
 
         embed.add_field(
-            name=_(utx, "Original"),
+            name=_(gtx, "Original"),
             value=link,
             inline=False,
         )
 
         embed.add_field(
-            name=_(utx, "Hint"),
+            name=_(gtx, "Hint"),
             value=_(
-                utx,
+                gtx,
                 "_If image is repost, give it ♻️ reaction. "
                 "If it's not, click here on ❎ and when we reach {limit} reactions, "
                 "this message will be deleted._",
