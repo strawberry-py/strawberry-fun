@@ -34,6 +34,10 @@ class Meme(commands.Cog):
     @commands.command()
     async def hug(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
         """Hug someone"""
+        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+            await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
+            return
+
         if user is None:
             source = self.bot.user
             target = ctx.author
@@ -54,11 +58,15 @@ class Meme(commands.Cog):
     @commands.guild_only()
     @commands.cooldown(rate=2, per=10.0, type=commands.BucketType.user)
     @commands.command()
-    async def highfive(self, ctx, *, user: Union[nextcord.Member, nextcord.Role]):
+    async def highfive(self, ctx, *, user: nextcord.Member):
         """Highfive someone
 
         The user has to highfive you in under twenty seconds.
         """
+        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+            await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
+            return
+
         source = ctx.author
         target = user
         target_name: str = utils.text.sanitise(target.display_name)
@@ -95,6 +103,10 @@ class Meme(commands.Cog):
     @commands.command()
     async def whip(self, ctx, *, user: nextcord.Member = None):
         """Whip someone"""
+        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+            await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
+            return
+
         if user is None:
             source = self.bot.user
             target = ctx.author
@@ -136,6 +148,10 @@ class Meme(commands.Cog):
     @commands.command()
     async def spank(self, ctx, *, user: nextcord.Member = None):
         """Spank someone"""
+        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+            await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
+            return
+
         if user is None:
             source = self.bot.user
             target = ctx.author
@@ -177,6 +193,10 @@ class Meme(commands.Cog):
     @commands.command()
     async def pet(self, ctx, *, user: nextcord.Member = None):
         """Pet someone"""
+        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+            await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
+            return
+
         if user is None:
             source = self.bot.user
             target = ctx.author
@@ -218,6 +238,10 @@ class Meme(commands.Cog):
     @commands.command()
     async def hyperpet(self, ctx, *, user: nextcord.Member = None):
         """Hyperpet someone"""
+        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+            await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
+            return
+
         if user is None:
             source = self.bot.user
             target = ctx.author
@@ -262,6 +286,10 @@ class Meme(commands.Cog):
 
         member: Discord user. If none, the bot will bonk you.
         """
+        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+            await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
+            return
+
         if user is None:
             source = self.bot.user
             target = ctx.author
@@ -303,6 +331,10 @@ class Meme(commands.Cog):
     @commands.command()
     async def slap(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
         """Slap someone"""
+        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+            await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
+            return
+
         if user is None:
             source = self.bot.user
             target = ctx.author
@@ -336,8 +368,12 @@ class Meme(commands.Cog):
     @commands.guild_only()
     @commands.cooldown(rate=5, per=60.0, type=commands.BucketType.user)
     @commands.command()
-    async def lick(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
+    async def lick(self, ctx, *, user: nextcord.Member = None):
         """Lick someone"""
+        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+            await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
+            return
+
         if user is None:
             source = self.bot.user
             target = ctx.author
