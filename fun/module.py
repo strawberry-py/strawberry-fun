@@ -30,7 +30,7 @@ class Meme(commands.Cog):
         self.pending_highfives: Set[Tuple[int, int]] = {*()}
 
     @commands.guild_only()
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.cooldown(rate=2, per=10.0, type=commands.BucketType.user)
     @commands.command()
     async def hug(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
         """Hug someone"""
@@ -52,7 +52,7 @@ class Meme(commands.Cog):
         await ctx.send(f"{hug_emoji} {border}{target_name}{border}")
 
     @commands.guild_only()
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.cooldown(rate=2, per=10.0, type=commands.BucketType.user)
     @commands.command()
     async def highfive(self, ctx, *, user: Union[nextcord.Member, nextcord.Role]):
         """Highfive someone
@@ -91,7 +91,7 @@ class Meme(commands.Cog):
         await ctx.send(f"**{target_name}** 人 **{source_name}**")
 
     @commands.guild_only()
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @commands.command()
     async def whip(self, ctx, *, user: nextcord.Member = None):
         """Whip someone"""
@@ -132,7 +132,7 @@ class Meme(commands.Cog):
                     )
 
     @commands.guild_only()
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @commands.command()
     async def spank(self, ctx, *, user: nextcord.Member = None):
         """Spank someone"""
@@ -173,7 +173,7 @@ class Meme(commands.Cog):
                     )
 
     @commands.guild_only()
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @commands.command()
     async def pet(self, ctx, *, user: nextcord.Member = None):
         """Pet someone"""
@@ -214,7 +214,7 @@ class Meme(commands.Cog):
                     )
 
     @commands.guild_only()
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @commands.command()
     async def hyperpet(self, ctx, *, user: nextcord.Member = None):
         """Hyperpet someone"""
@@ -255,7 +255,7 @@ class Meme(commands.Cog):
                     )
 
     @commands.guild_only()
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @commands.command()
     async def bonk(self, ctx, *, user: nextcord.Member = None):
         """Bonk someone
@@ -299,7 +299,7 @@ class Meme(commands.Cog):
                     )
 
     @commands.guild_only()
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @commands.command()
     async def slap(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
         """Slap someone"""
@@ -334,7 +334,7 @@ class Meme(commands.Cog):
         )
 
     @commands.guild_only()
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @commands.cooldown(rate=5, per=60.0, type=commands.BucketType.user)
     @commands.command()
     async def lick(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
         """Lick someone"""
