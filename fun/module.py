@@ -411,6 +411,51 @@ class Meme(commands.Cog):
                     )
 
     @commands.guild_only()
+    @commands.cooldown(rate=5, per=60.0, type=commands.BucketType.user)
+    @commands.command()
+    async def hyperlick(self, ctx, *, user: nextcord.Member = None):
+        """Hyperlick someone"""
+        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+            await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
+            return
+
+        if user is None:
+            source = self.bot.user
+            target = ctx.author
+        else:
+            source = ctx.author
+            target = user
+
+        Relation.add(ctx.guild.id, source.id, target.id, "hyperlick")
+
+        async with ctx.typing():
+            url = target.display_avatar.replace(size=256).url
+            async with aiohttp.ClientSession() as session:
+                response: aiohttp.ClientResponse = await session.get(url)
+                content: BytesIO = BytesIO(await response.read())
+                avatar: Image = Image.open(content).convert("RGBA")
+
+                frames = self.get_hyperlick_frames(avatar)
+
+                with BytesIO() as image_binary:
+                    frames[0].save(
+                        image_binary,
+                        format="GIF",
+                        save_all=True,
+                        append_images=frames[1:],
+                        duration=30,
+                        loop=0,
+                        transparency=0,
+                        disposal=2,
+                        optimize=False,
+                    )
+                    image_binary.seek(0)
+                    await ctx.reply(
+                        file=nextcord.File(fp=image_binary, filename="hyperlick.gif"),
+                        mention_author=False,
+                    )
+
+    @commands.guild_only()
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
     @commands.command()
     async def relations(self, ctx, *, user: nextcord.User = None):
@@ -438,6 +483,7 @@ class Meme(commands.Cog):
             "spank",
             "whip",
             "lick",
+            "hyperlick",
             "highfive",
         ):
             action_stats = Relation.get_user_relation(ctx.guild.id, user.id, action)
@@ -653,6 +699,32 @@ class Meme(commands.Cog):
         for i in range(4):
             img = ("01", "02", "03", "02")[i]
             frame_avatar = avatar.resize((64, 64))
+            frame_object = Image.open(DATA_DIR / f"lick/{img}.png")
+
+            frame = Image.new("RGBA", (width, height), (54, 57, 63, 1))
+            frame.paste(frame_object, (10, 15), frame_object)
+            frame.paste(frame_avatar, (198 + voffset[i], 68 + hoffset[i]), frame_avatar)
+            frames.append(frame)
+
+        return frames
+
+    @staticmethod
+    def get_hyperlick_frames(avatar: Image.Image) -> List[Image.Image]:
+        """Get frames for the hyperlick"""
+        frames = []
+        width, height = 270, 136
+        voffset = (0, 3, -1, 3)
+        hoffset = (-2, 0, 2, 0)
+
+        avatar = ImageUtils.round_image(avatar.resize((64, 64)))
+        avatar_pixels = np.array(avatar)
+
+        for i in range(4):
+            img = ("01", "02", "03", "02")[i]
+            deform_hue = random.randint(0, 99) ** (i + 1) // 100 ** i / 100
+            frame_avatar = Image.fromarray(
+                ImageUtils.shift_hue(avatar_pixels, deform_hue)
+            )
             frame_object = Image.open(DATA_DIR / f"lick/{img}.png")
 
             frame = Image.new("RGBA", (width, height), (54, 57, 63, 1))
