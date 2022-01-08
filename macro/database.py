@@ -23,12 +23,14 @@ class TextMacro(database.base):
     idx = Column(Integer, primary_key=True, autoincrement=True)
     guild_id = Column(BigInteger)
     name = Column(String)
-    triggers = relationship("TextMacroTrigger")
-    responses = relationship("TextMacroResponse")
+    triggers = relationship("TextMacroTrigger", cascade="all, delete")
+    responses = relationship("TextMacroResponse", cascade="all, delete")
+    dm = Column(Boolean)
+    delete_trigger = Column(Boolean)
     sensitive = Column(Boolean)
     match = Column(Enum(MacroMatch))
-    channels = relationship("TextMacroChannel")
-    users = relationship("TextMacroUser")
+    channels = relationship("TextMacroChannel", cascade="all, delete")
+    users = relationship("TextMacroUser", cascade="all, delete")
     counter = Column(Integer, default=0)
 
     @staticmethod
@@ -37,6 +39,8 @@ class TextMacro(database.base):
         name: str,
         triggers: List[str],
         responses: List[str],
+        dm: bool,
+        delete_trigger: bool,
         sensitive: bool,
         match: MacroMatch,
         channels: List[int],
@@ -50,6 +54,8 @@ class TextMacro(database.base):
             name=name,
             triggers=[TextMacroTrigger(text=t) for t in triggers],
             responses=[TextMacroResponse(text=r) for r in responses],
+            dm=dm,
+            delete_trigger=delete_trigger,
             match=match,
             channels=[TextMacroChannel(channel_id=c) for c in channels]
             if channels
@@ -65,6 +71,8 @@ class TextMacro(database.base):
         *,
         triggers: Optional[List[str]] = None,
         responses: Optional[List[str]] = None,
+        dm: Optional[bool] = None,
+        delete_trigger: Optional[bool] = None,
         sensitive: Optional[bool] = None,
         match: Optional[MacroMatch] = None,
         channels: Optional[List[int]] = None,
@@ -74,14 +82,20 @@ class TextMacro(database.base):
             self.triggers = [TextMacroTrigger(text=t) for t in triggers]
         if responses is not None:
             self.responses = [TextMacroResponse(text=r) for r in responses]
+        if dm is not None:
+            self.dm = dm
+        if delete_trigger is not None:
+            self.delete_trigger = delete_trigger
         if sensitive is not None:
             self.sensitive = sensitive
         if match is not None:
             self.match = match
         if channels is not None:
-            self.channels = [TextMacroChannel(channel_id=c) for c in channels]
+            self.channels = (
+                [TextMacroChannel(channel_id=c) for c in channels] if channels else []
+            )
         if users is not None:
-            self.users = [TextMacroUser(user_id=u) for u in users]
+            self.users = [TextMacroUser(user_id=u) for u in users] if users else []
 
         session.commit()
 
@@ -131,6 +145,8 @@ class TextMacro(database.base):
             "name": self.name,
             "triggers": [s.text for s in self.triggers],
             "responses": [s.text for s in self.responses],
+            "dm": self.dm,
+            "delete_trigger": self.delete_trigger,
             "sensitive": self.sensitive,
             "match": self.match.name,
             "channels": [c.channel_id for c in self.channels],

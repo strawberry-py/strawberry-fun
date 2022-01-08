@@ -105,6 +105,8 @@ class Macro(commands.Cog):
         parser = MacroParser()
         parser.add_argument("--triggers", type=str, nargs="+")
         parser.add_argument("--responses", type=str, nargs="+")
+        parser.add_argument("--dm", type=bool, default=None)
+        parser.add_argument("--delete-trigger", type=bool, default=None)
         parser.add_argument("--sensitive", type=bool, default=None)
         parser.add_argument("--match", type=str, choices=[m.name for m in MacroMatch])
         parser.add_argument("--channels", type=int, nargs="?")
@@ -138,6 +140,8 @@ class Macro(commands.Cog):
         Args:
             --triggers: Trigger phrases.
             --responses: Possible answers; one of them will be picked each time.
+            --dm: Whether to send the reply to DM instead of the trigger channel; defaults to False.
+            --delete-trigger: Whether to delete the trigger message; defaults to False.
             --sensitive: Case-sensitivity; defaults to False.
             --match: One of FULL, START, END, ANY.
             --channels: Optional list of channel IDs where this macro will work.
@@ -163,6 +167,10 @@ class Macro(commands.Cog):
             name=name,
             triggers=args.triggers,
             responses=args.responses,
+            dm=args.dm if args.dm is not None else False,
+            delete_trigger=args.delete_trigger
+            if args.delete_trigger is not None
+            else False,
             sensitive=args.sensitive if args.sensitive is not None else False,
             match=getattr(MacroMatch, args.match.upper()),
             channels=args.channels if args.users.__class__ is int else args.channels,
@@ -185,6 +193,8 @@ class Macro(commands.Cog):
         Args:
             --triggers: Trigger phrases.
             --responses: Possible answers; one of them will be picked each time.
+            --dm: Whether to send the reply to DM instead of the trigger channel; defaults to False.
+            --delete-trigger: Whether to delete the trigger message; defaults to False.
             --sensitive: Case-sensitivity; defaults to False.
             --match: One of FULL, START, END, ANY.
             --channels: Optional list of channel IDs where this macro will work.
@@ -200,7 +210,16 @@ class Macro(commands.Cog):
             return
 
         filtered_args: Dict[str, Any] = {}
-        for arg in ("triggers", "responses", "sensitive", "match", "channels", "users"):
+        for arg in (
+            "triggers",
+            "responses",
+            "dm",
+            "delete_trigger",
+            "sensitive",
+            "match",
+            "channels",
+            "users",
+        ):
             if getattr(args, arg, None) is not None:
                 filtered_args[arg] = getattr(args, arg)
 
