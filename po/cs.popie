@@ -100,14 +100,26 @@ msgstr Spouštěče
 msgid Macro could not be added:
 msgstr Makro nemohlo být přidáno:
 
-msgid Argument --{arg} must be specified.
-msgstr Musí být uveden argument --{arg}
-
 msgid Macro with that name already exists.
 msgstr Makro s takovým jménem již existuje.
 
+msgid Argument --{arg} must be specified.
+msgstr Musí být uveden argument --{arg}.
+
 msgid Macro **{name}** created.
 msgstr Makro **{name}** vytvořeno.
+
+msgid Macro with that name does not exist.
+msgstr Makro s takovým názvem neexistuje.
+
+msgid No arguments specified.
+msgstr Nebyly uvedeny žádné argument.y
+
+msgid Macro **{name}** updated.
+msgstr Makro **{name}** aktualizováno.
+
+msgid Macro **{name}** removed.
+msgstr Makro **{name}** odebráno.
 
 msgid You asked a question, but did not add enough options.
 msgstr Ptáš se na otázku, ale nemám dost možností k výběru.

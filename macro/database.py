@@ -60,6 +60,31 @@ class TextMacro(database.base):
         session.commit()
         return macro
 
+    def update(
+        self,
+        *,
+        triggers: Optional[List[str]] = None,
+        responses: Optional[List[str]] = None,
+        sensitive: Optional[bool] = None,
+        match: Optional[MacroMatch] = None,
+        channels: Optional[List[int]] = None,
+        users: Optional[List[int]] = None,
+    ):
+        if triggers is not None:
+            self.triggers = [TextMacroTrigger(text=t) for t in triggers]
+        if responses is not None:
+            self.responses = [TextMacroResponse(text=r) for r in responses]
+        if sensitive is not None:
+            self.sensitive = sensitive
+        if match is not None:
+            self.match = match
+        if channels is not None:
+            self.channels = [TextMacroChannel(channel_id=c) for c in channels]
+        if users is not None:
+            self.users = [TextMacroUser(user_id=u) for u in users]
+
+        session.commit()
+
     @staticmethod
     def get(guild_id: int, name: str) -> Optional[TextMacro]:
         query = (
@@ -70,8 +95,11 @@ class TextMacro(database.base):
         return query
 
     @staticmethod
-    def get_all(guild_id: int) -> List[TextMacro]:
-        query = session.query(TextMacro).filter_by(guild_id=guild_id).all()
+    def get_all(guild_id: Optional[int]) -> List[TextMacro]:
+        query = session.query(TextMacro)
+        if guild_id is not None:
+            query = query.filter_by(guild_id=guild_id)
+        query = query.all()
         return query
 
     @staticmethod
@@ -84,7 +112,11 @@ class TextMacro(database.base):
             )
             .delete()
         )
+        session.commit()
         return query
+
+    def save(self):
+        session.commit()
 
     def __repr__(self) -> str:
         return (

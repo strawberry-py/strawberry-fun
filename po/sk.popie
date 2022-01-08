@@ -100,13 +100,25 @@ msgstr
 msgid Macro could not be added:
 msgstr
 
-msgid Argument --{arg} must be specified.
-msgstr
-
 msgid Macro with that name already exists.
 msgstr
 
+msgid Argument --{arg} must be specified.
+msgstr
+
 msgid Macro **{name}** created.
+msgstr
+
+msgid Macro with that name does not exist.
+msgstr
+
+msgid No arguments specified.
+msgstr
+
+msgid Macro **{name}** updated.
+msgstr
+
+msgid Macro **{name}** removed.
 msgstr
 
 msgid You asked a question, but did not add enough options.
