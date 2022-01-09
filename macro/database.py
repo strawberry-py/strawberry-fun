@@ -129,6 +129,10 @@ class TextMacro(database.base):
         session.commit()
         return query
 
+    def bump(self):
+        self.counter += 1
+        session.commit()
+
     def save(self):
         session.commit()
 

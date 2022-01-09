@@ -1,7 +1,8 @@
 import argparse
+import random
 import shlex
 from collections import defaultdict
-from typing import Any, Dict, Optional, Iterable
+from typing import Any, Dict, Optional, Iterable, Generator
 
 from discord.ext import commands
 
@@ -54,7 +55,11 @@ class Macro(commands.Cog):
     def _refresh_triggers(self):
         triggers = defaultdict(dict)
         for macro in TextMacro.get_all(None):
-            macro_triggers = {t.text: macro.name for t in macro.triggers}
+            # Cached triggers are saved as lowercase.
+            # When the message is looked up in the cache, it's also converted
+            # to lowercase. This ensures that all macros will be found, even
+            # those which are case insensitive.
+            macro_triggers = {t.text.lower(): macro.name for t in macro.triggers}
             triggers[macro.guild_id].update(macro_triggers)
         self._triggers = triggers
 
@@ -254,19 +259,75 @@ class Macro(commands.Cog):
     async def on_message(self, message: str):
         if message.author.bot:
             return
-
-        def get_macro_name(message) -> Optional[str]:
-            """Get macro name from the message content."""
-            if message.guild.id not in self._triggers.keys():
-                return None
-            for trigger, macro_name in self._triggers[message.guild.id].items():
-                if trigger in message.content:
-                    return macro_name
+        if message.guild.id not in self._triggers.keys():
             return None
 
-        macro_name: Optional[str] = get_macro_name(message)
-        if macro_name is None:
-            return
+        content = message.content.lower()
+
+        def get_potential_macros() -> Generator:
+            """Get macro name from the message content."""
+            for trigger, macro_name in self._triggers[message.guild.id].items():
+                if trigger in content:
+                    yield macro_name
+
+        for macro_name in get_potential_macros():
+            triggered: bool = await self._process_macro(message, macro_name)
+            if triggered:
+                break
+
+    async def _process_macro(self, message, macro_name: str) -> bool:
+        """Process macro.
+
+        Returns:
+            True if the macro was triggered, False otherwise.
+        """
+        macro = TextMacro.get(message.guild.id, macro_name)
+        if macro is None:
+            await guild_log.error(
+                message.author, message.channel, f"Macro '{macro_name}' not found."
+            )
+            return False
+        macro_dump = macro.dump()
+
+        content = message.content
+        if not macro.sensitive:
+            macro_dump["triggers"] = [t.lower() for t in macro_dump["triggers"]]
+            content = content.lower()
+
+        for trigger in macro_dump["triggers"]:
+            if macro.match == MacroMatch.FULL and trigger == content:
+                break
+            if macro.match == MacroMatch.START and content.startswith(trigger):
+                break
+            if macro.match == MacroMatch.END and content.endswith(trigger):
+                break
+            if macro.match == MacroMatch.ANY and trigger in content:
+                break
+        else:
+            # the string is contained there, but not precisely
+            return False
+
+        # filtering
+        if macro.channels and message.channel.id not in macro_dump["channels"]:
+            return False
+        if macro.users and message.author.id not in macro_dump["users"]:
+            return False
+
+        macro.bump()
+
+        # pick one of responses
+        response = random.choice(macro_dump["responses"])
+
+        # delete trigger, if set
+        if macro.delete_trigger:
+            await utils.discord.delete_message(message)
+
+        # send
+        if macro.dm:
+            await message.author.send(response)
+        else:
+            await message.reply(response, mention_author=False)
+        return True
 
 
 def setup(bot) -> None:
