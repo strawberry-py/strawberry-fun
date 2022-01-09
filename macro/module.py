@@ -1,7 +1,7 @@
 import argparse
 import shlex
 from collections import defaultdict
-from typing import Any, Dict, Set, Optional, Iterable
+from typing import Any, Dict, Optional, Iterable
 
 from discord.ext import commands
 
@@ -48,14 +48,14 @@ class Macro(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-        self._triggers: Dict[int, Set[str]] = {}
+        self._triggers: Dict[int, Dict[str, str]] = {}
         self._refresh_triggers()
 
     def _refresh_triggers(self):
-        triggers = defaultdict(set)
+        triggers = defaultdict(dict)
         for macro in TextMacro.get_all(None):
-            macro_triggers = [t.text for t in macro.triggers]
-            triggers[macro.guild_id].union(*macro_triggers)
+            macro_triggers = {t.text: macro.name for t in macro.triggers}
+            triggers[macro.guild_id].update(macro_triggers)
         self._triggers = triggers
 
     #
@@ -255,15 +255,17 @@ class Macro(commands.Cog):
         if message.author.bot:
             return
 
-        def has_trigger(message):
+        def get_macro_name(message) -> Optional[str]:
+            """Get macro name from the message content."""
             if message.guild.id not in self._triggers.keys():
-                return False
-            for trigger in self._triggers[message.guild.id]:
+                return None
+            for trigger, macro_name in self._triggers[message.guild.id].items():
                 if trigger in message.content:
-                    return True
-            return False
+                    return macro_name
+            return None
 
-        if not has_trigger(message):
+        macro_name: Optional[str] = get_macro_name(message)
+        if macro_name is None:
             return
 
 
