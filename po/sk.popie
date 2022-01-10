@@ -83,43 +83,43 @@ msgid gave / got
 msgstr rozdané / získané
 
 msgid This server does not have defined any macros.
-msgstr
+msgstr Tento server nemá žiadne makrá.
 
 msgid Macro name
-msgstr
+msgstr Názov makra
 
 msgid Match
-msgstr
+msgstr Match
 
 msgid Invocations
-msgstr
+msgstr Spustenie
 
 msgid Triggers
-msgstr
+msgstr Spúšťače
 
 msgid Macro could not be added:
-msgstr
+msgstr Makro nemohlo byť pridané:
 
 msgid Macro with that name already exists.
-msgstr
+msgstr Makro s takým menom už existuje.
 
 msgid Argument --{arg} must be specified.
-msgstr
+msgstr Musí byť uvedený argument --{arg}.
 
 msgid Macro **{name}** created.
-msgstr
+msgstr Makro **{name}** vytvorené.
 
 msgid Macro with that name does not exist.
-msgstr
+msgstr Makro s takým menom neexistuje.
 
 msgid No arguments specified.
-msgstr
+msgstr Neboli uvedené žiadne argumenty.
 
 msgid Macro **{name}** updated.
-msgstr
+msgstr Makro **{name}** aktualizované.
 
 msgid Macro **{name}** removed.
-msgstr
+msgstr Makro **{name}** vymazané.
 
 msgid You asked a question, but did not add enough options.
 msgstr Opýtal si sa otázku, ale nemám na výber dostatok možností.
