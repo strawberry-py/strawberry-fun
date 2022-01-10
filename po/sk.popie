@@ -166,6 +166,30 @@ msgstr Všetky položky boli odstránené.
 msgid Ask me what you want to know and I will answer.
 msgstr Opýtaj sa ma čo chceš vedieť a ja ti odpoviem.
 
+msgid That's not valid place name.
+msgstr
+
+msgid Your preferred weather place set to **{place}**.
+msgstr
+
+msgid You don't have any place preference saved.
+msgstr
+
+msgid Your preferred weather place was removed.
+msgstr
+
+msgid Guild's preferred weather place set to **{place}**.
+msgstr
+
+msgid This server doesn't have any place preference saved.
+msgstr
+
+msgid Guild's preferred weather place was removed.
+msgstr
+
+msgid You have to specify a place or set a preference.
+msgstr
+
 msgid Characters
 msgstr Znaky
 
