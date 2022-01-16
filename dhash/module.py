@@ -232,7 +232,7 @@ class Dhash(commands.Cog):
                 _(ctx, "Message **`{message_id}`**").format(message_id=message.id)
             )
             for db_image in db_images:
-                text.append("   > `{hash}`".format(hash=db_image.dhash[2:]))
+                text.append("   > `{hash}`".format(hash=db_image.hash[2:]))
             text.append("")
 
         if not len(text):
