@@ -63,7 +63,12 @@ class Meme(commands.Cog):
 
         The user has to highfive you in under twenty seconds.
         """
-        if user is not None and user.id not in [m.id for m in ctx.channel.members]:
+        if isinstance(ctx.channel, nextcord.Thread):
+            # in Threads attribute members is not set correctly
+            members = await ctx.channel.fetch_members()
+        else:
+            members = ctx.channel.members
+        if user is not None and user.id not in [m.id for m in members]:
             await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
             return
 
