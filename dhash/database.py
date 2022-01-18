@@ -69,6 +69,7 @@ class ImageHash(database.base):
 
     @staticmethod
     def get_by_attachment(guild_id: int, attachment_id: int):
+        """Returns None for external URLs"""
         return (
             session.query(ImageHash)
             .filter_by(guild_id=guild_id, attachment_id=attachment_id)
@@ -87,7 +88,7 @@ class ImageHash(database.base):
 
     def __repr__(self) -> str:
         return (
-            f'<{self.__class__.__name} idx="{self.idx}" guild_id="{self.guild_id}" '
+            f'<{self.__class__.__name__} idx="{self.idx}" guild_id="{self.guild_id}" '
             f'channel_id="{self.channel_id}" message_id="{self.message_id}" '
             f'attachement_id="{self.attachment_id}" hash="{self.hash}">'
         )
@@ -99,6 +100,62 @@ class ImageHash(database.base):
             "message_id": self.message_id,
             "attachment_id": self.attachment_id,
             "hash": self.hash,
+        }
+
+
+class HashConfig(database.base):
+    """Stores config in format key:value
+
+    This holds values per-bot, not per-guild.
+    """
+
+    __tablename__ = "fun_dhash_config"
+
+    key = Column(String, primary_key=True)
+    value = Column(String)
+
+    @staticmethod
+    def init(key: str, value) -> bool:
+        config = session.query(HashConfig).filter_by(key=key).one_or_none()
+
+        if config:
+            return False
+
+        config = HashConfig(key=key, value=value)
+
+        session.add(config)
+        session.commit()
+
+        return True
+
+    @staticmethod
+    def get(key: str, value=None) -> str:
+        config = session.query(HashConfig).filter_by(key=key).one_or_none()
+
+        if config:
+            return config.value
+        else:
+            return value
+
+    @staticmethod
+    def set(key: str, value: str):
+        config = session.query(HashConfig).filter_by(key=key).one_or_none()
+
+        if not config:
+            config = HashConfig(key=key)
+
+        config.value = value
+
+        session.merge(config)
+        session.commit()
+
+    def __repr__(self) -> str:
+        return f'<{self.__class__.__name__} key="{self.key}" value="{self.value}">'
+
+    def dump(self) -> dict:
+        return {
+            "key": self.key,
+            "value": self.value,
         }
 
 

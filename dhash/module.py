@@ -1,13 +1,16 @@
+import aiohttp
 import asyncio
 import dhash
+import re
 import time
 from io import BytesIO
 from PIL import Image
+
 import nextcord
 from nextcord.ext import commands
 
 from pie import utils, i18n, logger, check
-from .database import HashChannel, ImageHash
+from .database import HashChannel, ImageHash, HashConfig
 
 _ = i18n.Translator("modules/fun").translate
 guild_log = logger.Guild.logger()
@@ -18,6 +21,14 @@ LIMIT_HARD = 7
 LIMIT_SOFT = 14
 
 MAX_ATTACHMENT_SIZE = 8000
+ALLOWED_FORMATS = ("jpg", "jpeg", "png", "webp", "gif")
+
+HTTP_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36"
+}
+
+URL_REGEX = r"(https?://[^\s]+)"
+DISCORD_REGEX = r"^https://(?:cdn\.discordapp\.com|media\.discordapp\.net)/"
 
 
 class Dhash(commands.Cog):
@@ -25,12 +36,21 @@ class Dhash(commands.Cog):
         self.bot = bot
         self.embed_cache = {}
 
+        self.allowed_urls = HashConfig.get("allowed_urls", None)
+
+        try:
+            self.allowed_urls = re.compile(self.allowed_urls)
+        except (re.error, TypeError):
+            self.allowed_urls = None
+
     def _in_repost_channel(self, message: nextcord.Message) -> bool:
         if message.guild is None:
             return False
-        if message.attachments is None or not len(message.attachments):
-            return False
         if message.author.bot:
+            return False
+        if (
+            message.attachments is None or not len(message.attachments)
+        ) and not re.search(URL_REGEX, message.content):
             return False
 
         channel = HashChannel.get(message.guild.id, message.channel.id)
@@ -44,6 +64,67 @@ class Dhash(commands.Cog):
     @commands.group(name="dhash")
     async def dhash(self, ctx):
         await utils.discord.send_help(ctx)
+
+    @commands.guild_only()
+    @commands.check(check.acl)
+    @dhash.group(name="regex")
+    async def dhash_regex(self, ctx):
+        await utils.discord.send_help(ctx)
+
+    @commands.check(check.acl)
+    @dhash_regex.command(name="get")
+    async def dhash_regex_get(self, ctx):
+        if self.allowed_urls:
+            await ctx.reply(
+                _(ctx, "Regex for allowed URLs is `{regex}`.").format(
+                    regex=self.allowed_urls.pattern
+                )
+            )
+        else:
+            await ctx.reply(_(ctx, "Regex for allowed URLs is not set."))
+
+    @commands.check(check.acl)
+    @dhash_regex.command(name="unset")
+    async def dhash_regex_unset(self, ctx):
+        HashConfig.set("allowed_urls", None)
+        self.allowed_urls = None
+        await bot_log.info(
+            ctx.author,
+            ctx.channel,
+            "DHash regex was unset.",
+        )
+        await ctx.reply(_(ctx, "Regex for allowed urls successfuly unset."))
+
+    @commands.check(check.acl)
+    @dhash_regex.command(name="set")
+    async def dhash_regex_set(self, ctx, regex: str):
+        """Set regex used for limiting URL's domains.
+
+        Args:
+            regex: Regex string
+        """
+        try:
+            comp_regex = re.compile(regex)
+        except re.error:
+            await ctx.reply(
+                _(ctx, "String `{regex}` is not valid regex.").format(regex=regex)
+            )
+            return
+
+        HashConfig.set("allowed_urls", regex)
+        self.allowed_urls = comp_regex
+
+        await bot_log.info(
+            ctx.author,
+            ctx.channel,
+            f"DHash regex was set to `{regex}`.",
+        )
+
+        await ctx.reply(
+            _(ctx, "String `{regex}` was successfuly set as allowed urls.").format(
+                regex=regex
+            )
+        )
 
     @commands.check(check.acl)
     @dhash.command(name="add")
@@ -356,13 +437,13 @@ class Dhash(commands.Cog):
 
     # Helper functions
 
-    async def _save_hashes(self, message: nextcord.Message):
+    async def _get_attachment_hashes(self, message: nextcord.Message):
         for attachment in message.attachments:
             if attachment.size > MAX_ATTACHMENT_SIZE * 1024:
                 continue
 
             extension = attachment.filename.split(".")[-1].lower()
-            if extension not in ("jpg", "jpeg", "png", "webp", "gif"):
+            if extension not in ALLOWED_FORMATS:
                 continue
 
             fp = BytesIO()
@@ -383,9 +464,55 @@ class Dhash(commands.Cog):
             )
             yield h
 
+    async def _get_url_hashes(self, message: nextcord.Message):
+        for url in re.findall(URL_REGEX, message.content):
+            if not re.search(DISCORD_REGEX, url) and (
+                not self.allowed_urls or not re.search(self.allowed_urls, url)
+            ):
+                continue
+
+            try:
+                async with aiohttp.ClientSession(
+                    headers=HTTP_HEADERS,
+                    raise_for_status=False,
+                    timeout=aiohttp.ClientTimeout(30),
+                    auto_decompress=False,
+                    read_bufsize=256,
+                ) as session:
+                    async with session.get(url) as resp:
+                        if resp.status != 200:
+                            continue
+                        size = resp.headers.get("content-length")
+                        if not size or int(size) > MAX_ATTACHMENT_SIZE * 1024:
+                            continue
+
+                        type = resp.headers.get("content-type").split("/")
+                        if (
+                            len(type) != 2
+                            or type[0] != "image"
+                            or type[1] not in ALLOWED_FORMATS
+                        ):
+                            continue
+
+                        image = Image.open(BytesIO(await resp.read()))
+
+                        h = dhash.dhash_int(image)
+                        ImageHash.add(
+                            guild_id=message.guild.id,
+                            channel_id=message.channel.id,
+                            message_id=message.id,
+                            attachment_id=0,
+                            hash=str(hex(h)),
+                        )
+                        yield h
+            except (aiohttp.ClientError):
+                continue
+
     async def _check_message(self, message: nextcord.Message):
         """Check if message contains duplicate image."""
-        image_hashes = [x async for x in self._save_hashes(message)]
+        attachments = [x async for x in self._get_attachment_hashes(message)]
+        urls = [x async for x in self._get_url_hashes(message)]
+        image_hashes = attachments + urls
 
         duplicates = {}
         all_images = None
@@ -456,7 +583,7 @@ class Dhash(commands.Cog):
         await message.add_reaction("♻")
 
         similarity = "{:.1f} %".format((1 - distance / 128) * 100)
-        timestamp = utils.time.id_to_datetime(original.attachment_id).strftime(
+        timestamp = utils.time.id_to_datetime(original.message_id).strftime(
             "%Y-%m-%d %H:%M:%S"
         )
 

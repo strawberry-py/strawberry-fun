@@ -1,3 +1,18 @@
+msgid Regex for allowed URLs is `{regex}`.
+msgstr Regex pro povolené URL je `{regex}`.
+
+msgid Regex for allowed URLs is not set.
+msgstr Regex pro povolené URL není nastaven.
+
+msgid Regex for allowed urls successfuly unset.
+msgstr Regex pro povolené adresy úspěšně zrušen.
+
+msgid String `{regex}` is not valid regex.
+msgstr Řetězec `{regex}` není validní regex.
+
+msgid String `{regex}` was successfuly set as allowed urls.
+msgstr Řetězec pro povolené URL adresy byl nastaven na `{regex}`.
+
 msgid {channel} is already hash channel.
 msgstr {channel} je již nastaven jako hash kanál.
 
