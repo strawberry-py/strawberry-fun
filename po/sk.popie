@@ -166,6 +166,39 @@ msgstr Všetky položky boli odstránené.
 msgid Ask me what you want to know and I will answer.
 msgstr Opýtaj sa ma čo chceš vedieť a ja ti odpoviem.
 
+msgid Morning
+msgstr Ráno
+
+msgid Day
+msgstr Deň
+
+msgid Evening
+msgstr Večer
+
+msgid Night
+msgstr Noc
+
+msgid An error occured while getting weather info.
+msgstr Pri získavaní počasia nastala chyba.
+
+msgid Weather forecast for _{date}_ in _{place}_
+msgstr Predpoveď počasia na _{date}_ pre _{place}_
+
+msgid Temperature: **{temp}** ˚C
+msgstr Teplota: **{temp}** ˚C
+
+msgid Feels like: **{feel}** ˚C
+msgstr Pocitová teplota: **{feel}** ˚C
+
+msgid Wind speed: **{speed}** km/h
+msgstr Rýchlosť vetra: **{speed}** km/h
+
+msgid Chance of rain: **{chance}** %
+msgstr Pravdepodobnosť zrážok: **{chance}** %
+
+msgid Weather map for today
+msgstr Mapa počasia na dnes
+
 msgid That's not valid place name.
 msgstr
 
