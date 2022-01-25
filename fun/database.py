@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 from sqlalchemy import BigInteger, Column, Integer, String, func
 
@@ -84,6 +84,32 @@ class Relation(database.base):
         )
 
         return gave, got
+
+    def get_given_top(
+        guild_id: int, user_id: int, action: str, limit: int
+    ) -> List[Relation]:
+        """Get top given relations for given action."""
+        query = (
+            session.query(Relation)
+            .filter_by(guild_id=guild_id, sender_id=user_id, action=action)
+            .order_by(Relation.value.desc())
+            .limit(limit)
+            .all()
+        )
+        return query
+
+    def get_received_top(
+        guild_id: int, user_id: int, action: str, limit: int
+    ) -> List[Relation]:
+        """Get top received relations for given action."""
+        query = (
+            session.query(Relation)
+            .filter_by(guild_id=guild_id, receiver_id=user_id, action=action)
+            .order_by(Relation.value.desc())
+            .limit(limit)
+            .all()
+        )
+        return query
 
     def save(self):
         session.commit()

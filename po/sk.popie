@@ -82,6 +82,30 @@ msgstr Vzťahy
 msgid gave / got
 msgstr rozdané / získané
 
+msgid Relations: {action}
+msgstr
+
+msgid Relation statistics: {gave} given, {got} received.
+msgstr
+
+msgid Unknown user
+msgstr
+
+msgid Top {count} given
+msgstr
+
+msgid Nothing given
+msgstr
+
+msgid No data available.
+msgstr
+
+msgid Top {count} received
+msgstr
+
+msgid Nothing received
+msgstr
+
 msgid This server does not have defined any macros.
 msgstr Tento server nemá žiadne makrá.
 
