@@ -116,8 +116,9 @@ class Relation(database.base):
 
     def __repr__(self) -> str:
         return (
-            f'<Relation idx="{self.idx}" guild_id="{self.guild_id}" '
-            f'sender_id="{self.sender_id}" receiver_id="{self.receiver_id}" action="{self.action}">'
+            f'<Relation guild_id="{self.guild_id}" '
+            f'sender_id="{self.sender_id}" receiver_id="{self.receiver_id}" '
+            f'action="{self.action}" value="{self.value}">'
         )
 
     def dump(self) -> dict:
@@ -126,4 +127,5 @@ class Relation(database.base):
             "sender_id": self.sender_id,
             "receiver_id": self.receiver_id,
             "action": self.action,
+            "value": self.value,
         }

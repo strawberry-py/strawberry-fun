@@ -477,8 +477,6 @@ class Fun(commands.Cog):
     @commands.command()
     async def relations(self, ctx, *, user: nextcord.User = None):
         """Get your information about hugs, pets, ..."""
-        await utils.discord.delete_message(ctx.message)
-
         if user is None:
             user = ctx.author
 
