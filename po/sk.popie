@@ -83,28 +83,28 @@ msgid gave / got
 msgstr rozdané / získané
 
 msgid Relations: {action}
-msgstr
+msgstr Vzťahy: {action}
 
 msgid Relation statistics: {gave} given, {got} received.
-msgstr
+msgstr Štatistika vzťahov: {gave} rozdané, {got} získané.
 
 msgid Unknown user
-msgstr
+msgstr Neznámy používateľ
 
 msgid Top {count} given
-msgstr
+msgstr Top {count} v rozdaní
 
 msgid Nothing given
-msgstr
+msgstr Nič nebolo rozdané
 
 msgid No data available.
-msgstr
+msgstr Žiadne dáta.
 
 msgid Top {count} received
-msgstr
+msgstr Top {count} v prijatí
 
 msgid Nothing received
-msgstr
+msgstr Nič nebolo prijaté
 
 msgid This server does not have defined any macros.
 msgstr Tento server nemá žiadne makrá.
@@ -224,28 +224,28 @@ msgid Weather map for today
 msgstr Mapa počasia na dnes
 
 msgid That's not valid place name.
-msgstr
+msgstr Tento názov miesta nieje platný.
 
 msgid Your preferred weather place set to **{place}**.
-msgstr
+msgstr Tvoje preferované miesto na počasie bolo nastavené na **{place}**.
 
 msgid You don't have any place preference saved.
-msgstr
+msgstr Nemáš nastavené žiadne preferované miesto počasia.
 
 msgid Your preferred weather place was removed.
-msgstr
+msgstr Tvoje preferované miesto počasia bolo zmazané.
 
 msgid Guild's preferred weather place set to **{place}**.
-msgstr
+msgstr Preferované miesto počasia guildy bolo nastavené na **{place}**.
 
 msgid This server doesn't have any place preference saved.
-msgstr
+msgstr Tento server nemá nastavené žiadne preferované miesto počasia.
 
 msgid Guild's preferred weather place was removed.
-msgstr
+msgstr Preferované miesto počasia guildy bolo zmazané.
 
 msgid You have to specify a place or set a preference.
-msgstr
+msgstr Musíš zadať miesto alebo si nastaviť preferenciu.
 
 msgid Characters
 msgstr Znaky
