@@ -82,6 +82,30 @@ msgstr Vztahy
 msgid gave / got
 msgstr rozdáno / získáno
 
+msgid Relations: {action}
+msgstr Vztahy: {action}
+
+msgid Relation statistics: {gave} given, {got} received.
+msgstr Statistiky vztahu: {gave} rozdáno, {got} získáno.
+
+msgid Unknown user
+msgstr Neznámý uživatel
+
+msgid Top {count} given
+msgstr Nejvyšších {count} rozdáno
+
+msgid Nothing given
+msgstr Nic nerozdáno
+
+msgid No data available.
+msgstr Data nejsou k dispozici.
+
+msgid Top {count} received
+msgstr Nejvyšších {count} získáno
+
+msgid Nothing received
+msgstr Nic nezískáno
+
 msgid This server does not have defined any macros.
 msgstr Tento server nemá žádná makra.
 

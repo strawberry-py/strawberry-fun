@@ -5,7 +5,7 @@ import random
 import numpy as np
 from io import BytesIO
 from PIL import Image, ImageDraw
-from typing import List, Set, Tuple, Union
+from typing import List, Set, Tuple, Optional, Union
 from pathlib import Path
 
 import nextcord
@@ -21,9 +21,21 @@ _ = i18n.Translator("modules/fun").translate
 config = pie.database.config.Config.get()
 
 DATA_DIR = Path(__file__).parent / "data"
+ACTIONS = (
+    "hug",
+    "pet",
+    "hyperpet",
+    "slap",
+    "bonk",
+    "spank",
+    "whip",
+    "lick",
+    "hyperlick",
+    "highfive",
+)
 
 
-class Meme(commands.Cog):
+class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -465,8 +477,6 @@ class Meme(commands.Cog):
     @commands.command()
     async def relations(self, ctx, *, user: nextcord.User = None):
         """Get your information about hugs, pets, ..."""
-        await utils.discord.delete_message(ctx.message)
-
         if user is None:
             user = ctx.author
 
@@ -476,21 +486,7 @@ class Meme(commands.Cog):
             description=_(ctx, "gave / got"),
         )
 
-        avatar_url: str = user.display_avatar.replace(size=256).url
-        embed.set_thumbnail(url=avatar_url)
-
-        for action in (
-            "hug",
-            "pet",
-            "hyperpet",
-            "slap",
-            "bonk",
-            "spank",
-            "whip",
-            "lick",
-            "hyperlick",
-            "highfive",
-        ):
+        for action in ACTIONS:
             action_stats = Relation.get_user_relation(ctx.guild.id, user.id, action)
 
             if action_stats[0] == 0 and action_stats[1] == 0:
@@ -501,7 +497,18 @@ class Meme(commands.Cog):
                 value=f"{action_stats[0]} / {action_stats[1]}",
             )
 
-        await ctx.send(embed=embed)
+        action_embeds: List[nextcord.Embed] = [
+            Fun.get_action_embed(ctx, user.id, action) for action in ACTIONS
+        ]
+        embeds: List[nextcord.Embed] = [embed] + [
+            e for e in action_embeds if e is not None
+        ]
+
+        avatar_url: str = user.display_avatar.replace(size=256).url
+        embeds = [e.set_thumbnail(url=avatar_url) for e in embeds]
+
+        scollable = utils.ScrollableEmbed(ctx, embeds)
+        await scollable.scroll()
 
     @commands.command(aliases=["owo"])
     async def uwu(self, ctx, *, message: str = None):
@@ -739,6 +746,66 @@ class Meme(commands.Cog):
 
         return frames
 
+    @staticmethod
+    def get_action_embed(
+        ctx: commands.Context, user_id: int, action: str
+    ) -> Optional[nextcord.Embed]:
+        gave, got = Relation.get_user_relation(ctx.guild.id, user_id, action)
+        if not gave and not got:
+            return None
+
+        embed = utils.discord.create_embed(
+            title=_(ctx, "Relations: {action}").format(action=action),
+            description=_(
+                ctx, "Relation statistics: {gave} given, {got} received."
+            ).format(gave=gave, got=got),
+            author=ctx.author,
+        )
+
+        given = Relation.get_given_top(ctx.guild.id, user_id, action, limit=10)
+        if given:
+            content: List[str] = []
+            for item in given:
+                member = ctx.guild.get_member(item.receiver_id)
+                member_str = (
+                    utils.text.sanitise(member.display_name)
+                    if member
+                    else "*" + _(ctx, "Unknown user") + "*"
+                )
+                content.append(f"`{item.value:>3}` … {member_str}")
+
+            embed.add_field(
+                name=_(ctx, "Top {count} given").format(count=len(given)),
+                value="\n".join(content),
+            )
+        else:
+            embed.add_field(
+                name=_(ctx, "Nothing given"), value=_(ctx, "No data available.")
+            )
+
+        received = Relation.get_received_top(ctx.guild.id, user_id, action, limit=10)
+        if received:
+            content: List[str] = []
+            for item in received:
+                member = ctx.guild.get_member(item.sender_id)
+                member_str = (
+                    utils.text.sanitise(member.display_name)
+                    if member
+                    else "*" + _(ctx, "Unknown user") + "*"
+                )
+                content.append(f"`{item.value:>3}` … {member_str}")
+
+            embed.add_field(
+                name=_(ctx, "Top {count} received").format(count=len(received)),
+                value="\n".join(content),
+            )
+        else:
+            embed.add_field(
+                name=_(ctx, "Nothing received"), value=_(ctx, "No data available.")
+            )
+
+        return embed
+
 
 def setup(bot) -> None:
-    bot.add_cog(Meme(bot))
+    bot.add_cog(Fun(bot))

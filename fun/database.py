@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 from sqlalchemy import BigInteger, Column, Integer, String, func
 
@@ -85,13 +85,40 @@ class Relation(database.base):
 
         return gave, got
 
+    def get_given_top(
+        guild_id: int, user_id: int, action: str, limit: int
+    ) -> List[Relation]:
+        """Get top given relations for given action."""
+        query = (
+            session.query(Relation)
+            .filter_by(guild_id=guild_id, sender_id=user_id, action=action)
+            .order_by(Relation.value.desc())
+            .limit(limit)
+            .all()
+        )
+        return query
+
+    def get_received_top(
+        guild_id: int, user_id: int, action: str, limit: int
+    ) -> List[Relation]:
+        """Get top received relations for given action."""
+        query = (
+            session.query(Relation)
+            .filter_by(guild_id=guild_id, receiver_id=user_id, action=action)
+            .order_by(Relation.value.desc())
+            .limit(limit)
+            .all()
+        )
+        return query
+
     def save(self):
         session.commit()
 
     def __repr__(self) -> str:
         return (
-            f'<Relation idx="{self.idx}" guild_id="{self.guild_id}" '
-            f'sender_id="{self.sender_id}" receiver_id="{self.receiver_id}" action="{self.action}">'
+            f'<Relation guild_id="{self.guild_id}" '
+            f'sender_id="{self.sender_id}" receiver_id="{self.receiver_id}" '
+            f'action="{self.action}" value="{self.value}">'
         )
 
     def dump(self) -> dict:
@@ -100,4 +127,5 @@ class Relation(database.base):
             "sender_id": self.sender_id,
             "receiver_id": self.receiver_id,
             "action": self.action,
+            "value": self.value,
         }
