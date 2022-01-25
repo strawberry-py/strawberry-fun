@@ -23,7 +23,7 @@ config = pie.database.config.Config.get()
 DATA_DIR = Path(__file__).parent / "data"
 
 
-class Meme(commands.Cog):
+class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -741,4 +741,4 @@ class Meme(commands.Cog):
 
 
 def setup(bot) -> None:
-    bot.add_cog(Meme(bot))
+    bot.add_cog(Fun(bot))
