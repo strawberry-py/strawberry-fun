@@ -33,7 +33,7 @@ ACTIONS = (
     "lick",
     "hyperlick",
 )
-EMBED_LIST_LIMIT: int = 2
+EMBED_LIST_LIMIT: int = 5
 
 
 class Fun(commands.Cog):
