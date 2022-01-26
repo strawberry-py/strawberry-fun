@@ -76,23 +76,23 @@ msgstr To robiť nemôžeš, nie sú v tomto kanáli.
 msgid **{user}** did not highfive you back on time in #{channel}.
 msgstr Užívateľ **{user}** ti v kanáli #{channel} nestihol na highfive odpovedať.
 
-msgid Relations
-msgstr Vzťahy
+msgid Relations {name}
+msgstr Vzťahy {name}
 
 msgid gave / got
 msgstr rozdané / získané
 
-msgid Relations: {action}
-msgstr Vzťahy: {action}
+msgid Relations {name}: {action}
+msgstr Vzťahy {name}: {action}
 
 msgid Relation statistics: {gave} given, {got} received.
-msgstr Štatistika vzťahov: {gave} rozdané, {got} získané.
+msgstr Štatistika vzťahu: {gave} rozdané, {got} získané.
 
 msgid Unknown user
 msgstr Neznámy používateľ
 
-msgid Top {count} given
-msgstr Top {count} v rozdaní
+msgid Given
+msgstr Rozdáno
 
 msgid Nothing given
 msgstr Nič nebolo rozdané
@@ -100,8 +100,8 @@ msgstr Nič nebolo rozdané
 msgid No data available.
 msgstr Žiadne dáta.
 
-msgid Top {count} received
-msgstr Top {count} v prijatí
+msgid Received
+msgstr Prijato
 
 msgid Nothing received
 msgstr Nič nebolo prijaté

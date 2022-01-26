@@ -25,14 +25,15 @@ ACTIONS = (
     "hug",
     "pet",
     "hyperpet",
+    "highfive",
+    "spank",
     "slap",
     "bonk",
-    "spank",
     "whip",
     "lick",
     "hyperlick",
-    "highfive",
 )
+EMBED_LIST_LIMIT: int = 2
 
 
 class Fun(commands.Cog):
@@ -477,7 +478,9 @@ class Fun(commands.Cog):
 
         embed = utils.discord.create_embed(
             author=ctx.author,
-            title=_(ctx, "Relations"),
+            title=_(ctx, "Relations {name}").format(
+                name=utils.text.sanitise(user.display_name)
+            ),
             description=_(ctx, "gave / got"),
         )
 
@@ -493,7 +496,7 @@ class Fun(commands.Cog):
             )
 
         action_embeds: List[nextcord.Embed] = [
-            Fun.get_action_embed(ctx, user.id, action) for action in ACTIONS
+            Fun.get_action_embed(ctx, user, action) for action in ACTIONS
         ]
         embeds: List[nextcord.Embed] = [embed] + [
             e for e in action_embeds if e is not None
@@ -754,21 +757,25 @@ class Fun(commands.Cog):
 
     @staticmethod
     def get_action_embed(
-        ctx: commands.Context, user_id: int, action: str
+        ctx: commands.Context, user: Union[nextcord.User, nextcord.Member], action: str
     ) -> Optional[nextcord.Embed]:
-        gave, got = Relation.get_user_relation(ctx.guild.id, user_id, action)
+        gave, got = Relation.get_user_relation(ctx.guild.id, user.id, action)
         if not gave and not got:
             return None
 
         embed = utils.discord.create_embed(
-            title=_(ctx, "Relations: {action}").format(action=action),
+            title=_(ctx, "Relations {name}: {action}").format(
+                name=utils.text.sanitise(user.display_name), action=action
+            ),
             description=_(
                 ctx, "Relation statistics: {gave} given, {got} received."
             ).format(gave=gave, got=got),
             author=ctx.author,
         )
 
-        given = Relation.get_given_top(ctx.guild.id, user_id, action, limit=10)
+        given = Relation.get_given_top(
+            ctx.guild.id, user.id, action, limit=EMBED_LIST_LIMIT
+        )
         if given:
             content: List[str] = []
             for item in given:
@@ -781,15 +788,20 @@ class Fun(commands.Cog):
                 content.append(f"`{item.value:>3}` … {member_str}")
 
             embed.add_field(
-                name=_(ctx, "Top {count} given").format(count=len(given)),
+                name=_(ctx, "Given"),
                 value="\n".join(content),
+                inline=False,
             )
         else:
             embed.add_field(
-                name=_(ctx, "Nothing given"), value=_(ctx, "No data available.")
+                name=_(ctx, "Nothing given"),
+                value=_(ctx, "No data available."),
+                inline=False,
             )
 
-        received = Relation.get_received_top(ctx.guild.id, user_id, action, limit=10)
+        received = Relation.get_received_top(
+            ctx.guild.id, user.id, action, limit=EMBED_LIST_LIMIT
+        )
         if received:
             content: List[str] = []
             for item in received:
@@ -802,12 +814,15 @@ class Fun(commands.Cog):
                 content.append(f"`{item.value:>3}` … {member_str}")
 
             embed.add_field(
-                name=_(ctx, "Top {count} received").format(count=len(received)),
+                name=_(ctx, "Received"),
                 value="\n".join(content),
+                inline=False,
             )
         else:
             embed.add_field(
-                name=_(ctx, "Nothing received"), value=_(ctx, "No data available.")
+                name=_(ctx, "Nothing received"),
+                value=_(ctx, "No data available."),
+                inline=False,
             )
 
         return embed
