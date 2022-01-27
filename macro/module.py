@@ -145,20 +145,20 @@ class Macro(commands.Cog):
                 value="\n".join(extra),
             )
 
-        if macro.channels:
-            channels = [ctx.guild.get_channel(c.channel_id) for c in macro.channels]
+        channels = [ctx.guild.get_channel(c.channel_id) for c in macro.channels]
+        channels = [c for c in channels if c is not None]
+        if channels:
             embed.add_field(
                 name=_(ctx, "Channels"),
-                value="\n".join(f"#{c.name}" for c in channels if c is not None),
+                value="\n".join(f"#{c.name}" for c in channels),
                 inline=False,
             )
-        if macro.users:
-            users = [ctx.guild.get_member(u.user_id) for u in macro.users]
+        users = [ctx.guild.get_member(u.user_id) for u in macro.users]
+        users = [u for u in users if u is not None]
+        if users:
             embed.add_field(
                 name=_(ctx, "Users"),
-                value="\n".join(
-                    utils.text.sanitise(u.display_name) for u in users if u is not None
-                ),
+                value="\n".join(utils.text.sanitise(u.display_name) for u in users),
                 inline=False,
             )
 
@@ -179,8 +179,8 @@ class Macro(commands.Cog):
         parser.add_argument("--delete-trigger", type=bool, default=None)
         parser.add_argument("--sensitive", type=bool, default=None)
         parser.add_argument("--match", type=str, choices=[m.name for m in MacroMatch])
-        parser.add_argument("--channels", type=int, nargs="?")
-        parser.add_argument("--users", type=int, nargs="?")
+        parser.add_argument("--channels", type=int, nargs="+")
+        parser.add_argument("--users", type=int, nargs="+")
         args = parser.parse_args(shlex.split(parameters))
         if parser.error_message:
             await ctx.reply(
@@ -199,6 +199,9 @@ class Macro(commands.Cog):
         for kw in ("channels", "users"):
             if getattr(args, kw).__class__ is int:
                 setattr(args, kw, [getattr(args, kw)])
+            # disable channel/user overwrites by supplying 0
+            if getattr(args, kw) == [0]:
+                setattr(args, kw, [])
 
         return args
 
@@ -214,8 +217,8 @@ class Macro(commands.Cog):
             --delete-trigger: Whether to delete the trigger message; defaults to False.
             --sensitive: Case-sensitivity; defaults to False.
             --match: One of FULL, START, END, ANY.
-            --channels: Optional list of channel IDs where this macro will work.
-            --users: Optional list of user IDs for which this macro wil work.
+            --channels: Optional list of channel IDs where this macro will work. Reset by supplying 0.
+            --users: Optional list of user IDs for which this macro wil work. Reset by supplying 0.
         """
         if TextMacro.get(guild_id=ctx.guild.id, name=name):
             await ctx.reply(_(ctx, "Macro with that name already exists."))
@@ -265,8 +268,8 @@ class Macro(commands.Cog):
             --delete-trigger: Whether to delete the trigger message; defaults to False.
             --sensitive: Case-sensitivity; defaults to False.
             --match: One of FULL, START, END, ANY.
-            --channels: Optional list of channel IDs where this macro will work.
-            --users: Optional list of user IDs for which this macro wil work.
+            --channels: Optional list of channel IDs where this macro will work. Reset by supplying 0.
+            --users: Optional list of user IDs for which this macro wil work. Reset by supplying 0.
         """
         macro = TextMacro.get(guild_id=ctx.guild.id, name=name)
         if not macro:
