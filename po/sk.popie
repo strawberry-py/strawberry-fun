@@ -125,31 +125,31 @@ msgid Macro with that name does not exist.
 msgstr Makro s takým menom neexistuje.
 
 msgid Macro details: {name}
-msgstr
+msgstr Detaily o makre: {name}
 
 msgid This macro was run {count} times in total.
-msgstr
+msgstr Toto makro bolo celkom spustené {count}-krát.
 
 msgid Responses
-msgstr
+msgstr Odpovede
 
 msgid Case sensitive
-msgstr
+msgstr Rozlíšenie veľkosti písmen
 
 msgid Forward to DM
-msgstr
+msgstr Preposlať do DM
 
 msgid Delete the trigger
-msgstr
+msgstr Zmazať spúšťač
 
 msgid Extra
-msgstr
+msgstr Extra
 
 msgid Channels
-msgstr
+msgstr Kanály
 
 msgid Users
-msgstr
+msgstr Užívatelia
 
 msgid Macro could not be added:
 msgstr Makro nemohlo byť pridané:

@@ -128,7 +128,7 @@ msgid Macro details: {name}
 msgstr Detaily o makru: {name}
 
 msgid This macro was run {count} times in total.
-msgstr Toto makro bylo celkem spuštěno {count} times.
+msgstr Toto makro bylo celkem spuštěno {count}-krát.
 
 msgid Responses
 msgstr Odpovědi
