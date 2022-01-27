@@ -121,6 +121,36 @@ msgstr Spuštění
 msgid Triggers
 msgstr Spouštěče
 
+msgid Macro with that name does not exist.
+msgstr Makro s takovým názvem neexistuje.
+
+msgid Macro details: {name}
+msgstr Detaily o makru: {name}
+
+msgid This macro was run {count} times in total.
+msgstr Toto makro bylo celkem spuštěno {count} times.
+
+msgid Responses
+msgstr Odpovědi
+
+msgid Case sensitive
+msgstr
+
+msgid Forward to DM
+msgstr Přeposlat do DM
+
+msgid Delete the trigger
+msgstr Smazat spouštěč
+
+msgid Extra
+msgstr Extra
+
+msgid Channels
+msgstr Kanály
+
+msgid Users
+msgstr Uživatelé
+
 msgid Macro could not be added:
 msgstr Makro nemohlo být přidáno:
 
@@ -132,9 +162,6 @@ msgstr Musí být uveden argument --{arg}.
 
 msgid Macro **{name}** created.
 msgstr Makro **{name}** vytvořeno.
-
-msgid Macro with that name does not exist.
-msgstr Makro s takovým názvem neexistuje.
 
 msgid No arguments specified.
 msgstr Nebyly uvedeny žádné argument.y

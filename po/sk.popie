@@ -121,6 +121,36 @@ msgstr Spustenie
 msgid Triggers
 msgstr Spúšťače
 
+msgid Macro with that name does not exist.
+msgstr Makro s takým menom neexistuje.
+
+msgid Macro details: {name}
+msgstr
+
+msgid This macro was run {count} times in total.
+msgstr
+
+msgid Responses
+msgstr
+
+msgid Case sensitive
+msgstr
+
+msgid Forward to DM
+msgstr
+
+msgid Delete the trigger
+msgstr
+
+msgid Extra
+msgstr
+
+msgid Channels
+msgstr
+
+msgid Users
+msgstr
+
 msgid Macro could not be added:
 msgstr Makro nemohlo byť pridané:
 
@@ -132,9 +162,6 @@ msgstr Musí byť uvedený argument --{arg}.
 
 msgid Macro **{name}** created.
 msgstr Makro **{name}** vytvorené.
-
-msgid Macro with that name does not exist.
-msgstr Makro s takým menom neexistuje.
 
 msgid No arguments specified.
 msgstr Neboli uvedené žiadne argumenty.

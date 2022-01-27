@@ -2,7 +2,7 @@ import argparse
 import random
 import shlex
 from collections import defaultdict
-from typing import Any, Dict, Optional, Iterable, Generator
+from typing import Any, Dict, Iterable, List, Optional, Generator
 
 from discord.ext import commands
 
@@ -98,6 +98,70 @@ class Macro(commands.Cog):
         )
         for page in table:
             await ctx.send("```" + page + "```")
+
+    @commands.check(check.acl)
+    @macro_.command(name="get")
+    async def macro_get(self, ctx, *, name: str):
+        """Display full macro details."""
+        macro = TextMacro.get(guild_id=ctx.guild.id, name=name)
+        if macro is None:
+            await ctx.reply(_(ctx, "Macro with that name does not exist."))
+            return
+
+        embed = utils.discord.create_embed(
+            title=_(ctx, "Macro details: {name}").format(name=name),
+            author=ctx.author,
+            description=_(ctx, "This macro was run {count} times in total.").format(
+                count=macro.counter,
+            ),
+        )
+        embed.add_field(
+            name=_(ctx, "Triggers"),
+            value="\n".join(m.text for m in macro.triggers),
+            inline=False,
+        )
+        embed.add_field(
+            name=_(ctx, "Responses"),
+            value="\n".join(m.text for m in macro.responses),
+            inline=False,
+        )
+        embed.add_field(
+            name=_(ctx, "Match"),
+            value=macro.match.name,
+        )
+        embed.add_field(
+            name=_(ctx, "Case sensitive"),
+            value=_(ctx, "Yes") if macro.sensitive else _(ctx, "No"),
+        )
+        extra: List[str] = []
+        if macro.dm:
+            extra.append(_(ctx, "Forward to DM"))
+        if macro.delete_trigger:
+            extra.append(_(ctx, "Delete the trigger"))
+        if extra:
+            embed.add_field(
+                name=_(ctx, "Extra"),
+                value="\n".join(extra),
+            )
+
+        if macro.channels:
+            channels = [ctx.guild.get_channel(c.channel_id) for c in macro.channels]
+            embed.add_field(
+                name=_(ctx, "Channels"),
+                value="\n".join(f"#{c.name}" for c in channels if c is not None),
+                inline=False,
+            )
+        if macro.users:
+            users = [ctx.guild.get_member(u.user_id) for u in macro.users]
+            embed.add_field(
+                name=_(ctx, "Users"),
+                value="\n".join(
+                    utils.text.sanitise(u.display_name) for u in users if u is not None
+                ),
+                inline=False,
+            )
+
+        await ctx.reply(embed=embed)
 
     async def _parse_macro_parameters(
         self, ctx: commands.Context, parameters: str
