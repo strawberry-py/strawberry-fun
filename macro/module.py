@@ -75,6 +75,7 @@ class Macro(commands.Cog):
     @commands.check(check.acl)
     @macro_.command(name="list")
     async def macro_list(self, ctx):
+        """List macros defined on this server."""
         macros = TextMacro.get_all(ctx.guild.id)
         if not macros:
             await ctx.reply(_(ctx, "This server does not have defined any macros."))
@@ -247,9 +248,7 @@ class Macro(commands.Cog):
         )
 
         await ctx.reply(_(ctx, "Macro **{name}** created.").format(name=name))
-        await guild_log.info(
-            ctx.author, ctx.channel, f"New {args.match}-matched macro '{name}'."
-        )
+        await guild_log.info(ctx.author, ctx.channel, f"New macro '{name}'.")
         self._refresh_triggers()
 
     @commands.check(check.acl)
@@ -299,14 +298,13 @@ class Macro(commands.Cog):
         macro.update(**filtered_args)
 
         await ctx.reply(_(ctx, "Macro **{name}** updated.").format(name=name))
-        await guild_log.info(
-            ctx.author, ctx.channel, f"Updated {args.match}-matched macro '{name}'."
-        )
+        await guild_log.info(ctx.author, ctx.channel, f"Updated macro '{name}'.")
         self._refresh_triggers()
 
     @commands.check(check.acl)
     @macro_.command(name="remove")
     async def macro_remove(self, ctx, name: str):
+        """Remove existing macro."""
         removed: int = TextMacro.remove(ctx.guild.id, name)
 
         if removed == 0:
