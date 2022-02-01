@@ -479,7 +479,7 @@ class Dhash(commands.Cog):
                     auto_decompress=False,
                     read_bufsize=256,
                 ) as session:
-                    async with session.get(url) as resp:
+                    async with session.get(url, read_until_eof=False) as resp:
                         if resp.status != 200:
                             continue
                         size = resp.headers.get("content-length")
