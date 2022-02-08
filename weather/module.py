@@ -1,5 +1,6 @@
-from typing import Optional, List
 import aiohttp
+import datetime
+from typing import Optional, List
 
 import nextcord
 from nextcord.ext import commands
@@ -20,7 +21,7 @@ NUM_OF_FORECAST_DAYS = 3
 DAY_PHASES = {
     "Morning": 2,
     "Day": 4,
-    # "Evening": 6,
+    "Evening": 6,
     "Night": 7,
 }
 
@@ -40,6 +41,16 @@ class Weather(commands.Cog):
             return _(ctx, "Evening")
         if day_phase == "Night":
             return _(ctx, "Night")
+
+    def _get_current_day_phase(self, ctx: commands.Context) -> str:
+        now = datetime.datetime.now()
+        if now.hour <= 6:
+            return _(ctx, "Morning")
+        if now.hour <= 12:
+            return _(ctx, "Day")
+        if now.hour <= 18:
+            return _(ctx, "Evening")
+        return _(ctx, "Night")
 
     def _get_useful_data(
         self, all_data: dict, ctx: commands.Context, lang_preference: str
@@ -103,48 +114,79 @@ class Weather(commands.Cog):
                 )
             ]
 
+        current_day_phase: str = self._get_current_day_phase(ctx)
+
         # create day embeds
         days = self._get_useful_data(resp_json, ctx, lang_preference)
         embeds = []
-        for day in days:
+        for i, day in enumerate(days):
+            title: str
+            if i == 0:
+                title = _(ctx, "Today")
+            elif i == 1:
+                title = _(ctx, "Tomorrow")
+            else:
+                title = _(ctx, day["date"])
+
+            if i == 0:
+                # Show current weather in title
+                now = day[current_day_phase]
+                title = f"{title}: {now['state']}, {now['temp']} ˚C"
+            else:
+                # Show maximum and minimum in title
+                temperatures = [
+                    int(info["temp"])
+                    for phase, info in day.items()
+                    if type(info) is dict
+                ]
+                min_t, max_t = min(temperatures), max(temperatures)
+                title = f"{title}: {min_t}\N{EN DASH}{max_t} °C"
+
             embed = utils.discord.create_embed(
                 author=ctx.message.author,
-                title=_(ctx, "Weather forecast for _{date}_ in _{place}_").format(
-                    date=day["date"], place=day["nearest_place"]
+                title=title,
+                description=_(ctx, "Weather forecast for **{place}**, {date}").format(
+                    date=day["date"], place=name
                 ),
             )
+
+            skip_day_phase: bool = True
             for day_phase, weather_info in day.items():
                 # skip 'date' and 'nearest_place' strings
-                if type(weather_info) == str:
+                if type(weather_info) != dict:
                     continue
-                temp_str = _(ctx, "Temperature: **{temp}** ˚C").format(
-                    temp=weather_info["temp"]
-                )
-                feel_str = _(ctx, "Feels like: **{feel}** ˚C").format(
-                    feel=weather_info["feels_like"]
-                )
-                wind_str = _(ctx, "Wind speed: **{speed}** km/h").format(
-                    speed=weather_info["wind_speed"]
-                )
-                rain_str = _(ctx, "Chance of rain: **{chance}** %").format(
-                    chance=weather_info["rain_chance"]
-                )
-                info_str = f"""
-                    - {temp_str}
-                    - {feel_str}
-                    - {wind_str}
-                    - {rain_str}"""
+                # skip today's day phase if it has already ended
+                if day_phase == current_day_phase:
+                    skip_day_phase = False
+                if i == 0 and skip_day_phase:
+                    continue
+
                 embed.add_field(
-                    name=day_phase + f": {weather_info['state']}",
-                    value=info_str,
+                    name=f"{day_phase}: {weather_info['state']}",
+                    value=_(
+                        ctx, "Temperature: **{real} ˚C** (feels like **{feel} ˚C**)"
+                    ).format(
+                        real=weather_info["temp"],
+                        feel=weather_info["feels_like"],
+                    )
+                    + "\n"
+                    + _(ctx, "Wind speed: **{wind} km/h**").format(
+                        wind=weather_info["wind_speed"],
+                    )
+                    + "\n"
+                    + _(ctx, "Chance of rain: **{rain} %**").format(
+                        rain=weather_info["rain_chance"],
+                    ),
                     inline=False,
                 )
+
             embeds.append(embed)
 
         # create the last "map" embed
         embed = utils.discord.create_embed(
             author=ctx.message.author,
             title=_(ctx, "Weather map for today"),
+            description=name,
         )
         img_url = f"https://v3.wttr.in/{name}.png"
         embed.set_image(url=img_url)
@@ -193,7 +235,7 @@ class Weather(commands.Cog):
             ctx.author, ctx.channel, f"Guild's preferred weather place set to {name}."
         )
         await ctx.reply(
-            _(ctx, "Guild's preferred weather place set to **{place}**.").format(
+            _(ctx, "Server's preferred weather place set to **{place}**.").format(
                 place=name
             )
         )
@@ -211,10 +253,36 @@ class Weather(commands.Cog):
         await guild_log.debug(
             ctx.author, ctx.channel, "Guild's preferred weather place unset."
         )
-        await ctx.reply(_(ctx, "Guild's preferred weather place was removed."))
+        await ctx.reply(_(ctx, "Server's preferred weather place was removed."))
 
     @commands.check(check.acl)
-    @commands.group(name="weather")
+    @commands.command(
+        name="weather-place",
+        aliases=["weather-places", "weather-preference"],
+    )
+    async def weather_places(self, ctx):
+        """Diplay your and server preference for forecast."""
+        user_place = Place.get(ctx.guild.id, ctx.author.id)
+        guild_place = Place.get(ctx.guild.id, None)
+
+        embed = utils.discord.create_embed(
+            title=_(ctx, "Weather forecast preference"),
+            author=ctx.author,
+        )
+        embed.add_field(
+            name=_(ctx, "Your preference"),
+            value=getattr(user_place, "name", _(ctx, "*No preference set*")),
+            inline=False,
+        )
+        embed.add_field(
+            name=_(ctx, "Server preference"),
+            value=getattr(guild_place, "name", _(ctx, "*No preference set*")),
+            inline=False,
+        )
+        await ctx.reply(embed=embed)
+
+    @commands.check(check.acl)
+    @commands.command(name="weather")
     async def weather(self, ctx, name: Optional[str] = None):
         """Get weather information on any place."""
         if name is None:
