@@ -233,61 +233,76 @@ msgid Ask me what you want to know and I will answer.
 msgstr Zeptej se mě na to, co chceš vědět a já ti odpovím.
 
 msgid Morning
-msgstr
+msgstr Ráno
 
 msgid Day
-msgstr
+msgstr Dopoledne
 
 msgid Evening
-msgstr
+msgstr Odpoledne
 
 msgid Night
-msgstr
+msgstr Noc
 
 msgid An error occured while getting weather info.
-msgstr
+msgstr Při získávání informací o počasí došlo k chybě.
 
-msgid Weather forecast for _{date}_ in _{place}_
-msgstr
+msgid Today
+msgstr Dnes
 
-msgid Temperature: **{temp}** ˚C
-msgstr
+msgid Tomorrow
+msgstr Zítra
 
-msgid Feels like: **{feel}** ˚C
-msgstr
+msgid Weather forecast for **{place}**, {date}
+msgstr Předpověď počasí pro **{place}**, {date}
 
-msgid Wind speed: **{speed}** km/h
-msgstr
+msgid Temperature: **{real} ˚C** (feels like **{feel} ˚C**)
+msgstr Teplota: **{real} ˚C** (pocitově **{feel} ˚C**)
 
-msgid Chance of rain: **{chance}** %
-msgstr
+msgid Wind speed: **{wind} km/h**
+msgstr Rychlost větru: **{wind} km/h**
+
+msgid Chance of rain: **{rain} %**
+msgstr Pravděpodobnost srážek: **{rain} %**
 
 msgid Weather map for today
-msgstr
+msgstr Mapa pro dnešní den
 
 msgid That's not valid place name.
-msgstr
+msgstr To není platný název místa.
 
 msgid Your preferred weather place set to **{place}**.
-msgstr
+msgstr Preferované místo předpovědi počasí nastaveno na **{place}**.
 
 msgid You don't have any place preference saved.
-msgstr
+msgstr Nemáš nastavené preferované místo.
 
 msgid Your preferred weather place was removed.
-msgstr
+msgstr Preference místa předpovědi počasí byla odstraněna.
 
-msgid Guild's preferred weather place set to **{place}**.
-msgstr
+msgid Server's preferred weather place set to **{place}**.
+msgstr Preference místa předpovědi počasí pro server byla nastavena na **{place}**.
 
 msgid This server doesn't have any place preference saved.
-msgstr
+msgstr Tento server nemá nastavené preferované místo.
 
-msgid Guild's preferred weather place was removed.
-msgstr
+msgid Server's preferred weather place was removed.
+msgstr Preference místa předpovědi počasí pro server byla odstraněna.
+
+msgid Weather forecast preference
+msgstr Preference předpovědi počasí
+
+msgid Your preference
+msgstr Tvoje preference
+
+msgid *No preference set*
+msgstr *Nenastavena*
+
+msgid Server preference
+msgstr Preference serveru
 
 msgid You have to specify a place or set a preference.
-msgstr
+msgstr Musíš uvést místo nebo si nastavit preferenci.
 
 msgid Characters
 msgstr Charaktery

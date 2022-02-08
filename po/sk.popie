@@ -247,20 +247,23 @@ msgstr Noc
 msgid An error occured while getting weather info.
 msgstr Pri získavaní počasia nastala chyba.
 
-msgid Weather forecast for _{date}_ in _{place}_
-msgstr Predpoveď počasia na _{date}_ pre _{place}_
+msgid Today
+msgstr
 
-msgid Temperature: **{temp}** ˚C
-msgstr Teplota: **{temp}** ˚C
+msgid Tomorrow
+msgstr
 
-msgid Feels like: **{feel}** ˚C
-msgstr Pocitová teplota: **{feel}** ˚C
+msgid Weather forecast for **{place}**, {date}
+msgstr
 
-msgid Wind speed: **{speed}** km/h
-msgstr Rýchlosť vetra: **{speed}** km/h
+msgid Temperature: **{real} ˚C** (feels like **{feel} ˚C**)
+msgstr
 
-msgid Chance of rain: **{chance}** %
-msgstr Pravdepodobnosť zrážok: **{chance}** %
+msgid Wind speed: **{wind} km/h**
+msgstr
+
+msgid Chance of rain: **{rain} %**
+msgstr
 
 msgid Weather map for today
 msgstr Mapa počasia na dnes
@@ -277,14 +280,26 @@ msgstr Nemáš nastavené žiadne preferované miesto počasia.
 msgid Your preferred weather place was removed.
 msgstr Tvoje preferované miesto počasia bolo zmazané.
 
-msgid Guild's preferred weather place set to **{place}**.
-msgstr Preferované miesto počasia guildy bolo nastavené na **{place}**.
+msgid Server's preferred weather place set to **{place}**.
+msgstr
 
 msgid This server doesn't have any place preference saved.
 msgstr Tento server nemá nastavené žiadne preferované miesto počasia.
 
-msgid Guild's preferred weather place was removed.
-msgstr Preferované miesto počasia guildy bolo zmazané.
+msgid Server's preferred weather place was removed.
+msgstr
+
+msgid Weather forecast preference
+msgstr
+
+msgid Your preference
+msgstr
+
+msgid *No preference set*
+msgstr
+
+msgid Server preference
+msgstr
 
 msgid You have to specify a place or set a preference.
 msgstr Musíš zadať miesto alebo si nastaviť preferenciu.
