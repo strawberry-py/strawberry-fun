@@ -23,14 +23,14 @@ class TextMacro(database.base):
     idx = Column(Integer, primary_key=True, autoincrement=True)
     guild_id = Column(BigInteger)
     name = Column(String)
-    triggers = relationship("TextMacroTrigger", cascade="all, delete")
-    responses = relationship("TextMacroResponse", cascade="all, delete")
+    triggers = relationship(lambda: TextMacroTrigger, cascade="all, delete")
+    responses = relationship(lambda: TextMacroResponse, cascade="all, delete")
     dm = Column(Boolean)
     delete_trigger = Column(Boolean)
     sensitive = Column(Boolean)
     match = Column(Enum(MacroMatch))
-    channels = relationship("TextMacroChannel", cascade="all, delete")
-    users = relationship("TextMacroUser", cascade="all, delete")
+    channels = relationship(lambda: TextMacroChannel, cascade="all, delete")
+    users = relationship(lambda: TextMacroUser, cascade="all, delete")
     counter = Column(Integer, default=0)
 
     @staticmethod
