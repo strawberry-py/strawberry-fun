@@ -255,6 +255,7 @@ class Weather(commands.Cog):
         )
         await ctx.reply(_(ctx, "Server's preferred weather place was removed."))
 
+    @commands.guild_only()
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command(
         name="weather-place",
@@ -281,6 +282,7 @@ class Weather(commands.Cog):
         )
         await ctx.reply(embed=embed)
 
+    @commands.guild_only()
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command(name="weather")
     async def weather(self, ctx, name: Optional[str] = None):
