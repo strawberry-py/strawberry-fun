@@ -7,7 +7,7 @@ from urllib import parse as url_parse
 
 from nextcord.ext import commands
 
-from pie import utils, i18n
+from pie import check, utils, i18n
 
 _ = i18n.Translator("modules/fun").translate
 
@@ -68,6 +68,7 @@ class Urban(commands.Cog):
             embed_list.append(embed)
         return embed_list
 
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
     async def urban(self, ctx: commands.Context, search_term: Optional[str] = None):

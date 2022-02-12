@@ -12,7 +12,7 @@ import nextcord
 from nextcord.ext import commands
 
 import pie.database.config
-from pie import utils, i18n
+from pie import check, utils, i18n
 
 from .database import Relation
 from .image_utils import ImageUtils
@@ -44,6 +44,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=2, per=10.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def hug(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
         """Hug someone"""
@@ -70,6 +71,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=2, per=10.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def highfive(self, ctx, *, user: nextcord.Member):
         """Highfive someone
@@ -113,6 +115,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def whip(self, ctx, *, user: nextcord.Member = None):
         """Whip someone"""
@@ -158,6 +161,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def spank(self, ctx, *, user: nextcord.Member = None):
         """Spank someone"""
@@ -203,6 +207,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def pet(self, ctx, *, user: nextcord.Member = None):
         """Pet someone"""
@@ -248,6 +253,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def hyperpet(self, ctx, *, user: nextcord.Member = None):
         """Hyperpet someone"""
@@ -293,6 +299,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def bonk(self, ctx, *, user: nextcord.Member = None):
         """Bonk someone
@@ -341,6 +348,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def slap(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
         """Slap someone"""
@@ -380,6 +388,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=60.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def lick(self, ctx, *, user: nextcord.Member = None):
         """Lick someone"""
@@ -425,6 +434,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=60.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def hyperlick(self, ctx, *, user: nextcord.Member = None):
         """Hyperlick someone"""
@@ -470,6 +480,7 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
     async def relations(self, ctx, *, user: nextcord.User = None):
         """Get your information about hugs, pets, ..."""
@@ -508,6 +519,7 @@ class Fun(commands.Cog):
         scollable = utils.ScrollableEmbed(ctx, embeds)
         await scollable.scroll()
 
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command(aliases=["owo"])
     async def uwu(self, ctx, *, message: str = None):
         """UWUize message"""
@@ -521,6 +533,7 @@ class Fun(commands.Cog):
 
         await utils.discord.delete_message(ctx.message)
 
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command(aliases=["rcase", "randomise"])
     async def randomcase(self, ctx, *, message: str = None):
         """raNdOMisE cAsInG"""

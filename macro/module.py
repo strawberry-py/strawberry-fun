@@ -66,13 +66,13 @@ class Macro(commands.Cog):
     #
 
     @commands.guild_only()
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.SUBMOD)
     @commands.group(name="macro")
     async def macro_(self, ctx):
         """Manage automatic bot replies"""
         await utils.discord.send_help(ctx)
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.SUBMOD)
     @macro_.command(name="list")
     async def macro_list(self, ctx):
         """List macros defined on this server."""
@@ -100,7 +100,7 @@ class Macro(commands.Cog):
         for page in table:
             await ctx.send("```" + page + "```")
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.SUBMOD)
     @macro_.command(name="get")
     async def macro_get(self, ctx, *, name: str):
         """Display full macro details."""
@@ -205,7 +205,7 @@ class Macro(commands.Cog):
 
         return args
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MOD)
     @macro_.command(name="add")
     async def macro_add(self, ctx, name: str, *, parameters: str):
         """Add new macro.
@@ -254,7 +254,7 @@ class Macro(commands.Cog):
         await guild_log.info(ctx.author, ctx.channel, f"New macro '{name}'.")
         self._refresh_triggers()
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MOD)
     @macro_.command(name="update")
     async def macro_update(self, ctx, name: str, *, parameters: str):
         """Update existing macro.
@@ -304,7 +304,7 @@ class Macro(commands.Cog):
         await guild_log.info(ctx.author, ctx.channel, f"Updated macro '{name}'.")
         self._refresh_triggers()
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MOD)
     @macro_.command(name="remove")
     async def macro_remove(self, ctx, name: str):
         """Remove existing macro."""

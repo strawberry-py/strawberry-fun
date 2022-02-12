@@ -60,18 +60,19 @@ class Dhash(commands.Cog):
         return True
 
     @commands.guild_only()
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.SUBMOD)
     @commands.group(name="dhash")
     async def dhash(self, ctx):
         await utils.discord.send_help(ctx)
 
     @commands.guild_only()
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MOD)
     @dhash.group(name="regex")
     async def dhash_regex(self, ctx):
         await utils.discord.send_help(ctx)
 
-    @commands.check(check.acl)
+    @commands.guild_only()
+    @check.acl2(check.ACLevel.MOD)
     @dhash_regex.command(name="get")
     async def dhash_regex_get(self, ctx):
         if self.allowed_urls:
@@ -83,7 +84,8 @@ class Dhash(commands.Cog):
         else:
             await ctx.reply(_(ctx, "Regex for allowed URLs is not set."))
 
-    @commands.check(check.acl)
+    @commands.guild_only()
+    @check.acl2(check.ACLevel.MOD)
     @dhash_regex.command(name="unset")
     async def dhash_regex_unset(self, ctx):
         HashConfig.set("allowed_urls", None)
@@ -95,7 +97,8 @@ class Dhash(commands.Cog):
         )
         await ctx.reply(_(ctx, "Regex for allowed urls successfuly unset."))
 
-    @commands.check(check.acl)
+    @commands.guild_only()
+    @check.acl2(check.ACLevel.MOD)
     @dhash_regex.command(name="set")
     async def dhash_regex_set(self, ctx, regex: str):
         """Set regex used for limiting URL's domains.
@@ -126,7 +129,8 @@ class Dhash(commands.Cog):
             )
         )
 
-    @commands.check(check.acl)
+    @commands.guild_only()
+    @check.acl2(check.ACLevel.MOD)
     @dhash.command(name="add")
     async def dhash_add(
         self, ctx, channel: nextcord.TextChannel, reaction_limit: int = 5
@@ -154,7 +158,7 @@ class Dhash(commands.Cog):
             f"Channel #{channel.name} set as hash channel with reaction limit {reaction_limit}.",
         )
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MOD)
     @dhash.command(name="limit")
     async def dhash_limit(
         self, ctx, channel: nextcord.TextChannel, reaction_limit: int
@@ -192,7 +196,7 @@ class Dhash(commands.Cog):
             f"Changed reaction limit for channel #{channel.name} to {reaction_limit}.",
         )
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.SUBMOD)
     @dhash.command(name="list")
     async def dhash_list(self, ctx):
         hash_channels = HashChannel.get_all(ctx.guild.id)
@@ -211,7 +215,7 @@ class Dhash(commands.Cog):
 
         await ctx.reply("```" + "\n".join(result) + "```")
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MOD)
     @dhash.command(name="remove", aliases=["rem"])
     async def dhash_remove(self, ctx, channel: nextcord.TextChannel):
         if HashChannel.remove(ctx.guild.id, channel.id):
@@ -225,7 +229,7 @@ class Dhash(commands.Cog):
             message = _(ctx, "{channel} is not hash channel.")
         await ctx.reply(message.format(channel=channel.mention))
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MOD)
     @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     @commands.bot_has_permissions(read_message_history=True)
     @dhash.command(name="history")
@@ -296,7 +300,7 @@ class Dhash(commands.Cog):
             )
         )
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.SUBMOD)
     @dhash.command(name="compare", aliases=["messages"])
     async def dhash_compare(self, ctx, messages: commands.Greedy[nextcord.Message]):
         """Display hashes of given messages.

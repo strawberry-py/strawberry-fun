@@ -5,7 +5,7 @@ import nextcord
 from nextcord.ext import commands
 from nextcord.abc import PrivateChannel
 
-from pie import utils, i18n
+from pie import check, utils, i18n
 
 _ = i18n.Translator("modules/fun").translate
 
@@ -77,6 +77,8 @@ class Weeb(commands.Cog):
             return True
         return False
 
+    @commands.guild_only()
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.command()
     async def sauce(self, ctx, doujin_id: Optional[int] = None):

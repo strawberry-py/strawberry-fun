@@ -6,7 +6,7 @@ from typing import Optional, List, Dict
 import nextcord
 from nextcord.ext import commands
 
-from pie import utils, i18n
+from pie import check, utils, i18n
 
 _ = i18n.Translator("modules/fun").translate
 
@@ -16,6 +16,7 @@ class Rand(commands.Cog):
         self.bot = bot
 
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.EVERYONE)
     @commands.command(name="random")
     async def random_(self, ctx, first: int, second: Optional[int] = 0):
         """Generate random number within the interval"""
@@ -25,6 +26,7 @@ class Rand(commands.Cog):
         await ctx.reply(random.randint(first, second))
 
     @commands.cooldown(rate=3, per=20.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.EVERYONE)
     @commands.command()
     async def pick(self, ctx, first: str, second: str, *args):
         """Pick an option"""
@@ -44,6 +46,7 @@ class Rand(commands.Cog):
             await ctx.reply(option)
 
     @commands.cooldown(rate=3, per=20.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.EVERYONE)
     @commands.command()
     async def flip(self, ctx):
         """Yes/No"""
@@ -51,6 +54,7 @@ class Rand(commands.Cog):
         await ctx.reply(random.choice(choices))
 
     @commands.cooldown(rate=5, per=20, type=commands.BucketType.channel)
+    @check.acl2(check.ACLevel.EVERYONE)
     @commands.command(aliases=["unsplash"])
     async def picsum(self, ctx, *, seed: Optional[str] = None):
         """Get random image from picsum.photos"""
@@ -89,6 +93,7 @@ class Rand(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.cooldown(rate=5, per=20, type=commands.BucketType.channel)
+    @check.acl2(check.ACLevel.EVERYONE)
     @commands.command()
     async def cat(self, ctx):
         """Get random image of a cat"""
@@ -115,6 +120,7 @@ class Rand(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.cooldown(rate=5, per=20, type=commands.BucketType.channel)
+    @check.acl2(check.ACLevel.EVERYONE)
     @commands.command()
     async def dog(self, ctx):
         """Get random image of a dog"""
@@ -140,6 +146,7 @@ class Rand(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.cooldown(rate=5, per=60, type=commands.BucketType.channel)
+    @check.acl2(check.ACLevel.EVERYONE)
     @commands.command()
     async def xkcd(self, ctx, number: int = None):
         """Get random xkcd comics
@@ -187,6 +194,7 @@ class Rand(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.cooldown(rate=5, per=60, type=commands.BucketType.channel)
+    @check.acl2(check.ACLevel.EVERYONE)
     @commands.command()
     async def dadjoke(self, ctx, *, keyword: Optional[str] = None):
         """Get random dad joke
