@@ -194,7 +194,7 @@ class Weather(commands.Cog):
         return embeds
 
     @commands.guild_only()
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command(name="set-weather-place")
     async def set_weather_place(self, ctx, *, name: str):
         """Set preferred place for weather and forecast information."""
@@ -212,7 +212,7 @@ class Weather(commands.Cog):
         )
 
     @commands.guild_only()
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command(name="unset-weather-place")
     async def unset_weather_place(self, ctx):
         """Unset preferred place for weather and forecast information."""
@@ -223,7 +223,7 @@ class Weather(commands.Cog):
         await ctx.reply(_(ctx, "Your preferred weather place was removed."))
 
     @commands.guild_only()
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MOD)
     @commands.command(name="set-guild-weather-place")
     async def set_guild_weather_place(self, ctx, *, name: str):
         """Set guild's preferred place for weather and forecast information."""
@@ -241,7 +241,7 @@ class Weather(commands.Cog):
         )
 
     @commands.guild_only()
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MOD)
     @commands.command(name="unset-guild-weather-place")
     async def unset_guild_weather_place(self, ctx):
         """Unset guild's preferred place for weather and forecast information."""
@@ -255,7 +255,7 @@ class Weather(commands.Cog):
         )
         await ctx.reply(_(ctx, "Server's preferred weather place was removed."))
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command(
         name="weather-place",
         aliases=["weather-places", "weather-preference"],
@@ -281,7 +281,7 @@ class Weather(commands.Cog):
         )
         await ctx.reply(embed=embed)
 
-    @commands.check(check.acl)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.command(name="weather")
     async def weather(self, ctx, name: Optional[str] = None):
         """Get weather information on any place."""
