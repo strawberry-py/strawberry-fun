@@ -41,6 +41,7 @@ class Fun(commands.Cog):
         self.bot = bot
 
         self.pending_highfives: Set[Tuple[int, int]] = {*()}
+        self.pending_hugs: Set[Tuple[int, int]] = {*()}
 
     @commands.guild_only()
     @commands.cooldown(rate=2, per=10.0, type=commands.BucketType.user)
@@ -65,9 +66,22 @@ class Fun(commands.Cog):
             Relation.add(ctx.guild.id, source.id, target.id, "hug")
 
         border: str = "***" if type(target) == nextcord.Role else "**"
-        hug_emoji: str = "(⊃・‿・)⊃" if random.randint(1, 20) < 20 else "⊃・﹏・)⊃"
-        target_name: str = utils.text.sanitise(target.display_name)
-        await ctx.send(f"{hug_emoji} {border}{target_name}{border}")
+
+        if (target.id, source.id) not in self.pending_hugs:
+            hug_emoji: str = "(⊃・‿・)⊃" if random.randint(1, 20) < 20 else "⊃・﹏・)⊃"
+            target_name: str = utils.text.sanitise(target.display_name)
+            message: str = f"{hug_emoji} {border}{target_name}{border}"
+        else:
+            hug_emoji: str = r"(⊃・‿・)⊃\(・‿・)⊃"
+            source_name: str = utils.text.sanitise(source.display_name)
+            target_name: str = utils.text.sanitise(target.display_name)
+            message: str = f"{border}{source_name}{border} {hug_emoji} {border}{target_name}{border}"
+
+        await ctx.send(message)
+        self.pending_hugs.add((source.id, target.id))
+        await asyncio.sleep(20)
+        with contextlib.suppress(KeyError):
+            self.pending_hugs.remove((source.id, target.id))
 
     @commands.guild_only()
     @commands.cooldown(rate=2, per=10.0, type=commands.BucketType.user)
