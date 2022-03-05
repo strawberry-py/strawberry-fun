@@ -72,7 +72,9 @@ class Fun(commands.Cog):
             target_name: str = utils.text.sanitise(target.display_name)
             message: str = f"{hug_emoji} {border}{target_name}{border}"
         else:
-            hug_emoji: str = r"(⊃・‿・)⊃\(・‿・)⊃"
+            hug_emoji: str = (
+                r"(つˆ⌣ˆ)つ⊂(・⌣・⊂)" if random.randint(1, 20) < 20 else r"(つˆ⌣ˆ)つ⊂(・﹏・⊂)"
+            )
             source_name: str = utils.text.sanitise(source.display_name)
             target_name: str = utils.text.sanitise(target.display_name)
             message: str = f"{border}{source_name}{border} {hug_emoji} {border}{target_name}{border}"
