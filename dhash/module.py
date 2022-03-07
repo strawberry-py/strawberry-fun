@@ -353,7 +353,7 @@ class Dhash(commands.Cog):
             except nextcord.errors.HTTPException as exc:
                 await bot_log.error(
                     message.author,
-                    message,
+                    message.channel,
                     f"Could not delete repost embed {message.id} at guild {message.guild.id} using cache.",
                     exception=exc,
                 )
