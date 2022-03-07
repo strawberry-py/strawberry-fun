@@ -68,13 +68,14 @@ class Fun(commands.Cog):
         border: str = "***" if type(target) == nextcord.Role else "**"
 
         if (target.id, source.id) not in self.pending_hugs:
-            hug_emoji: str = "(⊃・‿・)⊃" if random.randint(1, 20) < 20 else "⊃・﹏・)⊃"
+            hug_emoji: str = "(⊃・ᴗ・)⊃" if random.randint(1, 20) < 20 else "⊃・﹏・)⊃"
             target_name: str = utils.text.sanitise(target.display_name)
             message: str = f"{hug_emoji} {border}{target_name}{border}"
         else:
             hug_emoji: str = (
-                r"(つˆ⌣ˆ)つ⊂(・⌣・⊂)" if random.randint(1, 20) < 20 else r"(つˆ⌣ˆ)つ⊂(・﹏・⊂)"
+                r"(つˆ⌣ˆ)つ⊂(・ᴗ・⊂)" if random.randint(1, 20) < 20 else r"(つˆ⌣ˆ)つ⊂(・﹏・⊂)"
             )
+
             source_name: str = utils.text.sanitise(source.display_name)
             target_name: str = utils.text.sanitise(target.display_name)
             message: str = f"{border}{source_name}{border} {hug_emoji} {border}{target_name}{border}"
