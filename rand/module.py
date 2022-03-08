@@ -48,7 +48,7 @@ class Rand(commands.Cog):
     @commands.cooldown(rate=3, per=20.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.EVERYONE)
     @commands.command()
-    async def flip(self, ctx):
+    async def flip(self, ctx, *, question: Optional[str] = None):
         """Yes/No"""
         choices: List[str] = [_(ctx, "Yes"), _(ctx, "No")]
         await ctx.reply(random.choice(choices))
