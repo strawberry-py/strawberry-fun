@@ -303,7 +303,7 @@ class Weather(commands.Cog):
     @commands.guild_only()
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command(name="weather")
-    async def weather(self, ctx, name: Optional[str] = None):
+    async def weather(self, ctx, *, name: Optional[str] = None):
         """Get weather information on any place."""
         if name is None:
             # try to get user preference
@@ -320,8 +320,9 @@ class Weather(commands.Cog):
             return
 
         lang_preference = translator.get_language_preference(ctx)
-        embeds = await self._create_embeds(ctx, name, lang_preference)
-        scroll_embed = utils.ScrollableEmbed(ctx, embeds)
+        async with ctx.typing():
+            embeds = await self._create_embeds(ctx, name, lang_preference)
+            scroll_embed = utils.ScrollableEmbed(ctx, embeds)
         await scroll_embed.scroll()
 
     def _place_is_valid(self, name: str) -> bool:
