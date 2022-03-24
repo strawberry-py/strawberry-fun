@@ -247,6 +247,9 @@ msgstr Noc
 msgid An error occured while getting weather info.
 msgstr Při získávání informací o počasí došlo k chybě.
 
+msgid Did not receive JSON response.
+msgstr Na výstupu jsme nedostali typ JSON.
+
 msgid Today
 msgstr Dnes
 

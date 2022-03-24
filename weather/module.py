@@ -1,5 +1,6 @@
 import aiohttp
 import datetime
+import json
 from typing import Optional, List
 
 import nextcord
@@ -14,6 +15,7 @@ translator = i18n.Translator("modules/fun")
 _ = translator.translate
 guild_log = logger.Guild.logger()
 config = pie.database.config.Config.get()
+bot_log = logger.Bot.logger()
 
 # number of days to get forecast for (including current day, max is 3)
 NUM_OF_FORECAST_DAYS = 3
@@ -99,7 +101,7 @@ class Weather(commands.Cog):
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url) as resp:
-                    resp_json = await resp.json()
+                    data = await resp.text()
         except aiohttp.ClientResponseError as e:
             await guild_log.warning(
                 ctx.author,
@@ -110,6 +112,22 @@ class Weather(commands.Cog):
                 utils.discord.create_embed(
                     author=ctx.message.author,
                     title=_(ctx, "An error occured while getting weather info."),
+                    error=True,
+                )
+            ]
+
+        try:
+            resp_json = json.loads(data)
+        except json.JSONDecodeError:
+            await bot_log.error(
+                ctx.author,
+                ctx.channel,
+                f"Did not receive JSON response: {resp!s} {data!s}.",
+            )
+            return [
+                utils.discord.create_embed(
+                    author=ctx.message.author,
+                    title=_(ctx, "Did not receive JSON response."),
                     error=True,
                 )
             ]
