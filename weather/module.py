@@ -1,5 +1,6 @@
 import aiohttp
 import datetime
+import urllib.parse
 import json
 from typing import Optional, List
 
@@ -97,6 +98,7 @@ class Weather(commands.Cog):
         self, ctx: commands.Context, name: str, lang_preference: str
     ) -> List[nextcord.Embed]:
         """create embeds for scrollable embed"""
+        name = urllib.parse.quote_plus(name)
         url = f"https://wttr.in/{name}?format=j1&lang={lang_preference}"
         try:
             async with aiohttp.ClientSession() as session:
@@ -326,8 +328,9 @@ class Weather(commands.Cog):
         await scroll_embed.scroll()
 
     def _place_is_valid(self, name: str) -> bool:
-        if "&" in name:
-            return False
+        for char in ("&", "#", "?"):
+            if char in name:
+                return False
         return True
 
 
