@@ -98,8 +98,8 @@ class Weather(commands.Cog):
         self, ctx: commands.Context, name: str, lang_preference: str
     ) -> List[nextcord.Embed]:
         """create embeds for scrollable embed"""
-        name = urllib.parse.quote_plus(name)
-        url = f"https://wttr.in/{name}?format=j1&lang={lang_preference}"
+        safe_name: str = urllib.parse.quote_plus(name)
+        url = f"https://wttr.in/{safe_name}?format=j1&lang={lang_preference}"
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url) as resp:
@@ -202,15 +202,6 @@ class Weather(commands.Cog):
 
             embeds.append(embed)
 
-        # create the last "map" embed
-        embed = utils.discord.create_embed(
-            author=ctx.message.author,
-            title=_(ctx, "Weather map for today"),
-            description=name,
-        )
-        img_url = f"https://v3.wttr.in/{name}.png"
-        embed.set_image(url=img_url)
-        embeds.append(embed)
         return embeds
 
     @commands.guild_only()
