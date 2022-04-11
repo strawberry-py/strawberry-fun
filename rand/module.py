@@ -1,6 +1,7 @@
 import aiohttp
 import random
 import re
+import hashlib
 from typing import Optional, List, Dict
 
 import nextcord
@@ -61,7 +62,8 @@ class Rand(commands.Cog):
         size: str = "900/600"
         url: str = "https://picsum.photos/"
         if seed:
-            url += "seed/" + seed + "/"
+            url_seed: str = hashlib.sha3_224(seed.encode("utf-8")).hexdigest()[:16]
+            url += "seed/" + url_seed + "/"
         url += f"{size}.jpg?random={ctx.message.id}"
 
         async with aiohttp.ClientSession() as session, session.get(url) as img_response:
