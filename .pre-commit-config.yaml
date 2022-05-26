@@ -21,4 +21,4 @@ repos:
     rev: v1.9.0
     hooks:
     - id: popie
-      args: [--detached --diff]
+      args: [--detached]
