@@ -196,31 +196,27 @@ class Fun(commands.Cog):
         Relation.add(ctx.guild.id, source.id, target.id, "spank")
 
         async with ctx.typing():
-            url = target.display_avatar.replace(size=256).url
-            async with aiohttp.ClientSession() as session:
-                response: aiohttp.ClientResponse = await session.get(url)
-                content: BytesIO = BytesIO(await response.read())
-                avatar: Image = Image.open(content).convert("RGBA")
+            source_avatar: Image = await self.get_users_avatar(source)
+            target_avatar: Image = await self.get_users_avatar(target)
 
-                frames = self.get_spank_frames(avatar)
-
-                with BytesIO() as image_binary:
-                    frames[0].save(
-                        image_binary,
-                        format="GIF",
-                        save_all=True,
-                        append_images=frames[1:],
-                        duration=30,
-                        loop=0,
-                        transparency=0,
-                        disposal=2,
-                        optimize=False,
-                    )
-                    image_binary.seek(0)
-                    await ctx.reply(
-                        file=nextcord.File(fp=image_binary, filename="spank.gif"),
-                        mention_author=False,
-                    )
+            frames = self.get_spank_frames(source_avatar, target_avatar)
+            with BytesIO() as image_binary:
+                frames[0].save(
+                    image_binary,
+                    format="GIF",
+                    save_all=True,
+                    append_images=frames[1:],
+                    duration=200,
+                    loop=0,
+                    transparency=0,
+                    disposal=2,
+                    optimize=False,
+                )
+                image_binary.seek(0)
+                await ctx.reply(
+                    file=nextcord.File(fp=image_binary, filename="spank.gif"),
+                    mention_author=False,
+                )
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
@@ -624,6 +620,15 @@ class Fun(commands.Cog):
         return frame_avatar
 
     @staticmethod
+    async def get_users_avatar(user: nextcord.User):
+        url = user.display_avatar.replace(size=256).url
+        async with aiohttp.ClientSession() as session:
+            response: aiohttp.ClientResponse = await session.get(url)
+            content: BytesIO = BytesIO(await response.read())
+        avatar: Image = Image.open(content).convert("RGBA")
+        return avatar
+
+    @staticmethod
     def get_pet_frames(avatar: Image.Image) -> List[Image.Image]:
         """Get frames for the pet"""
         frames = []
@@ -654,7 +659,7 @@ class Fun(commands.Cog):
 
         for i in range(6):
             img = "%02d" % (i + 1)
-            deform_hue = random.randint(0, 99) ** (i + 1) // 100 ** i / 100
+            deform_hue = random.randint(0, 99) ** (i + 1) // 100**i / 100
             frame_avatar = Image.fromarray(
                 ImageUtils.shift_hue(avatar_pixels, deform_hue)
             )
@@ -713,25 +718,42 @@ class Fun(commands.Cog):
         return frames
 
     @staticmethod
-    def get_spank_frames(avatar: Image.Image) -> List[Image.Image]:
+    def get_spank_frames(
+        source_avatar: Image.Image, target_avatar: Image.Image
+    ) -> List[Image.Image]:
         """Get frames for the spank"""
         frames = []
-        width, height = 200, 120
-        deformation = (4, 2, 1, 0, 0, 0, 0, 3)
+        width, height = 300, 400
+        target_voffset = (0, 1)
+        target_hoffset = (0, 2)
+        target_rotation = (310, 308)
+        image_hoffset = (0, 2)
 
-        avatar = ImageUtils.round_image(avatar.resize((100, 100)))
+        source_avatar = ImageUtils.round_image(source_avatar.resize((84, 84)))
+        target_avatar = ImageUtils.round_image(target_avatar.resize((100, 100)))
 
-        for i in range(8):
-            img = "%02d" % (i + 1)
-            frame_avatar = avatar.resize(
-                (100 + 2 * deformation[i], 100 + 2 * deformation[i])
-            )
-            frame_object = Image.open(DATA_DIR / f"spank/{img}.png").resize((100, 100))
-
+        for i in range(2):
+            img = ("01", "02")[i]
+            rotated_avatar = target_avatar.rotate(target_rotation[i])
+            frame_object = Image.open(DATA_DIR / f"spank/{img}.png")
+            frame_source_avatar = source_avatar.resize((64, 64))
+            frame_target_avatar = rotated_avatar.resize((64, 64))
             frame = Image.new("RGBA", (width, height), (54, 57, 63, 1))
-            frame.paste(frame_object, (10, 15), frame_object)
+
             frame.paste(
-                frame_avatar, (80 - deformation[i], 10 - deformation[i]), frame_avatar
+                frame_target_avatar,
+                (220 + target_voffset[i], 140 + target_hoffset[i]),
+                frame_target_avatar,
+            )
+            frame.paste(
+                frame_object,
+                (0, 65 + image_hoffset[i]),
+                frame_object,
+            )
+            frame.paste(
+                frame_source_avatar,
+                (120, 20 + image_hoffset[i]),
+                frame_source_avatar,
             )
             frames.append(frame)
 
@@ -772,7 +794,7 @@ class Fun(commands.Cog):
 
         for i in range(4):
             img = ("01", "02", "03", "02")[i]
-            deform_hue = random.randint(0, 99) ** (i + 1) // 100 ** i / 100
+            deform_hue = random.randint(0, 99) ** (i + 1) // 100**i / 100
             frame_avatar = Image.fromarray(
                 ImageUtils.shift_hue(avatar_pixels, deform_hue)
             )
