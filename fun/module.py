@@ -150,31 +150,27 @@ class Fun(commands.Cog):
         Relation.add(ctx.guild.id, source.id, target.id, "whip")
 
         async with ctx.typing():
-            url = target.display_avatar.replace(size=256).url
-            async with aiohttp.ClientSession() as session:
-                response: aiohttp.ClientResponse = await session.get(url)
-                content: BytesIO = BytesIO(await response.read())
-                avatar: Image = Image.open(content).convert("RGBA")
+            avatar: Image = await self.get_users_avatar(target)
 
-                frames = self.get_whip_frames(avatar)
+            frames = self.get_whip_frames(avatar)
 
-                with BytesIO() as image_binary:
-                    frames[0].save(
-                        image_binary,
-                        format="GIF",
-                        save_all=True,
-                        append_images=frames[1:],
-                        duration=30,
-                        loop=0,
-                        transparency=0,
-                        disposal=2,
-                        optimize=False,
-                    )
-                    image_binary.seek(0)
-                    await ctx.reply(
-                        file=nextcord.File(fp=image_binary, filename="whip.gif"),
-                        mention_author=False,
-                    )
+            with BytesIO() as image_binary:
+                frames[0].save(
+                    image_binary,
+                    format="GIF",
+                    save_all=True,
+                    append_images=frames[1:],
+                    duration=30,
+                    loop=0,
+                    transparency=0,
+                    disposal=2,
+                    optimize=False,
+                )
+                image_binary.seek(0)
+                await ctx.reply(
+                    file=nextcord.File(fp=image_binary, filename="whip.gif"),
+                    mention_author=False,
+                )
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
@@ -238,31 +234,27 @@ class Fun(commands.Cog):
         Relation.add(ctx.guild.id, source.id, target.id, "pet")
 
         async with ctx.typing():
-            url = target.display_avatar.replace(size=256).url
-            async with aiohttp.ClientSession() as session:
-                response: aiohttp.ClientResponse = await session.get(url)
-                content: BytesIO = BytesIO(await response.read())
-                avatar: Image = Image.open(content).convert("RGBA")
+            avatar: Image = await self.get_users_avatar(target)
 
-                frames = self.get_pet_frames(avatar)
+            frames = self.get_pet_frames(avatar)
 
-                with BytesIO() as image_binary:
-                    frames[0].save(
-                        image_binary,
-                        format="GIF",
-                        save_all=True,
-                        append_images=frames[1:],
-                        duration=40,
-                        loop=0,
-                        transparency=0,
-                        disposal=2,
-                        optimize=False,
-                    )
-                    image_binary.seek(0)
-                    await ctx.reply(
-                        file=nextcord.File(fp=image_binary, filename="pet.gif"),
-                        mention_author=False,
-                    )
+            with BytesIO() as image_binary:
+                frames[0].save(
+                    image_binary,
+                    format="GIF",
+                    save_all=True,
+                    append_images=frames[1:],
+                    duration=40,
+                    loop=0,
+                    transparency=0,
+                    disposal=2,
+                    optimize=False,
+                )
+                image_binary.seek(0)
+                await ctx.reply(
+                    file=nextcord.File(fp=image_binary, filename="pet.gif"),
+                    mention_author=False,
+                )
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
@@ -284,31 +276,27 @@ class Fun(commands.Cog):
         Relation.add(ctx.guild.id, source.id, target.id, "hyperpet")
 
         async with ctx.typing():
-            url = target.display_avatar.replace(size=256).url
-            async with aiohttp.ClientSession() as session:
-                response: aiohttp.ClientResponse = await session.get(url)
-                content: BytesIO = BytesIO(await response.read())
-                avatar: Image = Image.open(content).convert("RGBA")
+            avatar: Image = await self.get_users_avatar(target)
 
-                frames = self.get_hyperpet_frames(avatar)
+            frames = self.get_hyperpet_frames(avatar)
 
-                with BytesIO() as image_binary:
-                    frames[0].save(
-                        image_binary,
-                        format="GIF",
-                        save_all=True,
-                        append_images=frames[1:],
-                        duration=30,
-                        loop=0,
-                        transparency=0,
-                        disposal=2,
-                        optimize=False,
-                    )
-                    image_binary.seek(0)
-                    await ctx.reply(
-                        file=nextcord.File(fp=image_binary, filename="hyperpet.gif"),
-                        mention_author=False,
-                    )
+            with BytesIO() as image_binary:
+                frames[0].save(
+                    image_binary,
+                    format="GIF",
+                    save_all=True,
+                    append_images=frames[1:],
+                    duration=30,
+                    loop=0,
+                    transparency=0,
+                    disposal=2,
+                    optimize=False,
+                )
+                image_binary.seek(0)
+                await ctx.reply(
+                    file=nextcord.File(fp=image_binary, filename="hyperpet.gif"),
+                    mention_author=False,
+                )
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
@@ -333,31 +321,27 @@ class Fun(commands.Cog):
         Relation.add(ctx.guild.id, source.id, target.id, "bonk")
 
         async with ctx.typing():
-            url = target.display_avatar.replace(size=256).url
-            async with aiohttp.ClientSession() as session:
-                response: aiohttp.ClientResponse = await session.get(url)
-                content: BytesIO = BytesIO(await response.read())
-                avatar: Image = Image.open(content).convert("RGBA")
+            avatar: Image = await self.get_users_avatar(target)
 
-                frames = self.get_bonk_frames(avatar)
+            frames = self.get_bonk_frames(avatar)
 
-                with BytesIO() as image_binary:
-                    frames[0].save(
-                        image_binary,
-                        format="GIF",
-                        save_all=True,
-                        append_images=frames[1:],
-                        duration=30,
-                        loop=0,
-                        transparency=0,
-                        disposal=2,
-                        optimize=False,
-                    )
-                    image_binary.seek(0)
-                    await ctx.reply(
-                        file=nextcord.File(fp=image_binary, filename="bonk.gif"),
-                        mention_author=False,
-                    )
+            with BytesIO() as image_binary:
+                frames[0].save(
+                    image_binary,
+                    format="GIF",
+                    save_all=True,
+                    append_images=frames[1:],
+                    duration=30,
+                    loop=0,
+                    transparency=0,
+                    disposal=2,
+                    optimize=False,
+                )
+                image_binary.seek(0)
+                await ctx.reply(
+                    file=nextcord.File(fp=image_binary, filename="bonk.gif"),
+                    mention_author=False,
+                )
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
@@ -419,31 +403,27 @@ class Fun(commands.Cog):
         Relation.add(ctx.guild.id, source.id, target.id, "lick")
 
         async with ctx.typing():
-            url = target.display_avatar.replace(size=256).url
-            async with aiohttp.ClientSession() as session:
-                response: aiohttp.ClientResponse = await session.get(url)
-                content: BytesIO = BytesIO(await response.read())
-                avatar: Image = Image.open(content).convert("RGBA")
+            avatar: Image = await self.get_users_avatar(target)
 
-                frames = self.get_lick_frames(avatar)
+            frames = self.get_lick_frames(avatar)
 
-                with BytesIO() as image_binary:
-                    frames[0].save(
-                        image_binary,
-                        format="GIF",
-                        save_all=True,
-                        append_images=frames[1:],
-                        duration=30,
-                        loop=0,
-                        transparency=0,
-                        disposal=2,
-                        optimize=False,
-                    )
-                    image_binary.seek(0)
-                    await ctx.reply(
-                        file=nextcord.File(fp=image_binary, filename="lick.gif"),
-                        mention_author=False,
-                    )
+            with BytesIO() as image_binary:
+                frames[0].save(
+                    image_binary,
+                    format="GIF",
+                    save_all=True,
+                    append_images=frames[1:],
+                    duration=30,
+                    loop=0,
+                    transparency=0,
+                    disposal=2,
+                    optimize=False,
+                )
+                image_binary.seek(0)
+                await ctx.reply(
+                    file=nextcord.File(fp=image_binary, filename="lick.gif"),
+                    mention_author=False,
+                )
 
     @commands.guild_only()
     @commands.cooldown(rate=5, per=60.0, type=commands.BucketType.user)
@@ -465,31 +445,27 @@ class Fun(commands.Cog):
         Relation.add(ctx.guild.id, source.id, target.id, "hyperlick")
 
         async with ctx.typing():
-            url = target.display_avatar.replace(size=256).url
-            async with aiohttp.ClientSession() as session:
-                response: aiohttp.ClientResponse = await session.get(url)
-                content: BytesIO = BytesIO(await response.read())
-                avatar: Image = Image.open(content).convert("RGBA")
+            avatar: Image = await self.get_users_avatar(target)
 
-                frames = self.get_hyperlick_frames(avatar)
+            frames = self.get_hyperlick_frames(avatar)
 
-                with BytesIO() as image_binary:
-                    frames[0].save(
-                        image_binary,
-                        format="GIF",
-                        save_all=True,
-                        append_images=frames[1:],
-                        duration=30,
-                        loop=0,
-                        transparency=0,
-                        disposal=2,
-                        optimize=False,
-                    )
-                    image_binary.seek(0)
-                    await ctx.reply(
-                        file=nextcord.File(fp=image_binary, filename="hyperlick.gif"),
-                        mention_author=False,
-                    )
+            with BytesIO() as image_binary:
+                frames[0].save(
+                    image_binary,
+                    format="GIF",
+                    save_all=True,
+                    append_images=frames[1:],
+                    duration=30,
+                    loop=0,
+                    transparency=0,
+                    disposal=2,
+                    optimize=False,
+                )
+                image_binary.seek(0)
+                await ctx.reply(
+                    file=nextcord.File(fp=image_binary, filename="hyperlick.gif"),
+                    mention_author=False,
+                )
 
     @commands.guild_only()
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
