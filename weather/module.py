@@ -146,7 +146,7 @@ class Weather(commands.Cog):
             elif i == 1:
                 title = _(ctx, "Tomorrow")
             else:
-                title = _(ctx, day["date"])
+                title = day["date"]
 
             if i == 0:
                 # Show current weather in title
