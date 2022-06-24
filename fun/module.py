@@ -540,6 +540,38 @@ class Fun(commands.Cog):
 
     @commands.guild_only()
     @check.acl2(check.ACLevel.MOD)
+    @commands.command(name="relations-variants")
+    async def relations_variants(self, ctx):
+        """List relation variants on this server."""
+        overwrites = RelationOverwrite.get_all(ctx.guild.id)
+        if not overwrites:
+            await ctx.reply(_(ctx, "This server has not enabled any variants."))
+            return
+
+        class Item:
+            def __init__(self, overwrite: RelationOverwrite):
+                self.relation = overwrite.command
+                channel = ctx.guild.get_channel(overwrite.channel_id)
+                channel_name = getattr(channel, "name", str(overwrite.channel_id))
+                self.channel = f"#{channel_name}"
+                self.variant = overwrite.variant
+
+        items = [Item(overwrite) for overwrite in overwrites]
+
+        table: List[str] = utils.text.create_table(
+            items,
+            header={
+                "relation": _(ctx, "Relation"),
+                "channel": _(ctx, "Channel"),
+                "variant": _(ctx, "Variant"),
+            },
+        )
+
+        for page in table:
+            await ctx.send("```" + page + "```")
+
+    @commands.guild_only()
+    @check.acl2(check.ACLevel.MOD)
     @commands.command(name="relations-variant")
     async def relations_variant(
         self,

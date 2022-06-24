@@ -97,6 +97,18 @@ msgstr Vztahy {name}
 msgid gave / got
 msgstr rozdáno / získáno
 
+msgid This server has not enabled any variants.
+msgstr Tento server nemá zapnuty žádné varianty.
+
+msgid Relation
+msgstr Vztah
+
+msgid Channel
+msgstr Kanál
+
+msgid Variant
+msgstr Varianta
+
 msgid That relation does not exist.
 msgstr Takový vztah neexistuje.
 

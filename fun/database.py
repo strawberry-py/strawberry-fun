@@ -172,3 +172,13 @@ class RelationOverwrite(database.base):
             .filter_by(guild_id=guild_id, channel_id=channel_id, command=command)
             .one_or_none()
         )
+
+    @classmethod
+    def get_all(cls, guild_id: int) -> list:
+        """Get all variants on the server."""
+        return (
+            session.query(cls)
+            .filter_by(guild_id=guild_id)
+            .order_by(cls.command.asc())
+            .all()
+        )
