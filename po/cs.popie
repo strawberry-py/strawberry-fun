@@ -97,6 +97,21 @@ msgstr Vztahy {name}
 msgid gave / got
 msgstr rozdáno / získáno
 
+msgid That relation does not exist.
+msgstr Takový vztah neexistuje.
+
+msgid Relation **{command}** does not have any variant.
+msgstr Vztah **{command}** nemá žádné varianty.
+
+msgid Relation **{command}** has following variants:
+msgstr Vztah **{command}** má následující varianty:
+
+msgid That relation does not have this variant.
+msgstr Vztah nemá takovou variantu.
+
+msgid Variant for **{command}** in **#{channel}** set to **{variant}**.
+msgstr Varianta pro **{command}** v **#{channel}** nastavena na **{variant}**.
+
 msgid Relations {name}: {action}
 msgstr Vztahy {name}: {action}
 

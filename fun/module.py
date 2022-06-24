@@ -12,13 +12,15 @@ import nextcord
 from nextcord.ext import commands
 
 import pie.database.config
-from pie import check, utils, i18n
+from pie import check, logger, utils, i18n
 
-from .database import Relation
+from .database import Relation, RelationOverwrite
 from .image_utils import ImageUtils
 
 _ = i18n.Translator("modules/fun").translate
 config = pie.database.config.Config.get()
+guild_log = logger.Guild.logger()
+
 
 DATA_DIR = Path(__file__).parent / "data"
 ACTIONS = (
@@ -33,6 +35,7 @@ ACTIONS = (
     "lick",
     "hyperlick",
 )
+ACTION_VARIANTS = {}
 EMBED_LIST_LIMIT: int = 5
 
 
@@ -521,6 +524,65 @@ class Fun(commands.Cog):
         )
 
         await utils.discord.delete_message(ctx.message)
+
+    @commands.guild_only()
+    @check.acl2(check.ACLevel.MOD)
+    @commands.command(name="relations-variant")
+    async def relations_variant(
+        self,
+        ctx,
+        command: str,
+        channel: nextcord.TextChannel,
+        variant: str = "",
+    ):
+        """Enable alternative relations.
+
+        Omit the variant to show possibilities.
+        """
+        if command not in ACTIONS:
+            await ctx.reply(_(ctx, "That relation does not exist."))
+            return
+        if variant == "":
+            variants = ACTION_VARIANTS.get(command, [])
+            current = getattr(
+                RelationOverwrite.get(channel.guild.id, channel.id, command),
+                "variant",
+                "default",
+            )
+            variants = [f"**{current}**"] + [v for v in variants if v != current]
+            if len(variants) == 1:
+                await ctx.reply(
+                    _(ctx, "Relation **{command}** does not have any variant.").format(
+                        command=command
+                    )
+                )
+                return
+            await ctx.reply(
+                _(ctx, "Relation **{command}** has following variants:").format(
+                    command=command
+                )
+                + "\n>>> {variants}".format(
+                    variants="\n".join(f"- {variant}" for variant in variants)
+                )
+            )
+            return
+
+        if variant not in ACTION_VARIANTS.get(command, []):
+            await ctx.reply(_(ctx, "That relation does not have this variant."))
+            return
+
+        RelationOverwrite.set(channel.guild.id, channel.id, command, variant)
+        await guild_log.info(
+            ctx.author,
+            ctx.channel,
+            f"Relation variant for '{command}' in #{channel.name} set to '{variant}'.",
+        )
+        await ctx.reply(
+            _(
+                ctx,
+                "Variant for **{command}** in **#{channel}** set to **{variant}**.",
+            ).format(command=command, channel=channel.name, variant=variant)
+        )
 
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command(aliases=["rcase", "randomise"])

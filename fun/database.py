@@ -129,3 +129,46 @@ class Relation(database.base):
             "action": self.action,
             "value": self.value,
         }
+
+
+class RelationOverwrite(database.base):
+    """Preferences of relation variants."""
+
+    __tablename__ = "fun_fun_relation_variants"
+
+    idx = Column(Integer, primary_key=True, autoincrement=True)
+    guild_id = Column(BigInteger)
+    channel_id = Column(BigInteger)
+    command = Column(String)
+    variant = Column(String)
+
+    @classmethod
+    def set(cls, guild_id: int, channel_id: int, command: str, variant: str) -> bool:
+        """Add variant. Entry will be deleted if variant is 'default'.
+
+        :return: True if the entry was added or updated, False if it was deleted.
+        """
+        deleted = (
+            session.query(cls)
+            .filter_by(guild_id=guild_id, channel_id=channel_id, command=command)
+            .delete()
+        )
+
+        if deleted == 1 and variant == "default":
+            return False
+
+        overwrite = cls(
+            guild_id=guild_id, channel_id=channel_id, command=command, variant=variant
+        )
+        session.add(overwrite)
+        session.commit()
+        return True
+
+    @classmethod
+    def get(cls, guild_id: int, channel_id: int, command: str) -> Optional[str]:
+        """Get variant."""
+        return (
+            session.query(cls)
+            .filter_by(guild_id=guild_id, channel_id=channel_id, command=command)
+            .one_or_none()
+        )
