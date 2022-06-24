@@ -828,7 +828,7 @@ class Fun(commands.Cog):
             )
             frame.paste(
                 frame_source_avatar,
-                (120, 20 + image_hoffset[i]),
+                (115, 20 + image_hoffset[i]),
                 frame_source_avatar,
             )
             frames.append(frame)
