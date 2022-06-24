@@ -35,7 +35,9 @@ ACTIONS = (
     "lick",
     "hyperlick",
 )
-ACTION_VARIANTS = {}
+ACTION_VARIANTS = {
+    "spank": ["default", "figures"],
+}
 EMBED_LIST_LIMIT: int = 5
 
 
@@ -198,14 +200,25 @@ class Fun(commands.Cog):
             source_avatar: Image = await self.get_users_avatar(source)
             target_avatar: Image = await self.get_users_avatar(target)
 
-            frames = self.get_spank_frames(source_avatar, target_avatar)
+            frame_duration: int = 30
+            variant = getattr(
+                RelationOverwrite.get(ctx.guild.id, ctx.channel.id, "spank"),
+                "variant",
+                "default",
+            )
+            if variant == "figures":
+                frames = self.get_spank_frames_figures(source_avatar, target_avatar)
+                frame_duration = 200
+            else:
+                frames = self.get_spank_frames(target_avatar)
+
             with BytesIO() as image_binary:
                 frames[0].save(
                     image_binary,
                     format="GIF",
                     save_all=True,
                     append_images=frames[1:],
-                    duration=200,
+                    duration=frame_duration,
                     loop=0,
                     transparency=0,
                     disposal=2,
@@ -756,10 +769,35 @@ class Fun(commands.Cog):
         return frames
 
     @staticmethod
-    def get_spank_frames(
+    def get_spank_frames(avatar: Image.Image) -> List[Image.Image]:
+        """Get frames for the spank."""
+        frames = []
+        width, height = 200, 120
+        deformation = (4, 2, 1, 0, 0, 0, 0, 3)
+
+        avatar = ImageUtils.round_image(avatar.resize((100, 100)))
+
+        for i in range(8):
+            img = "%02d" % (i + 1)
+            frame_avatar = avatar.resize(
+                (100 + 2 * deformation[i], 100 + 2 * deformation[i])
+            )
+            frame_object = Image.open(DATA_DIR / f"spank/{img}.png").resize((100, 100))
+
+            frame = Image.new("RGBA", (width, height), (54, 57, 63, 1))
+            frame.paste(frame_object, (10, 15), frame_object)
+            frame.paste(
+                frame_avatar, (80 - deformation[i], 10 - deformation[i]), frame_avatar
+            )
+            frames.append(frame)
+
+        return frames
+
+    @staticmethod
+    def get_spank_frames_figures(
         source_avatar: Image.Image, target_avatar: Image.Image
     ) -> List[Image.Image]:
-        """Get frames for the spank"""
+        """Get frames for the spank; alternative version."""
         frames = []
         width, height = 300, 400
         target_voffset = (0, 1)
@@ -773,7 +811,7 @@ class Fun(commands.Cog):
         for i in range(2):
             img = ("01", "02")[i]
             rotated_avatar = target_avatar.rotate(target_rotation[i])
-            frame_object = Image.open(DATA_DIR / f"spank/{img}.png")
+            frame_object = Image.open(DATA_DIR / f"spank_figures/{img}.png")
             frame_source_avatar = source_avatar.resize((64, 64))
             frame_target_avatar = rotated_avatar.resize((64, 64))
             frame = Image.new("RGBA", (width, height), (54, 57, 63, 1))
