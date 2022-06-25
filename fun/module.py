@@ -4,7 +4,7 @@ import contextlib
 import random
 import numpy as np
 from io import BytesIO
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 from typing import List, Set, Tuple, Optional, Union
 from pathlib import Path
 
@@ -692,6 +692,56 @@ class Fun(commands.Cog):
             result = result[:-1] + "," * random.randint(2, 4)
 
         return result
+
+    @commands.guild_only()
+    @check.acl2(check.ACLevel.MEMBER)
+    @commands.command(name="art-of-the-deal", aliases=["the-art-of-the-deal"])
+    async def art_of_the_deal(self, ctx, *, member: Optional[nextcord.Member] = None):
+        """A business man... doing business."""
+        if member is None:
+            member = ctx.author
+
+        title: str = member.display_name.upper()
+        title_margin_y: int = 50
+
+        # compute font size; top bar is 1_000 x 370 px
+        default_font_size: int = 10
+        font_path = DATA_DIR / "the-art-of-the-deal/marlboro.regular.ttf"
+        text_width, text_height = ImageFont.truetype(str(font_path)).getsize(title)
+        font_scale_width: float = 1 / text_width * (1_000 - (title_margin_y * 2))
+        font_scale_height: float = 1 / text_height * (370 - 160)
+        font_scale = int(min(font_scale_width, font_scale_height))
+
+        font = ImageFont.truetype(str(font_path), default_font_size * font_scale)
+        true_text_width = int(font_scale * text_width)
+        true_text_height = int(font_scale * text_height)
+
+        async with ctx.typing():
+            avatar: Image = await self.get_users_avatar(member)
+            avatar = ImageUtils.round_image(avatar.resize((320, 320)))
+
+            background = Image.open(DATA_DIR / "the-art-of-the-deal/background.jpg")
+
+            frame = Image.new("RGB", (background.width, background.height), (0, 0, 0))
+            frame.paste(background, (0, 0))
+            frame.paste(avatar, (410, 530), avatar)
+
+            draw = ImageDraw.Draw(frame)
+            title_x = int((1_000 - true_text_width) / 2)
+            title_y = int((370 - true_text_height) / 2) - title_margin_y
+            draw.text((title_x, title_y), text=title, font=font, fill=(152, 110, 52))
+
+            with BytesIO() as image_binary:
+                frame.save(image_binary, format="PNG")
+                image_binary.seek(0)
+                await ctx.reply(
+                    file=nextcord.File(
+                        fp=image_binary, filename="the-art-of-the-deal.png"
+                    ),
+                    mention_author=False,
+                )
+
+    # Helper functions
 
     @staticmethod
     def round_image(frame_avatar: Image.Image) -> Image.Image:
