@@ -531,9 +531,10 @@ class Fun(commands.Cog):
         if message is None:
             text = "OwO!"
         else:
-            text = utils.text.sanitise(self.uwuize(message), limit=1900, escape=False)
+            text = self.uwuize(message[:1900])
         await ctx.send(
-            f"**{utils.text.sanitise(ctx.author.display_name)}**\n>>> " + text
+            f"**{utils.text.sanitise(ctx.author.display_name)}**\n>>> " + text,
+            allowed_mentions=discord.AllowedMentions.none(),
         )
 
         await utils.discord.delete_message(ctx.message)
@@ -637,7 +638,7 @@ class Fun(commands.Cog):
             text = "O.o"
         else:
             text = ""
-            for letter in message:
+            for letter in message[:1900]:
                 if letter.isalpha():
                     text += (
                         letter.upper()
@@ -646,9 +647,9 @@ class Fun(commands.Cog):
                     )
                 else:
                     text += letter
-                text = utils.text.sanitise(text, limit=1960)
         await ctx.send(
-            f"**{utils.text.sanitise(ctx.author.display_name)}**\n>>> " + text
+            f"**{utils.text.sanitise(ctx.author.display_name)}**\n>>> " + text,
+            allowed_mentions=discord.AllowedMentions.none(),
         )
         await utils.discord.delete_message(ctx.message)
 
