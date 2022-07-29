@@ -1,6 +1,6 @@
 import contextlib
 
-from nextcord.ext import commands
+from discord.ext import commands
 
 import pie.database.config
 from pie import check, i18n, logger, utils
@@ -117,5 +117,5 @@ class Seeking(commands.Cog):
         await guild_log.info(ctx.author, ctx.channel, f"Seeking items deleted: {ids}.")
 
 
-def setup(bot) -> None:
-    bot.add_cog(Seeking(bot))
+async def setup(bot) -> None:
+    await bot.add_cog(Seeking(bot))

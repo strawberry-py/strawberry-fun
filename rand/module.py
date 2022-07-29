@@ -4,8 +4,8 @@ import re
 import hashlib
 from typing import Optional, List, Dict
 
-import nextcord
-from nextcord.ext import commands
+import discord
+from discord.ext import commands
 
 from pie import check, utils, i18n
 
@@ -79,13 +79,13 @@ class Rand(commands.Cog):
         try:
             image_url: str = image_info["url"]
         except Exception:
-            image_url = nextcord.Embed.Empty
+            image_url = None
 
         footer: str = "picsum.photos"
         if seed:
             footer += f" ({seed})"
 
-        embed: nextcord.Embed = utils.discord.create_embed(
+        embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
             description=image_url,
             footer=footer,
@@ -113,7 +113,7 @@ class Rand(commands.Cog):
 
                 json_response = await response.json()
 
-        embed: nextcord.Embed = utils.discord.create_embed(
+        embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
             footer="thecatapi.com",
         )
@@ -139,7 +139,7 @@ class Rand(commands.Cog):
 
                 json_response = await response.json()
 
-        embed: nextcord.Embed = utils.discord.create_embed(
+        embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
             footer="thedogapi.com",
         )
@@ -172,7 +172,7 @@ class Rand(commands.Cog):
                     ) as response:
                         fetched = await response.json()
 
-        embed: nextcord.Embed = utils.discord.create_embed(
+        embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
             title=fetched["title"],
             description="_" + fetched["alt"][:2046] + "_",
@@ -233,7 +233,7 @@ class Rand(commands.Cog):
         else:
             result = fetched
 
-        embed: nextcord.Embed = utils.discord.create_embed(
+        embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
             description=result["joke"],
             footer="icanhazdadjoke.com",
@@ -243,5 +243,5 @@ class Rand(commands.Cog):
         await ctx.reply(embed=embed)
 
 
-def setup(bot) -> None:
-    bot.add_cog(Rand(bot))
+async def setup(bot) -> None:
+    await bot.add_cog(Rand(bot))

@@ -4,8 +4,8 @@ import urllib.parse
 import json
 from typing import Optional, List
 
-import nextcord
-from nextcord.ext import commands
+import discord
+from discord.ext import commands
 
 import pie.database.config
 from pie import check, i18n, logger, utils
@@ -96,7 +96,7 @@ class Weather(commands.Cog):
 
     async def _create_embeds(
         self, ctx: commands.Context, name: str, lang_preference: str
-    ) -> List[nextcord.Embed]:
+    ) -> List[discord.Embed]:
         """create embeds for scrollable embed"""
         safe_name: str = urllib.parse.quote_plus(name)
         url = f"https://wttr.in/{safe_name}?format=j1&lang={lang_preference}"
@@ -325,5 +325,5 @@ class Weather(commands.Cog):
         return True
 
 
-def setup(bot) -> None:
-    bot.add_cog(Weather(bot))
+async def setup(bot) -> None:
+    await bot.add_cog(Weather(bot))

@@ -5,7 +5,7 @@ from datetime import datetime
 import dateutil.parser as dparser
 from urllib import parse as url_parse
 
-from nextcord.ext import commands
+from discord.ext import commands
 
 from pie import check, utils, i18n
 
@@ -124,5 +124,5 @@ class Urban(commands.Cog):
         await scrollable_embed.scroll()
 
 
-def setup(bot) -> None:
-    bot.add_cog(Urban(bot))
+async def setup(bot) -> None:
+    await bot.add_cog(Urban(bot))

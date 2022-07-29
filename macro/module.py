@@ -395,5 +395,5 @@ class Macro(commands.Cog):
         return True
 
 
-def setup(bot) -> None:
-    bot.add_cog(Macro(bot))
+async def setup(bot) -> None:
+    await bot.add_cog(Macro(bot))

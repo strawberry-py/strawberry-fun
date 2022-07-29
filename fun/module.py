@@ -8,8 +8,8 @@ from PIL import Image, ImageDraw, ImageFont
 from typing import List, Set, Tuple, Optional, Union
 from pathlib import Path
 
-import nextcord
-from nextcord.ext import commands
+import discord
+from discord.ext import commands
 
 import pie.database.config
 from pie import check, logger, utils, i18n
@@ -52,7 +52,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=2, per=10.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def hug(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
+    async def hug(self, ctx, *, user: Union[discord.Member, discord.Role] = None):
         """Hug someone"""
         if not await self._is_user_in_channel(ctx, user):
             await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
@@ -65,12 +65,12 @@ class Fun(commands.Cog):
             source = ctx.author
             target = user
 
-        if type(target) == nextcord.Role:
+        if type(target) == discord.Role:
             Relation.add(ctx.guild.id, source.id, None, "hug")
         else:
             Relation.add(ctx.guild.id, source.id, target.id, "hug")
 
-        border: str = "***" if type(target) == nextcord.Role else "**"
+        border: str = "***" if type(target) == discord.Role else "**"
 
         if (target.id, source.id) not in self.pending_hugs:
             hug_emoji: str = "(⊃・ᴗ・)⊃" if random.randint(1, 20) < 20 else "⊃・﹏・)⊃"
@@ -95,7 +95,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=2, per=10.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def highfive(self, ctx, *, user: nextcord.Member):
+    async def highfive(self, ctx, *, user: discord.Member):
         """Highfive someone
 
         The user has to highfive you in under twenty seconds.
@@ -139,7 +139,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def whip(self, ctx, *, user: nextcord.Member = None):
+    async def whip(self, ctx, *, user: discord.Member = None):
         """Whip someone"""
         if not await self._is_user_in_channel(ctx, user):
             await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
@@ -173,7 +173,7 @@ class Fun(commands.Cog):
                 )
                 image_binary.seek(0)
                 await ctx.reply(
-                    file=nextcord.File(fp=image_binary, filename="whip.gif"),
+                    file=discord.File(fp=image_binary, filename="whip.gif"),
                     mention_author=False,
                 )
 
@@ -181,7 +181,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def spank(self, ctx, *, user: nextcord.Member = None):
+    async def spank(self, ctx, *, user: discord.Member = None):
         """Spank someone"""
         if not await self._is_user_in_channel(ctx, user):
             await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
@@ -226,7 +226,7 @@ class Fun(commands.Cog):
                 )
                 image_binary.seek(0)
                 await ctx.reply(
-                    file=nextcord.File(fp=image_binary, filename="spank.gif"),
+                    file=discord.File(fp=image_binary, filename="spank.gif"),
                     mention_author=False,
                 )
 
@@ -234,7 +234,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def pet(self, ctx, *, user: nextcord.Member = None):
+    async def pet(self, ctx, *, user: discord.Member = None):
         """Pet someone"""
         if not await self._is_user_in_channel(ctx, user):
             await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
@@ -268,7 +268,7 @@ class Fun(commands.Cog):
                 )
                 image_binary.seek(0)
                 await ctx.reply(
-                    file=nextcord.File(fp=image_binary, filename="pet.gif"),
+                    file=discord.File(fp=image_binary, filename="pet.gif"),
                     mention_author=False,
                 )
 
@@ -276,7 +276,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def hyperpet(self, ctx, *, user: nextcord.Member = None):
+    async def hyperpet(self, ctx, *, user: discord.Member = None):
         """Hyperpet someone"""
         if not await self._is_user_in_channel(ctx, user):
             await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
@@ -310,7 +310,7 @@ class Fun(commands.Cog):
                 )
                 image_binary.seek(0)
                 await ctx.reply(
-                    file=nextcord.File(fp=image_binary, filename="hyperpet.gif"),
+                    file=discord.File(fp=image_binary, filename="hyperpet.gif"),
                     mention_author=False,
                 )
 
@@ -318,7 +318,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def bonk(self, ctx, *, user: nextcord.Member = None):
+    async def bonk(self, ctx, *, user: discord.Member = None):
         """Bonk someone
 
         member: Discord user. If none, the bot will bonk you.
@@ -355,7 +355,7 @@ class Fun(commands.Cog):
                 )
                 image_binary.seek(0)
                 await ctx.reply(
-                    file=nextcord.File(fp=image_binary, filename="bonk.gif"),
+                    file=discord.File(fp=image_binary, filename="bonk.gif"),
                     mention_author=False,
                 )
 
@@ -363,7 +363,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=3, per=30.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def slap(self, ctx, *, user: Union[nextcord.Member, nextcord.Role] = None):
+    async def slap(self, ctx, *, user: Union[discord.Member, discord.Role] = None):
         """Slap someone"""
         if not await self._is_user_in_channel(ctx, user):
             await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
@@ -380,7 +380,7 @@ class Fun(commands.Cog):
 
         target_name: str
         border: str
-        if type(target) == nextcord.Role:
+        if type(target) == discord.Role:
             Relation.add(ctx.guild.id, source.id, None, "slap")
             target_name = target.name
             border = "***"
@@ -403,7 +403,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=5, per=60.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def lick(self, ctx, *, user: nextcord.Member = None):
+    async def lick(self, ctx, *, user: discord.Member = None):
         """Lick someone"""
         if not await self._is_user_in_channel(ctx, user):
             await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
@@ -437,7 +437,7 @@ class Fun(commands.Cog):
                 )
                 image_binary.seek(0)
                 await ctx.reply(
-                    file=nextcord.File(fp=image_binary, filename="lick.gif"),
+                    file=discord.File(fp=image_binary, filename="lick.gif"),
                     mention_author=False,
                 )
 
@@ -445,7 +445,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=5, per=60.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def hyperlick(self, ctx, *, user: nextcord.Member = None):
+    async def hyperlick(self, ctx, *, user: discord.Member = None):
         """Hyperlick someone"""
         if not await self._is_user_in_channel(ctx, user):
             await ctx.reply(_(ctx, "You can't do that, they are not in this channel."))
@@ -479,7 +479,7 @@ class Fun(commands.Cog):
                 )
                 image_binary.seek(0)
                 await ctx.reply(
-                    file=nextcord.File(fp=image_binary, filename="hyperlick.gif"),
+                    file=discord.File(fp=image_binary, filename="hyperlick.gif"),
                     mention_author=False,
                 )
 
@@ -487,7 +487,7 @@ class Fun(commands.Cog):
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command()
-    async def relations(self, ctx, *, user: nextcord.User = None):
+    async def relations(self, ctx, *, user: discord.User = None):
         """Get your information about hugs, pets, ..."""
         if user is None:
             user = ctx.author
@@ -511,10 +511,10 @@ class Fun(commands.Cog):
                 value=f"{action_stats[0]} / {action_stats[1]}",
             )
 
-        action_embeds: List[nextcord.Embed] = [
+        action_embeds: List[discord.Embed] = [
             Fun.get_action_embed(ctx, user, action) for action in ACTIONS
         ]
-        embeds: List[nextcord.Embed] = [embed] + [
+        embeds: List[discord.Embed] = [embed] + [
             e for e in action_embeds if e is not None
         ]
 
@@ -577,7 +577,7 @@ class Fun(commands.Cog):
         self,
         ctx,
         command: str,
-        channel: nextcord.TextChannel,
+        channel: discord.TextChannel,
         variant: str = "",
     ):
         """Enable alternative relations.
@@ -652,11 +652,11 @@ class Fun(commands.Cog):
         )
         await utils.discord.delete_message(ctx.message)
 
-    async def _is_user_in_channel(self, ctx, user: nextcord.Member):
-        if user is None or isinstance(user, nextcord.Role):
+    async def _is_user_in_channel(self, ctx, user: discord.Member):
+        if user is None or isinstance(user, discord.Role):
             return True
 
-        if not ctx.channel.members or isinstance(ctx.channel, nextcord.Thread):
+        if not ctx.channel.members or isinstance(ctx.channel, discord.Thread):
             members = await ctx.channel.fetch_members()
         else:
             members = ctx.channel.members
@@ -696,7 +696,7 @@ class Fun(commands.Cog):
     @commands.guild_only()
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command(name="art-of-the-deal", aliases=["the-art-of-the-deal"])
-    async def art_of_the_deal(self, ctx, *, member: Optional[nextcord.Member] = None):
+    async def art_of_the_deal(self, ctx, *, member: Optional[discord.Member] = None):
         """A business man... doing business."""
         if member is None:
             member = ctx.author
@@ -735,7 +735,7 @@ class Fun(commands.Cog):
                 frame.save(image_binary, format="PNG")
                 image_binary.seek(0)
                 await ctx.reply(
-                    file=nextcord.File(
+                    file=discord.File(
                         fp=image_binary, filename="the-art-of-the-deal.png"
                     ),
                     mention_author=False,
@@ -753,7 +753,7 @@ class Fun(commands.Cog):
         return frame_avatar
 
     @staticmethod
-    async def get_users_avatar(user: nextcord.User):
+    async def get_users_avatar(user: discord.User):
         url = user.display_avatar.replace(size=256).url
         async with aiohttp.ClientSession() as session:
             response: aiohttp.ClientResponse = await session.get(url)
@@ -967,8 +967,8 @@ class Fun(commands.Cog):
 
     @staticmethod
     def get_action_embed(
-        ctx: commands.Context, user: Union[nextcord.User, nextcord.Member], action: str
-    ) -> Optional[nextcord.Embed]:
+        ctx: commands.Context, user: Union[discord.User, discord.Member], action: str
+    ) -> Optional[discord.Embed]:
         gave, got = Relation.get_user_relation(ctx.guild.id, user.id, action)
         if not gave and not got:
             return None
@@ -1038,5 +1038,5 @@ class Fun(commands.Cog):
         return embed
 
 
-def setup(bot) -> None:
-    bot.add_cog(Fun(bot))
+async def setup(bot) -> None:
+    await bot.add_cog(Fun(bot))
