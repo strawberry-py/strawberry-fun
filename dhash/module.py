@@ -241,7 +241,7 @@ class Dhash(commands.Cog):
         gtx = i18n.TranslationContext(ctx.guild.id, None)
 
         async with ctx.typing():
-            messages = await ctx.channel.history(limit=limit).flatten()
+            messages = [message async for message in ctx.channel.history(limit=limit)]
 
         status = await ctx.send(
             _(gtx, "**LOADING**")
