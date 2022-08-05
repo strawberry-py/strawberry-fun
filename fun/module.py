@@ -72,14 +72,16 @@ class Fun(commands.Cog):
 
         border: str = "***" if type(target) == discord.Role else "**"
 
+        hug_face = random.choices(
+            ["・ᴗ・", "・⌣・", "・≧▽≦・", "・‿‿・", "・﹏・", "◕‿‿◕", "▀̿_▀̿", "´▽｀"],
+            weights=(91, 1, 1, 1, 1, 1, 1, 1),
+        )[0]
         if (target.id, source.id) not in self.pending_hugs:
-            hug_emoji: str = "(⊃・ᴗ・)⊃" if random.randint(1, 20) < 20 else "⊃・﹏・)⊃"
+            hug_emoji: str = f"(⊃{hug_face})⊃"
             target_name: str = utils.text.sanitise(target.display_name)
             message: str = f"{hug_emoji} {border}{target_name}{border}"
         else:
-            hug_emoji: str = (
-                r"(つˆ⌣ˆ)つ⊂(・ᴗ・⊂)" if random.randint(1, 20) < 20 else r"(つˆ⌣ˆ)つ⊂(・﹏・⊂)"
-            )
+            hug_emoji: str = rf"(つˆ⌣ˆ)つ⊂({hug_face}⊂)"
 
             source_name: str = utils.text.sanitise(source.display_name)
             target_name: str = utils.text.sanitise(target.display_name)
