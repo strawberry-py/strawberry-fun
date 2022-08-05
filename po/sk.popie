@@ -98,31 +98,31 @@ msgid gave / got
 msgstr rozdané / získané
 
 msgid This server has not enabled any variants.
-msgstr
+msgstr Tento server nemá zapnuté žiadne varianty.
 
 msgid Relation
-msgstr
+msgstr Vzťah
 
 msgid Channel
-msgstr
+msgstr Kanál
 
 msgid Variant
-msgstr
+msgstr Varianta
 
 msgid That relation does not exist.
-msgstr
+msgstr Tento vzťah neexistuje.
 
 msgid Relation **{command}** does not have any variant.
-msgstr
+msgstr Vzťah **{command}** nemá žiadnu variantu.
 
 msgid Relation **{command}** has following variants:
-msgstr
+msgstr Vzťah **{command}** má ansledujúce varianty:
 
 msgid That relation does not have this variant.
-msgstr
+msgstr Tento vzťah nemá variantu.
 
 msgid Variant for **{command}** in **#{channel}** set to **{variant}**.
-msgstr
+msgstr Varianta pre **{command}** v **#{channel}** nastavená na **{variant}**.
 
 msgid Relations {name}: {action}
 msgstr Vzťahy {name}: {action}
@@ -134,7 +134,7 @@ msgid Unknown user
 msgstr Neznámy používateľ
 
 msgid Given
-msgstr Rozdáno
+msgstr Rozdané
 
 msgid Nothing given
 msgstr Nič nebolo rozdané
@@ -155,7 +155,7 @@ msgid Macro name
 msgstr Názov makra
 
 msgid Match
-msgstr Match
+msgstr Zhoda
 
 msgid Invocations
 msgstr Spustenie
@@ -278,22 +278,22 @@ msgid Did not receive JSON response.
 msgstr Na výstupe sme nedostali typ JSON.
 
 msgid Today
-msgstr
+msgstr Dnes
 
 msgid Tomorrow
-msgstr
+msgstr Zajtra
 
 msgid Weather forecast for **{place}**, {date}
-msgstr
+msgstr Predpoveď počasia pre **{place}**, {date}
 
 msgid Temperature: **{real} ˚C** (feels like **{feel} ˚C**)
-msgstr
+msgstr Teplota: **{real} ˚C** (pocitovo **{feel} ˚C**)
 
 msgid Wind speed: **{wind} km/h**
-msgstr
+msgstr Rýchlosť vetra: **{wind} km/h**
 
 msgid Chance of rain: **{rain} %**
-msgstr
+msgstr Pravdepodobnosť dažďa: **{rain} %**
 
 msgid That's not valid place name.
 msgstr Tento názov miesta nieje platný.
@@ -314,19 +314,19 @@ msgid This server doesn't have any place preference saved.
 msgstr Tento server nemá nastavené žiadne preferované miesto počasia.
 
 msgid Server's preferred weather place was removed.
-msgstr
+msgstr Preferencia miesta predpovede počasia pre server bola odstránená.
 
 msgid Weather forecast preference
-msgstr
+msgstr Preferencia predpovede počasia
 
 msgid Your preference
-msgstr
+msgstr Tvoja preferencia
 
 msgid *No preference set*
-msgstr
+msgstr *Preferencia nenastavená*
 
 msgid Server preference
-msgstr
+msgstr Preferencie servera
 
 msgid You have to specify a place or set a preference.
 msgstr Musíš zadať miesto alebo si nastaviť preferenciu.
