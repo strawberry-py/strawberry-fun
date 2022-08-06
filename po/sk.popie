@@ -308,7 +308,7 @@ msgid Your preferred weather place was removed.
 msgstr Tvoje preferované miesto počasia bolo zmazané.
 
 msgid Server's preferred weather place set to **{place}**.
-msgstr
+msgstr Preferencia miesta predpovedi počasia pre server bola nastavená na **{place}**.
 
 msgid This server doesn't have any place preference saved.
 msgstr Tento server nemá nastavené žiadne preferované miesto počasia.
