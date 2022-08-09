@@ -2,11 +2,12 @@ import aiohttp
 import asyncio
 import contextlib
 import random
-import numpy as np
 from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont
 from typing import List, Set, Tuple, Optional, Union
 from pathlib import Path
+
+import numpy as np
+from PIL import Image, ImageDraw, ImageFont
 
 import discord
 from discord.ext import commands
