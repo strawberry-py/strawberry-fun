@@ -74,20 +74,26 @@ class Fun(commands.Cog):
 
         border: str = "***" if type(target) == discord.Role else "**"
 
+        source_name: str = utils.text.sanitise(source.display_name)
+        if type(target) is discord.Member:
+            target_name: str = utils.text.sanitise(target.display_name)
+        else:
+            target_name: str = utils.text.sanitise(target.name)
+
         hug_face = random.choices(
             ["・ᴗ・", "・⌣・", "・≧▽≦・", "・‿‿・", "・﹏・", "◕‿‿◕", "▀̿_▀̿", "´▽｀"],
             weights=(91, 1, 1, 1, 1, 1, 1, 1),
         )[0]
         if (target.id, source.id) not in self.pending_hugs:
             hug_emoji: str = f"(⊃{hug_face})⊃"
-            target_name: str = utils.text.sanitise(target.display_name)
             message: str = f"{hug_emoji} {border}{target_name}{border}"
         else:
             hug_emoji: str = rf"(つˆ⌣ˆ)つ⊂({hug_face}⊂)"
-
-            source_name: str = utils.text.sanitise(source.display_name)
-            target_name: str = utils.text.sanitise(target.display_name)
-            message: str = f"{border}{source_name}{border} {hug_emoji} {border}{target_name}{border}"
+            message: str = (
+                f"{border}{source_name}{border} "
+                f"{hug_emoji} "
+                f"{border}{target_name}{border}"
+            )
 
         await ctx.send(message)
         self.pending_hugs.add((source.id, target.id))
