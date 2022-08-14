@@ -166,7 +166,8 @@ class Weather(commands.Cog):
                 author=ctx.message.author,
                 title=title,
                 description=_(ctx, "Weather forecast for **{place}**, {date}").format(
-                    date=day["date"], place=name
+                    date=day["date"],
+                    place=name[0:32] + ("..." if len(name) > 32 else ""),
                 ),
             )
 
