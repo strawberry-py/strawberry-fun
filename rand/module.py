@@ -111,15 +111,32 @@ class Rand(commands.Cog):
                     )
                     return
 
-                json_response = await response.json()
+                image_response = await response.json()
 
-        embed: discord.Embed = utils.discord.create_embed(
+            fact_response: str = ""
+            if random.randint(0, 9) == 1:
+                async with session.get("https://meowfacts.herokuapp.com/") as response:
+                    if response.status == 200:
+                        fact_response = await response.json()
+                        fact_response = fact_response["data"][0]
+
+        image_embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
             footer="thecatapi.com",
         )
-        embed.set_image(url=json_response[0]["url"])
+        image_embed.set_image(url=image_response[0]["url"])
+        embeds: List[discord.Embed] = [image_embed]
 
-        await ctx.reply(embed=embed)
+        if fact_response:
+            fact_embed = utils.discord.create_embed(
+                author=ctx.author,
+                title=_(ctx, "Cat fact"),
+                description=fact_response,
+                footer="meowfacts.herokuapp.com",
+            )
+            embeds.append(fact_embed)
+
+        await ctx.reply(embeds=embeds)
 
     @commands.cooldown(rate=5, per=20, type=commands.BucketType.channel)
     @check.acl2(check.ACLevel.EVERYONE)
