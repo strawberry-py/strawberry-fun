@@ -323,6 +323,8 @@ class Weather(commands.Cog):
         for char in ("&", "#", "?"):
             if char in name:
                 return False
+        if len(name) > 64:
+            return False
         return True
 
 
