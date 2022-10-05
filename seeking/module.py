@@ -29,15 +29,21 @@ class Seeking(commands.Cog):
         if ctx.invoked_subcommand is not None:
             return
 
-        embed = utils.discord.create_embed(
-            author=ctx.author,
-            title=_(ctx, "Seeking"),
-        )
         items = SeekingDB.get_all(ctx.guild.id, ctx.channel.id)
 
-        if items:
-            template = "#{id} | {name}, {timestamp}"
-            for item in items:
+        if not items:
+            await ctx.reply(_(ctx, "No items found."))
+            return
+
+        embeds = []
+        template = "#{id} | {name}, {timestamp}"
+
+        for i in range(0, len(items), 15):
+            embed = utils.discord.create_embed(
+                author=ctx.author,
+                title=_(ctx, "Seeking"),
+            )
+            for item in items[i : i + 15]:
                 member = ctx.guild.get_member(item.user_id)
                 name = (
                     utils.text.sanitise(member.display_name)
@@ -59,9 +65,10 @@ class Seeking(commands.Cog):
                     value=text,
                     inline=False,
                 )
-        else:
-            embed.add_field(name="\u200b", value=_(ctx, "No items found"))
-        await ctx.send(embed=embed)
+            embeds.append(embed)
+
+        scrollable_embed = utils.ScrollableEmbed(ctx, embeds)
+        await scrollable_embed.scroll()
 
     @check.acl2(check.ACLevel.MEMBER)
     @seeking.command(name="add")
