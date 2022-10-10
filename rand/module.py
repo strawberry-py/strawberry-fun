@@ -83,7 +83,7 @@ class Rand(commands.Cog):
 
         footer: str = "picsum.photos"
         if seed:
-            footer += f" ({seed})"
+            footer += f" ({seed})" if len(seed) <= 16 else f" ({seed[:16]}…)"
 
         embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
