@@ -214,6 +214,63 @@ msgstr Makro **{name}** aktualizováno.
 msgid Macro **{name}** removed.
 msgstr Makro **{name}** odebráno.
 
+msgid Change of nickname
+msgstr Změna přezdívky
+
+msgid Values are in karma points. Use commnand **nickname/name** for more info.
+msgstr Hodnoty jsou udávané v karma bodech. Použití příkazu **nickname/name** pro více informací.
+
+msgid Set
+msgstr Set
+
+msgid Price **{price}**
+msgstr Cena **{price}**
+
+msgid Reset
+msgstr Reset
+
+msgid Cannot change nickname because module karma is not loaded.
+msgstr Nelze změnit přezdívku, protože modul karma není načten.
+
+msgid New nickname {nickname} is same as current nickname. No need to change.
+msgstr Nová přezdívka {nickname} je stejná jako aktuální, takže ji není třeba měnit.
+
+msgid Unable to change nickname, this command has no set price.
+msgstr Není možné změnit přezdívku, jelikož příkaz nemá nastavenou cenu.
+
+msgid No enough karma, try to chat more to earn karma.
+msgstr Nedostatek karmy, pro zisk karmy se více zapoj do konverzace.
+
+msgid {nickname} includes some forbidden characters.
+msgstr {nickname} obsahuje některý z nepovolených znaků.
+
+msgid Cannot change nickname because you have greater privileges.
+msgstr Není možné změnit přezdívku z důvodu vyššího oprávnění.
+
+msgid Congratulation! You were successfully renamed to {nickname}.
+msgstr Gratulace! Byl jsi uspěšně přejměnován na {nickname}.
+
+msgid Cannot change nickname because mudule karma is not loaded.
+msgstr Není možné změnit jméno, protože modul karma není načten.
+
+msgid Unable to reset nickname, this command has no set price.
+msgstr Není možné resetovat přezdívku, jelikož příkaz nemá nastavenou cenu.
+
+msgid You are already using username.
+msgstr Aktuálně už používáš uživatelské jméno.
+
+msgid Congratulation! You are now using username not nickname.
+msgstr Gratulace! Právě používáš uživatelské jméno a ne přezdívku.
+
+msgid Unable to change the price because one of the prices have negative value.
+msgstr Nění možné změnit cenu, jelikož jedna z cen je záporná.
+
+msgid Prices have been successfully updated.
+msgstr Ceny byly uspěšně aktualizovány.
+
+msgid Prices have not been successfully updated.
+msgstr Ceny nebyly úspěšně aktualizovány.
+
 msgid You asked a question, but did not add enough options.
 msgstr Ptáš se na otázku, ale nemám dost možností k výběru.
 
