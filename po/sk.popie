@@ -214,16 +214,13 @@ msgstr Makro **{name}** aktualizované.
 msgid Macro **{name}** removed.
 msgstr Makro **{name}** vymazané.
 
-msgid Change of nickname
+msgid Nickname change prices
 msgstr
 
-msgid Values are in karma points. Use commnand **nickname/name** for more info.
+msgid Values are in karma points.
 msgstr
 
 msgid Set
-msgstr
-
-msgid Price **{price}**
 msgstr
 
 msgid Reset
@@ -232,10 +229,10 @@ msgstr
 msgid Cannot change nickname because module karma is not loaded.
 msgstr
 
-msgid New nickname {nickname} is same as current nickname. No need to change.
+msgid New nickname {nickname} is same as current nickname.
 msgstr
 
-msgid Unable to change nickname, this command has no set price.
+msgid Unable to change nickname, **set** price not configured.
 msgstr
 
 msgid No enough karma, try to chat more to earn karma.
@@ -247,22 +244,22 @@ msgstr
 msgid Cannot change nickname because you have greater privileges.
 msgstr
 
-msgid Congratulation! You were successfully renamed to {nickname}.
+msgid Congratulations, you have been renamed to **{nickname}**.
 msgstr
 
 msgid Cannot change nickname because mudule karma is not loaded.
 msgstr
 
-msgid Unable to reset nickname, this command has no set price.
+msgid Unable to change nickname, **unset** price not configured.
 msgstr
 
-msgid You are already using username.
+msgid You have no nickname here.
 msgstr
 
-msgid Congratulation! You are now using username not nickname.
+msgid Congratulations, your nickname has been removed.
 msgstr
 
-msgid Unable to change the price because one of the prices have negative value.
+msgid Set nor reset price cannot be negative.
 msgstr
 
 msgid Prices have been successfully updated.

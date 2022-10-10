@@ -9,10 +9,11 @@ from .database import Price
 
 _ = i18n.Translator("modules/fun").translate
 bot_log = logger.Bot.logger()
+guild_log = logger.Guild.logger()
 
 
 class Names(commands.Cog):
-    """Pay by karma and I change your name."""
+    """Buy nickname changes for karma points."""
 
     def __init__(self, bot: commands.Bot):
         # Check if dependency module is loaded.
@@ -25,47 +26,38 @@ class Names(commands.Cog):
 
     @commands.bot_has_permissions(manage_nicknames=True)
     @commands.guild_only()
-    @check.acl2(check.ACLevel.EVERYONE)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @commands.group(name="nickname", aliases=["name"])
     async def nickname_(self, ctx):
         """Change your nickname"""
         await utils.discord.send_help(ctx)
 
-    @commands.guild_only()
-    @check.acl2(check.ACLevel.EVERYONE)
+    @check.acl2(check.ACLevel.MEMBER)
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @nickname_.command(name="prices")
     async def prices(self, ctx):
-        """Display prices for various name/nickname operations"""
+        """Display nickname change prices"""
 
         embed = utils.discord.create_embed(
             author=ctx.author,
-            title=_(ctx, "Change of nickname"),
-            description=_(
-                ctx,
-                "Values are in karma points. Use commnand **nickname/name** for more info.",
-            ),
+            title=_(ctx, "Nickname change prices"),
+            description=_(ctx, "Values are in karma points."),
         )
+
         price = Price.get(ctx.guild.id)
         embed.add_field(
             name=_(ctx, "Set"),
-            value=_(ctx, "Price **{price}**").format(
-                price=price.set_price if price is not None else _(ctx, "not set")
-            ),
+            value=price.set_price if price is not None else _(ctx, "not set"),
         )
         embed.add_field(
             name=_(ctx, "Reset"),
-            value=_(ctx, "Price **{price}**").format(
-                price=price.reset_price if price is not None else _(ctx, "not set")
-            ),
+            value=price.reset_price if price is not None else _(ctx, "not set"),
         )
 
         await ctx.reply(embed=embed)
 
-    @commands.guild_only()
-    @check.acl2(check.ACLevel.EVERYONE)
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @nickname_.command(name="set")
     async def nickname_set(self, ctx, nickname: str):
         """Change server nickname"""
@@ -82,17 +74,16 @@ class Names(commands.Cog):
 
         if nickname == ctx.author.display_name:
             await ctx.reply(
-                _(
-                    ctx,
-                    "New nickname {nickname} is same as current nickname. No need to change.",
-                ).format(nickname=nickname)
+                _(ctx, "New nickname {nickname} is same as current nickname.").format(
+                    nickname=nickname
+                )
             )
             return
 
         price = Price.get(ctx.guild.id)
         if price is None:
             await ctx.reply(
-                _(ctx, "Unable to change nickname, this command has no set price.")
+                _(ctx, "Unable to change nickname, **set** price not configured.")
             )
             return
 
@@ -122,14 +113,17 @@ class Names(commands.Cog):
         member.save()
 
         await ctx.reply(
-            _(
-                ctx, "Congratulation! You were successfully renamed to {nickname}."
-            ).format(nickname=nickname)
+            _(ctx, "Congratulations, you have been renamed to **{nickname}**.").format(
+                nickname=utils.text.sanitise(nickname)
+            )
+        )
+        await guild_log.info(
+            ctx.author,
+            ctx.channel,
+            f"Nickname changed to '{nickname}' for {price.set_price} karma points.",
         )
 
-    @commands.guild_only()
-    @check.acl2(check.ACLevel.EVERYONE)
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
+    @check.acl2(check.ACLevel.MEMBER)
     @nickname_.command(name="unset", aliases=["reset"])
     async def nickname_unset(self, ctx):
         """Change your nickname back to global from server"""
@@ -147,7 +141,7 @@ class Names(commands.Cog):
         price = Price.get(ctx.guild.id)
         if price is None:
             await ctx.reply(
-                _(ctx, "Unable to reset nickname, this command has no set price.")
+                _(ctx, "Unable to change nickname, **unset** price not configured.")
             )
             return
 
@@ -157,7 +151,7 @@ class Names(commands.Cog):
             return
 
         if ctx.author.nick is None:
-            await ctx.reply(_(ctx, "You are already using username."))
+            await ctx.reply(_(ctx, "You have no nickname here."))
             return
 
         try:
@@ -171,24 +165,21 @@ class Names(commands.Cog):
         member.value += -price.reset_price
         member.save()
 
-        await ctx.reply(
-            _(ctx, "Congratulation! You are now using username not nickname.")
+        await ctx.reply(_(ctx, "Congratulations, your nickname has been removed."))
+        await guild_log.info(
+            ctx.author,
+            ctx.channel,
+            f"Nickname reset for {price.reset_price} karma points.",
         )
 
-    @commands.guild_only()
     @check.acl2(check.ACLevel.MOD)
-    @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
-    @nickname_.command(name="set-prices", aliases=["set_prices"])
+    @nickname_.command(name="set-prices")
     async def nickname_set_prices(self, ctx, set_price: int, reset_price: int):
-        """Change prices for set and reset"""
+        """Change nickname change prices"""
         if set_price < 0 or reset_price < 0:
-            await ctx.reply(
-                _(
-                    ctx,
-                    "Unable to change the price because one of the prices have negative value.",
-                )
-            )
+            await ctx.reply(_(ctx, "Set nor reset price cannot be negative."))
             return
+
         price = Price.set(ctx.guild.id, set_price, reset_price)
         if price is not None:
             await ctx.reply(_(ctx, "Prices have been successfully updated."))

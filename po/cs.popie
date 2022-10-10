@@ -214,29 +214,26 @@ msgstr Makro **{name}** aktualizováno.
 msgid Macro **{name}** removed.
 msgstr Makro **{name}** odebráno.
 
-msgid Change of nickname
-msgstr Změna přezdívky
+msgid Nickname change prices
+msgstr Ceny změn přezdívek
 
-msgid Values are in karma points. Use commnand **nickname/name** for more info.
-msgstr Hodnoty jsou udávané v karma bodech. Použití příkazu **nickname/name** pro více informací.
+msgid Values are in karma points.
+msgstr Hodnoty jsou v karma bodech
 
 msgid Set
-msgstr Set
-
-msgid Price **{price}**
-msgstr Cena **{price}**
+msgstr Změna
 
 msgid Reset
-msgstr Reset
+msgstr Resetování
 
 msgid Cannot change nickname because module karma is not loaded.
-msgstr Nelze změnit přezdívku, protože modul karma není načten.
+msgstr Nelze změnit přezdívku, protože karma karma není načten.
 
-msgid New nickname {nickname} is same as current nickname. No need to change.
-msgstr Nová přezdívka {nickname} je stejná jako aktuální, takže ji není třeba měnit.
+msgid New nickname {nickname} is same as current nickname.
+msgstr Nová přezdívka {nickname} je stejná jako aktuální přezdívka.
 
-msgid Unable to change nickname, this command has no set price.
-msgstr Není možné změnit přezdívku, jelikož příkaz nemá nastavenou cenu.
+msgid Unable to change nickname, **set** price not configured.
+msgstr Přezdívku nelze změnit, **set** cena nebyla nastavena.
 
 msgid No enough karma, try to chat more to earn karma.
 msgstr Nedostatek karmy, pro zisk karmy se více zapoj do konverzace.
@@ -247,23 +244,23 @@ msgstr {nickname} obsahuje některý z nepovolených znaků.
 msgid Cannot change nickname because you have greater privileges.
 msgstr Není možné změnit přezdívku z důvodu vyššího oprávnění.
 
-msgid Congratulation! You were successfully renamed to {nickname}.
-msgstr Gratulace! Byl jsi uspěšně přejměnován na {nickname}.
+msgid Congratulations, you have been renamed to **{nickname}**.
+msgstr Gratuluji, přezdívka ti byla změněna na **{nickname}**.
 
 msgid Cannot change nickname because mudule karma is not loaded.
 msgstr Není možné změnit jméno, protože modul karma není načten.
 
-msgid Unable to reset nickname, this command has no set price.
-msgstr Není možné resetovat přezdívku, jelikož příkaz nemá nastavenou cenu.
+msgid Unable to change nickname, **unset** price not configured.
+msgstr Přezdívku nelze změnit, **unset** cena nebyla nastavena.
 
-msgid You are already using username.
-msgstr Aktuálně už používáš uživatelské jméno.
+msgid You have no nickname here.
+msgstr Žádnou přezdívku tu nemáš.
 
-msgid Congratulation! You are now using username not nickname.
-msgstr Gratulace! Právě používáš uživatelské jméno a ne přezdívku.
+msgid Congratulations, your nickname has been removed.
+msgstr Gratuluji, tvoje přezdívka byla odstraněna.
 
-msgid Unable to change the price because one of the prices have negative value.
-msgstr Nění možné změnit cenu, jelikož jedna z cen je záporná.
+msgid Set nor reset price cannot be negative.
+msgstr Cena za nastavení ani zrušení nemůže být negativní.
 
 msgid Prices have been successfully updated.
 msgstr Ceny byly uspěšně aktualizovány.
