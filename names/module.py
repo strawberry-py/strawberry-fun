@@ -59,7 +59,7 @@ class Names(commands.Cog):
 
     @check.acl2(check.ACLevel.MEMBER)
     @nickname_.command(name="set")
-    async def nickname_set(self, ctx, nickname: str):
+    async def nickname_set(self, ctx, *, nickname: str):
         """Change server nickname"""
         if not BaseAdminModule.get("boards.karma").enabled:
             await bot_log.error(
@@ -71,6 +71,9 @@ class Names(commands.Cog):
                 _(ctx, "Cannot change nickname because module karma is not loaded.")
             )
             return
+
+        # Strip accidental quotes
+        nickname = nickname.strip("'\" ")
 
         if nickname == ctx.author.display_name:
             await ctx.reply(
@@ -110,6 +113,8 @@ class Names(commands.Cog):
         if member.value < price.set_price:
             await ctx.reply(_(ctx, "No enough karma, try to chat more to earn karma."))
             return
+
+        # TODO Add ConfirmView
 
         try:
             await ctx.author.edit(nick=nickname, reason="Nickname purchase")
@@ -163,6 +168,8 @@ class Names(commands.Cog):
         if ctx.author.nick is None:
             await ctx.reply(_(ctx, "You have no nickname here."))
             return
+
+        # TODO Add ConfirmView
 
         try:
             await ctx.author.edit(nick=None, reason="Nickname reset")
