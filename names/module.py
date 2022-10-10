@@ -74,9 +74,28 @@ class Names(commands.Cog):
 
         if nickname == ctx.author.display_name:
             await ctx.reply(
-                _(ctx, "New nickname {nickname} is same as current nickname.").format(
+                _(ctx, "That nickname is same as current nickname.").format(
                     nickname=nickname
                 )
+            )
+            return
+
+        if nickname in ("everyone", "here", "discord"):
+            await ctx.reply(_(ctx, "That nickname is forbidden keyword."))
+            return
+
+        for char in ("@", "#", "`", "'", '"'):
+            if char in nickname:
+                await ctx.reply(
+                    _(ctx, "That nickname includes some forbidden characters.").format(
+                        nickname=nickname
+                    )
+                )
+                return
+
+        if len(nickname) < 2 or len(nickname) > 32:
+            await ctx.reply(
+                _(ctx, "The length of a nickname must be between 2 and 32 characters.")
             )
             return
 
@@ -91,15 +110,6 @@ class Names(commands.Cog):
         if member.value < price.set_price:
             await ctx.reply(_(ctx, "No enough karma, try to chat more to earn karma."))
             return
-
-        for char in ("@", "#", "`", "'", '"'):
-            if char in nickname:
-                await ctx.reply(
-                    _(ctx, "{nickname} includes some forbidden characters.").format(
-                        nickname=nickname
-                    )
-                )
-                return
 
         try:
             await ctx.author.edit(nick=nickname, reason="Nickname purchase")

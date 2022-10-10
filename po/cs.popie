@@ -229,17 +229,23 @@ msgstr Resetování
 msgid Cannot change nickname because module karma is not loaded.
 msgstr Nelze změnit přezdívku, protože karma karma není načten.
 
-msgid New nickname {nickname} is same as current nickname.
-msgstr Nová přezdívka {nickname} je stejná jako aktuální přezdívka.
+msgid That nickname is same as current nickname.
+msgstr To je tvoje aktuální přezdívka.
+
+msgid That nickname is forbidden keyword.
+msgstr To je zakázané klíčové slovo.
+
+msgid That nickname includes some forbidden characters.
+msgstr Taková přezdívka obsahuje zakázané znaky.
+
+msgid The length of a nickname must be between 2 and 32 characters.
+msgstr Délka přezdívky musí být mezi dvěma a 32 znaky.
 
 msgid Unable to change nickname, **set** price not configured.
 msgstr Přezdívku nelze změnit, **set** cena nebyla nastavena.
 
 msgid No enough karma, try to chat more to earn karma.
 msgstr Nedostatek karmy, pro zisk karmy se více zapoj do konverzace.
-
-msgid {nickname} includes some forbidden characters.
-msgstr {nickname} obsahuje některý z nepovolených znaků.
 
 msgid Cannot change nickname because you have greater privileges.
 msgstr Není možné změnit přezdívku z důvodu vyššího oprávnění.

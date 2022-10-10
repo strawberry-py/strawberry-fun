@@ -229,16 +229,22 @@ msgstr
 msgid Cannot change nickname because module karma is not loaded.
 msgstr
 
-msgid New nickname {nickname} is same as current nickname.
+msgid That nickname is same as current nickname.
+msgstr
+
+msgid That nickname is forbidden keyword.
+msgstr
+
+msgid That nickname includes some forbidden characters.
+msgstr
+
+msgid The length of a nickname must be between 2 and 32 characters.
 msgstr
 
 msgid Unable to change nickname, **set** price not configured.
 msgstr
 
 msgid No enough karma, try to chat more to earn karma.
-msgstr
-
-msgid {nickname} includes some forbidden characters.
 msgstr
 
 msgid Cannot change nickname because you have greater privileges.
