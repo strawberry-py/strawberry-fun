@@ -196,7 +196,7 @@ class Rand(commands.Cog):
         """Get random image of a duck"""
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                "https://random-d.uk/api/v2/random?type=jpeg"
+                "https://random-d.uk/api/v2/random"
             ) as response:
                 if response.status != 200:
                     return await ctx.reply(
