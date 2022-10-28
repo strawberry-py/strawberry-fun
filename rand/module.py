@@ -1,3 +1,4 @@
+import urllib
 import aiohttp
 import random
 import re
@@ -305,6 +306,47 @@ class Rand(commands.Cog):
             description=result["joke"],
             footer="icanhazdadjoke.com",
             url="https://icanhazdadjoke.com/j/" + result["id"],
+        )
+
+        await ctx.reply(embed=embed)
+
+    @commands.cooldown(rate=5, per=60, type=commands.BucketType.channel)
+    @check.acl2(check.ACLevel.EVERYONE)
+    @commands.command()
+    async def joke(self, ctx, *, keyword: Optional[str] = None):
+        """Get random joke
+
+        Arguments
+        ---------
+        keyword: search for a certain keyword in a joke
+        """
+        if keyword is not None and ("&" in keyword or "?" in keyword):
+            return await ctx.reply(_(ctx, "I didn't find a joke like that."))
+
+        params: Dict[str, str] = {"type": "single"}
+        url: str = "https://v2.jokeapi.dev/joke/Any"
+        if keyword is not None:
+            params["contains"] = urllib.parse.quote(keyword.encode('utf8'))
+        headers: Dict[str, str] = {"Accept": "application/json"}
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, headers=headers, params=params) as response:
+                result = await response.json()
+
+        if keyword is not None:
+            if result["error"]:
+                return await ctx.reply(_(ctx, "I didn't find a joke like that."))
+            result["joke"] = re.sub(
+                f"(\\b\\w*{keyword}\\w*\\b)",
+                r"**\1**",
+                result["joke"],
+                flags=re.IGNORECASE,
+            )
+
+        embed: discord.Embed = utils.discord.create_embed(
+            author=ctx.author,
+            description=result["joke"],
+            footer="jokeapi.dev",
         )
 
         await ctx.reply(embed=embed)
