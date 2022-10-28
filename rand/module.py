@@ -188,6 +188,32 @@ class Rand(commands.Cog):
 
         await ctx.reply(embed=embed)
 
+    @commands.cooldown(rate=5, per=20, type=commands.BucketType.channel)
+    @check.acl2(check.ACLevel.EVERYONE)
+    @commands.command()
+    async def duck(self, ctx):
+        """Get random image of a duck"""
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                "https://random-d.uk/api/v2/random?type=jpeg"
+            ) as response:
+                if response.status != 200:
+                    return await ctx.reply(
+                        _(ctx, "Command encountered an error (E{code}).").format(
+                            code=response.status
+                        )
+                    )
+
+                json_response = await response.json()
+
+        embed: discord.Embed = utils.discord.create_embed(
+            author=ctx.author,
+            footer="random-d.uk",
+        )
+        embed.set_image(url=json_response["url"])
+
+        await ctx.reply(embed=embed)
+
     @commands.cooldown(rate=5, per=60, type=commands.BucketType.channel)
     @check.acl2(check.ACLevel.EVERYONE)
     @commands.command()
