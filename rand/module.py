@@ -17,6 +17,27 @@ class Rand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    # Helpers
+
+    def _get_request_headers(self) -> Dict[str, str]:
+        """Generate headers to identify to API.
+
+        Even if some APIs do not require authorization, it is part or the good
+        manners to identify us as a client.
+
+        Individual API requirements should be commented here. Unless they are
+        contradicting, or unless they contain a secret, they should always be
+        sent.
+        """
+        result: Dict[str, str] = {}
+        result["X-pumpkin.py-bot"] = str(self.bot.user.id)
+        # TODO The URL also appears in mgmt/verify. Should we move it
+        #      to somewhere in the core?
+        result["X-pumpkin.py-url"] = "https://github.com/pumpkin-py"
+        return result
+
+    # Commands
+
     @commands.cooldown(rate=5, per=20.0, type=commands.BucketType.user)
     @check.acl2(check.ACLevel.EVERYONE)
     @commands.command(name="random")
@@ -67,7 +88,9 @@ class Rand(commands.Cog):
             url += "seed/" + url_seed + "/"
         url += f"{size}.jpg?random={ctx.message.id}"
 
-        async with aiohttp.ClientSession() as session, session.get(url) as img_response:
+        async with aiohttp.ClientSession(
+            headers=self._get_request_headers()
+        ) as session, session.get(url) as img_response:
             if img_response.status != 200:
                 return await ctx.reply(f"E{img_response.status}")
 
@@ -100,7 +123,8 @@ class Rand(commands.Cog):
     @commands.command()
     async def cat(self, ctx):
         """Get random image of a cat"""
-        async with aiohttp.ClientSession() as session:
+        headers = self._get_request_headers()
+        async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(
                 "https://api.thecatapi.com/v1/images/search"
             ) as response:
@@ -111,15 +135,14 @@ class Rand(commands.Cog):
                         )
                     )
                     return
-
                 image_response = await response.json()
 
             fact_response: str = ""
             if random.randint(0, 9) == 1:
                 async with session.get("https://meowfacts.herokuapp.com/") as response:
                     if response.status == 200:
-                        fact_response = await response.json()
-                        fact_response = fact_response["data"][0]
+                        fact_response_ = await response.json()
+                        fact_response = fact_response_["data"][0]
 
         image_embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
@@ -144,7 +167,8 @@ class Rand(commands.Cog):
     @commands.command()
     async def dog(self, ctx):
         """Get random image of a dog"""
-        async with aiohttp.ClientSession() as session:
+        headers = self._get_request_headers()
+        async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(
                 "https://api.thedogapi.com/v1/images/search"
             ) as response:
@@ -188,7 +212,8 @@ class Rand(commands.Cog):
     @commands.command()
     async def fox(self, ctx):
         """Get random image of a fox"""
-        async with aiohttp.ClientSession() as session:
+        headers = self._get_request_headers()
+        async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get("https://randomfox.ca/floof/") as response:
                 if response.status != 200:
                     return await ctx.reply(
@@ -212,7 +237,8 @@ class Rand(commands.Cog):
     @commands.command()
     async def duck(self, ctx):
         """Get random image of a duck"""
-        async with aiohttp.ClientSession() as session:
+        headers = self._get_request_headers()
+        async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(
                 "https://random-d.uk/api/v2/random"
             ) as response:
@@ -243,8 +269,9 @@ class Rand(commands.Cog):
         ---------
         number: Comics number. Omit to get random one.
         """
+        headers = self._get_request_headers()
         # get maximal
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get("https://xkcd.com/info.0.json") as response:
                 fetched = await response.json()
 
@@ -299,10 +326,11 @@ class Rand(commands.Cog):
         if keyword is not None:
             params["term"] = keyword
             url += "/search"
-        headers: Dict[str, str] = {"Accept": "application/json"}
 
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers, params=params) as response:
+        headers = self._get_request_headers()
+        headers["Accept"] = "application/json"
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url, params=params) as response:
                 fetched = await response.json()
 
         if keyword is not None:
@@ -344,16 +372,19 @@ class Rand(commands.Cog):
         params: Dict[str, str] = {"type": "single"}
         url: str = "https://v2.jokeapi.dev/joke/Any"
         if keyword is not None:
-            params["contains"] = urllib.parse.quote(keyword.encode('utf8'))
+            params["contains"] = urllib.parse.quote(keyword.encode("utf8"))
         headers: Dict[str, str] = {"Accept": "application/json"}
 
-        async with aiohttp.ClientSession() as session:
+        headers = self._get_request_headers()
+        async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(url, headers=headers, params=params) as response:
                 result = await response.json()
 
         if keyword is not None:
             if result["error"]:
-                return await ctx.reply(_(ctx, "I didn't find a joke like that."))
+                await ctx.reply(_(ctx, "I didn't find a joke like that."))
+                return
+
             result["joke"] = re.sub(
                 f"(\\b\\w*{keyword}\\w*\\b)",
                 r"**\1**",
