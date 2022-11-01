@@ -285,14 +285,11 @@ class Rand(commands.Cog):
                     ) as response:
                         fetched = await response.json()
 
-        embed: discord.Embed = utils.discord.create_embed(
+        main_embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
             title=fetched["title"],
-            description="_" + fetched["alt"][:2046] + "_",
-            footer="xkcd.com",
         )
-
-        embed.add_field(
+        main_embed.add_field(
             name=(
                 f"{fetched['year']}"
                 f"-{str(fetched['month']).zfill(2)}"
@@ -304,9 +301,15 @@ class Rand(commands.Cog):
             ),
             inline=False,
         )
-        embed.set_image(url=fetched["img"])
+        main_embed.set_image(url=fetched["img"])
+        description_embed: discord.Embed = utils.discord.create_embed(
+            author=ctx.author,
+            title="_" + _(ctx, "Description") + "_",
+            description=fetched["alt"][:2048],
+            footer="xkcd.com",
+        )
 
-        await ctx.reply(embed=embed)
+        await ctx.reply(embeds=[main_embed, description_embed])
 
     @commands.cooldown(rate=5, per=60, type=commands.BucketType.channel)
     @check.acl2(check.ACLevel.EVERYONE)
