@@ -154,16 +154,34 @@ class Rand(commands.Cog):
                             code=response.status
                         )
                     )
+                image_response = await response.json()
 
-                json_response = await response.json()
+            fact_response: str = ""
+            if random.randint(0, 9) == 1:
+                async with session.get(
+                    "https://www.dogfactsapi.ducnguyen.dev/api/v1/facts/?number=1"
+                ) as response:
+                    if response.status == 200:
+                        fact_response_ = await response.json()
+                        fact_response = fact_response_["facts"][0]
 
-        embed: discord.Embed = utils.discord.create_embed(
+        image_embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
             footer="thedogapi.com",
         )
-        embed.set_image(url=json_response[0]["url"])
+        image_embed.set_image(url=image_response[0]["url"])
+        embeds: List[discord.Embed] = [image_embed]
 
-        await ctx.reply(embed=embed)
+        if fact_response:
+            fact_embed = utils.discord.create_embed(
+                author=ctx.author,
+                title=_(ctx, "Dog fact"),
+                description=fact_response,
+                footer="dogfactsapi.ducnguyen.dev",
+            )
+            embeds.append(fact_embed)
+
+        await ctx.reply(embeds=embeds)
 
     @commands.cooldown(rate=5, per=20, type=commands.BucketType.channel)
     @check.acl2(check.ACLevel.EVERYONE)
