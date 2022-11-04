@@ -38,6 +38,9 @@ class Weather(commands.Cog):
 
         :return: Tuple of latitude, longitude, city, country code.
         """
+        if not self._is_place_valid(place):
+            raise RuntimeError("Place contains illegal characters or is too long.")
+
         safe_place: str = urllib.parse.quote_plus(place)
         url = (
             "https://nominatim.openstreetmap.org/search"
@@ -48,7 +51,10 @@ class Weather(commands.Cog):
             async with session.get(url) as resp:
                 data = await resp.json()
 
-        lat, lon = data["features"][0]["geometry"]["coordinates"]
+        if not data["features"]:
+            raise RuntimeError("Place not found.")
+
+        lon, lat = data["features"][0]["geometry"]["coordinates"]
 
         city: str
         address = data["features"][0]["properties"]["address"]
@@ -291,9 +297,23 @@ class Weather(commands.Cog):
             return
 
         async with ctx.typing():
-            geo = await self.place_to_geo(place)
+            try:
+                geo = await self.place_to_geo(place)
+            except RuntimeError:
+                await ctx.reply(_(ctx, "Submitted place could not be found."))
+                return
+
             lat, lon, city, country = geo
-            forecast = await self.geo_to_forecast(lat, lon)
+            try:
+                forecast = await self.geo_to_forecast(lat, lon)
+            except aiohttp.ContentTypeError as exc:
+                await ctx.reply(_(ctx, "Forecast server refused the geolocation."))
+                await bot_log.error(
+                    ctx.author,
+                    ctx.channel,
+                    f"Geolocation refused by api.met.no: {type(exc).__name__}: {exc}.",
+                )
+                return
             filtered_forecast = filter_forecast_data(forecast)
 
             embeds = self.create_embed_list(

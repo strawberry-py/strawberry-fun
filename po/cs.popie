@@ -409,6 +409,12 @@ msgstr Preference serveru
 msgid You have to specify a place or set a preference.
 msgstr Musíš uvést místo nebo si nastavit preferenci.
 
+msgid Submitted place could not be found.
+msgstr Zadané místo nebylo nalezeno.
+
+msgid Forecast server refused the geolocation.
+msgstr Server odmítl geografickou lokaci.
+
 msgid Characters
 msgstr Charaktery
 
