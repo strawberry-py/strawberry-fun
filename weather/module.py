@@ -86,13 +86,24 @@ class Weather(commands.Cog):
 
         days = data["data"]
         for day_no, (date, day_data) in enumerate(days.items()):
-            if day_no > 3:
+            if day_no == 0:
+                title_date = _(ctx, "Today")
+            elif day_no == 1:
+                title_date = _(ctx, "Tomorrow")
+            elif day_no in (2, 3):
+                title_date = date
+            else:
                 break
 
-            minmax = get_day_minmax(day_data)["air_temperature"]
+            minmax = get_day_minmax(day_data)
+            minmax_temp = minmax["air_temperature"]
+            if minmax_temp[0] == minmax_temp[1]:
+                title = f"{title_date}: {minmax_temp[0]} ˚C"
+            else:
+                title = f"{title_date}: {minmax_temp[0]} - {minmax_temp[1]} ˚C"
 
             embed = utils.discord.create_embed(
-                title=f"{date}: {minmax[0]} - {minmax[1]} ˚C",
+                title=title,
                 description=_(
                     ctx, "Weather forecast for **{place}, {country}**"
                 ).format(place=place, country=country.upper()),
@@ -107,20 +118,12 @@ class Weather(commands.Cog):
                         valmax=phase_data["air_temperature"][1],
                     )
                     + "\n"
-                    + _(ctx, "Air pressure: **{valmax} hPa**").format(
-                        valmax=phase_data["air_pressure"][1],
-                    )
-                    + "\n"
                     + _(ctx, "Clouds: **{valmax} %**").format(
                         valmax=phase_data["cloudiness"][1],
                     )
                     + "\n"
                     + _(ctx, "Relative humidity: **{valmax} %**").format(
                         valmax=phase_data["relative_humidity"][1],
-                    )
-                    + "\n"
-                    + _(ctx, "Wind speed: **{valmax} m/s**").format(
-                        valmax=phase_data["wind_speed"][1],
                     )
                 )
                 if phase_data["fogginess"][1] > 0:
@@ -132,6 +135,26 @@ class Weather(commands.Cog):
                     value=value,
                     inline=False,
                 )
+
+            extra_value = (
+                _(ctx, "*Air pressure: {valmin} - {valmax} hPa*").format(
+                    valmin=minmax["air_pressure"][0],
+                    valmax=minmax["air_pressure"][1],
+                )
+                + "\n"
+                + _(ctx, "*Wind speed: up to {valmax} m/s*").format(
+                    valmax=minmax["wind_speed"][1],
+                )
+            )
+            if minmax["uv_index"][1] > 0:
+                extra_value += "\n" + _(ctx, "*UV index: up to {valmax}*").format(
+                    valmax=minmax["uv_index"][1]
+                )
+            embed.add_field(
+                name=_(ctx, "*Extra information*"),
+                value=extra_value,
+            )
+
             embeds.append(embed)
         return embeds
 

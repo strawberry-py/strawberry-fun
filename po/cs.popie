@@ -340,14 +340,17 @@ msgstr Odpoledne
 msgid Evening
 msgstr Večer
 
+msgid Today
+msgstr Dnes
+
+msgid Tomorrow
+msgstr Zítra
+
 msgid Weather forecast for **{place}, {country}**
 msgstr Předpověď počasí pro **{place}, {country}**
 
 msgid Temperature: **{valmin} - {valmax} ˚C**
 msgstr Teplota: **{valmin} - {valmax} ˚C**
-
-msgid Air pressure: **{valmax} hPa**
-msgstr Tlak: **{valmax} hPa**
 
 msgid Clouds: **{valmax} %**
 msgstr Oblačnost: **{valmax} %**
@@ -355,11 +358,20 @@ msgstr Oblačnost: **{valmax} %**
 msgid Relative humidity: **{valmax} %**
 msgstr Relativní vlhkost: **{valmax} %**
 
-msgid Wind speed: **{valmax} m/s**
-msgstr Vítr: **{valmax} m/s**
-
 msgid Fogginess: **{valmax}**
 msgstr Mlha: **{valmax} %**
+
+msgid *Air pressure: {valmin} - {valmax} hPa*
+msgstr *Tlak: {valmin} - {valmax} hPa*
+
+msgid *Wind speed: up to {valmax} m/s*
+msgstr *Rychlost větru: až {valmax} m/s*
+
+msgid *UV index: up to {valmax}*
+msgstr *UV index: až {valmax}*
+
+msgid *Extra information*
+msgstr *Doplňující informace*
 
 msgid That's not valid place name.
 msgstr To není platný název místa.

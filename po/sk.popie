@@ -340,13 +340,16 @@ msgstr
 msgid Evening
 msgstr Večer
 
+msgid Today
+msgstr
+
+msgid Tomorrow
+msgstr
+
 msgid Weather forecast for **{place}, {country}**
 msgstr
 
 msgid Temperature: **{valmin} - {valmax} ˚C**
-msgstr
-
-msgid Air pressure: **{valmax} hPa**
 msgstr
 
 msgid Clouds: **{valmax} %**
@@ -355,10 +358,19 @@ msgstr
 msgid Relative humidity: **{valmax} %**
 msgstr
 
-msgid Wind speed: **{valmax} m/s**
+msgid Fogginess: **{valmax}**
 msgstr
 
-msgid Fogginess: **{valmax}**
+msgid *Air pressure: {valmin} - {valmax} hPa*
+msgstr
+
+msgid *Wind speed: up to {valmax} m/s*
+msgstr
+
+msgid *UV index: up to {valmax}*
+msgstr
+
+msgid *Extra information*
 msgstr
 
 msgid That's not valid place name.
