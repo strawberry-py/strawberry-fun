@@ -328,41 +328,38 @@ msgstr Všetky položky boli odstránené.
 msgid Ask me what you want to know and I will answer.
 msgstr Opýtaj sa ma čo chceš vedieť a ja ti odpoviem.
 
+msgid Night
+msgstr Noc
+
 msgid Morning
 msgstr Ráno
 
-msgid Day
-msgstr Deň
+msgid Afternoon
+msgstr
 
 msgid Evening
 msgstr Večer
 
-msgid Night
-msgstr Noc
+msgid Weather forecast for **{place}, {country}**
+msgstr
 
-msgid An error occured while getting weather info.
-msgstr Pri získavaní počasia nastala chyba.
+msgid Temperature: **{valmin} - {valmax} ˚C**
+msgstr
 
-msgid Did not receive JSON response.
-msgstr Na výstupe sme nedostali typ JSON.
+msgid Air pressure: **{valmax} hPa**
+msgstr
 
-msgid Today
-msgstr Dnes
+msgid Clouds: **{valmax} %**
+msgstr
 
-msgid Tomorrow
-msgstr Zajtra
+msgid Relative humidity: **{valmax} %**
+msgstr
 
-msgid Weather forecast for **{place}**, {date}
-msgstr Predpoveď počasia pre **{place}**, {date}
+msgid Wind speed: **{valmax} m/s**
+msgstr
 
-msgid Temperature: **{real} ˚C** (feels like **{feel} ˚C**)
-msgstr Teplota: **{real} ˚C** (pocitovo **{feel} ˚C**)
-
-msgid Wind speed: **{wind} km/h**
-msgstr Rýchlosť vetra: **{wind} km/h**
-
-msgid Chance of rain: **{rain} %**
-msgstr Pravdepodobnosť dažďa: **{rain} %**
+msgid Fogginess: **{valmax}**
+msgstr
 
 msgid That's not valid place name.
 msgstr Tento názov miesta nieje platný.

@@ -328,41 +328,38 @@ msgstr Všechny položky byly vymazány.
 msgid Ask me what you want to know and I will answer.
 msgstr Zeptej se mě na to, co chceš vědět a já ti odpovím.
 
-msgid Morning
-msgstr Ráno
-
-msgid Day
-msgstr Dopoledne
-
-msgid Evening
-msgstr Odpoledne
-
 msgid Night
 msgstr Noc
 
-msgid An error occured while getting weather info.
-msgstr Při získávání informací o počasí došlo k chybě.
+msgid Morning
+msgstr Ráno
 
-msgid Did not receive JSON response.
-msgstr Na výstupu jsme nedostali typ JSON.
+msgid Afternoon
+msgstr Odpoledne
 
-msgid Today
-msgstr Dnes
+msgid Evening
+msgstr Večer
 
-msgid Tomorrow
-msgstr Zítra
+msgid Weather forecast for **{place}, {country}**
+msgstr Předpověď počasí pro **{place}, {country}**
 
-msgid Weather forecast for **{place}**, {date}
-msgstr Předpověď počasí pro **{place}**, {date}
+msgid Temperature: **{valmin} - {valmax} ˚C**
+msgstr Teplota: **{valmin} - {valmax} ˚C**
 
-msgid Temperature: **{real} ˚C** (feels like **{feel} ˚C**)
-msgstr Teplota: **{real} ˚C** (pocitově **{feel} ˚C**)
+msgid Air pressure: **{valmax} hPa**
+msgstr Tlak: **{valmax} hPa**
 
-msgid Wind speed: **{wind} km/h**
-msgstr Rychlost větru: **{wind} km/h**
+msgid Clouds: **{valmax} %**
+msgstr Oblačnost: **{valmax} %**
 
-msgid Chance of rain: **{rain} %**
-msgstr Pravděpodobnost srážek: **{rain} %**
+msgid Relative humidity: **{valmax} %**
+msgstr Relativní vlhkost: **{valmax} %**
+
+msgid Wind speed: **{valmax} m/s**
+msgstr Vítr: **{valmax} m/s**
+
+msgid Fogginess: **{valmax}**
+msgstr Mlha: **{valmax} %**
 
 msgid That's not valid place name.
 msgstr To není platný název místa.

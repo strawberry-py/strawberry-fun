@@ -1,8 +1,6 @@
 import aiohttp
-import datetime
 import urllib.parse
-import json
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 import discord
 from discord.ext import commands
@@ -11,22 +9,13 @@ import pie.database.config
 from pie import check, i18n, logger, utils
 
 from .database import Place
+from .process import filter_forecast_data, get_day_minmax
 
 translator = i18n.Translator("modules/fun")
 _ = translator.translate
 guild_log = logger.Guild.logger()
 config = pie.database.config.Config.get()
 bot_log = logger.Bot.logger()
-
-# number of days to get forecast for (including current day, max is 3)
-NUM_OF_FORECAST_DAYS = 3
-# dict for getting the data from json easier (when you don't wan't some phase of day comment it)
-DAY_PHASES = {
-    "Morning": 2,
-    "Day": 4,
-    "Evening": 6,
-    "Night": 7,
-}
 
 
 class Weather(commands.Cog):
@@ -35,175 +24,128 @@ class Weather(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    def _translate_day_phase(self, ctx: commands.Context, day_phase: str) -> str:
-        if day_phase == "Morning":
-            return _(ctx, "Morning")
-        if day_phase == "Day":
-            return _(ctx, "Day")
-        if day_phase == "Evening":
-            return _(ctx, "Evening")
-        if day_phase == "Night":
+    async def place_to_geo(self, place: str) -> Tuple[float, float, str, str]:
+        """Use OpenStreetMap Nominatim to translate place to geo coordinates.
+
+        :return: Tuple of latitude, longitude, city, country code.
+        """
+        safe_place: str = urllib.parse.quote_plus(place)
+        url = (
+            "https://nominatim.openstreetmap.org/search"
+            f"?city={safe_place}&format=geojson&limit=1&addressdetails=1"
+        )
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                data = await resp.json()
+
+        lat, lon = data["features"][0]["geometry"]["coordinates"]
+
+        city: str
+        address = data["features"][0]["properties"]["address"]
+        for city_kwd in ("city", "town", "village"):
+            if city_kwd in address:
+                city = address[city_kwd]
+        country = address["country_code"]
+
+        return lat, lon, city, country
+
+    async def geo_to_forecast(self, lat: float, lon: float) -> dict:
+        """Use yr.no to translate geo coordinates to forecast.
+
+        :return: Result dictionary as per met.no developer documentation.
+        """
+        url = (
+            "https://api.met.no/weatherapi/locationforecast/2.0/complete"
+            f"?lat={lat:.4}&lon={lon:.4}"
+        )
+        headers = {
+            "Accept": "application/json",
+            "User-Agent": f"https://github.com/pumpkin-py#bot:{self.bot.user.id}",
+        }
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get(url) as resp:
+                data = await resp.json()
+
+        return data
+
+    def translate_day_phase(self, ctx: commands.Context, day_phase: int) -> str:
+        if day_phase == 0:
             return _(ctx, "Night")
-
-    def _get_current_day_phase(self, ctx: commands.Context) -> str:
-        now = datetime.datetime.now()
-        if now.hour <= 6:
+        if day_phase == 6:
             return _(ctx, "Morning")
-        if now.hour <= 12:
-            return _(ctx, "Day")
-        if now.hour <= 18:
+        if day_phase == 12:
+            return _(ctx, "Afternoon")
+        if day_phase == 18:
             return _(ctx, "Evening")
-        return _(ctx, "Night")
 
-    def _get_useful_data(
-        self, all_data: dict, ctx: commands.Context, lang_preference: str
-    ) -> List[dict]:
-        """
-        example json: https://wttr.in/praha?lang=sk&format=j1
-        get useful data from json as list of individual days
-        """
-
-        # get individual days to extract data
-        weather = []
-        nearest_place = all_data["nearest_area"][0]["areaName"][0]["value"]
-        lang_preference = f"lang_{lang_preference}"
-        for i in range(NUM_OF_FORECAST_DAYS):
-            day = all_data["weather"][i]
-            day_dict = {
-                "date": day["date"],
-                "nearest_place": nearest_place,
-            }
-            day = day["hourly"]
-            for day_phase, hour in DAY_PHASES.items():
-                if lang_preference != "lang_en":
-                    lang_or_desc = lang_preference
-                else:
-                    lang_or_desc = "weatherDesc"
-                day_dict.update(
-                    {
-                        self._translate_day_phase(ctx, day_phase): {
-                            "state": day[hour][lang_or_desc][0]["value"],
-                            "temp": day[hour]["tempC"],
-                            "feels_like": day[hour]["FeelsLikeC"],
-                            "wind_speed": day[hour]["windspeedKmph"],
-                            "rain_chance": day[hour]["chanceofrain"],
-                        }
-                    }
-                )
-
-            weather.append(day_dict)
-        return weather
-
-    async def _create_embeds(
-        self, ctx: commands.Context, name: str, lang_preference: str
+    def create_embed_list(
+        self, ctx, *, place: str, country: str, data: dict
     ) -> List[discord.Embed]:
-        """create embeds for scrollable embed"""
-        safe_name: str = urllib.parse.quote_plus(name)
-        url = f"https://wttr.in/{safe_name}?format=j1&lang={lang_preference}"
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url) as resp:
-                    data = await resp.text()
-        except aiohttp.ClientResponseError as e:
-            await guild_log.warning(
-                ctx.author,
-                ctx.channel,
-                f'An error occured while getting weather info, err code "{e.code}"',
-            )
-            return [
-                utils.discord.create_embed(
-                    author=ctx.message.author,
-                    title=_(ctx, "An error occured while getting weather info."),
-                    error=True,
-                )
-            ]
+        embeds: List[discord.Embed] = []
 
-        try:
-            resp_json = json.loads(data)
-        except json.JSONDecodeError:
-            await bot_log.error(
-                ctx.author,
-                ctx.channel,
-                f"Did not receive JSON response: {resp!s} {data!s}.",
-            )
-            return [
-                utils.discord.create_embed(
-                    author=ctx.message.author,
-                    title=_(ctx, "Did not receive JSON response."),
-                    error=True,
-                )
-            ]
+        days = data["data"]
+        for day_no, (date, day_data) in enumerate(days.items()):
+            if day_no > 3:
+                break
 
-        current_day_phase: str = self._get_current_day_phase(ctx)
-
-        # create day embeds
-        days = self._get_useful_data(resp_json, ctx, lang_preference)
-        embeds = []
-        for i, day in enumerate(days):
-            title: str
-            if i == 0:
-                title = _(ctx, "Today")
-            elif i == 1:
-                title = _(ctx, "Tomorrow")
-            else:
-                title = day["date"]
-
-            if i == 0:
-                # Show current weather in title
-                now = day[current_day_phase]
-                title = f"{title}: {now['state']}, {now['temp']} ˚C"
-            else:
-                # Show maximum and minimum in title
-                temperatures = [
-                    int(info["temp"])
-                    for phase, info in day.items()
-                    if type(info) is dict
-                ]
-                min_t, max_t = min(temperatures), max(temperatures)
-                title = f"{title}: {min_t}\N{EN DASH}{max_t} °C"
+            minmax = get_day_minmax(day_data)["air_temperature"]
 
             embed = utils.discord.create_embed(
-                author=ctx.message.author,
-                title=title,
-                description=_(ctx, "Weather forecast for **{place}**, {date}").format(
-                    date=day["date"],
-                    place=name[0:32] + ("..." if len(name) > 32 else ""),
-                ),
+                title=f"{date}: {minmax[0]} - {minmax[1]} ˚C",
+                description=_(
+                    ctx, "Weather forecast for **{place}, {country}**"
+                ).format(place=place, country=country.upper()),
+                author=ctx.author,
+                footer="met.no & openstreetmap.org",
             )
 
-            skip_day_phase: bool = True
-            for day_phase, weather_info in day.items():
-                # skip 'date' and 'nearest_place' strings
-                if type(weather_info) != dict:
-                    continue
-                # skip today's day phase if it has already ended
-                if day_phase == current_day_phase:
-                    skip_day_phase = False
-                if i == 0 and skip_day_phase:
-                    continue
-
+            for phase, phase_data in day_data.items():
+                value = (
+                    _(ctx, "Temperature: **{valmin} - {valmax} ˚C**").format(
+                        valmin=phase_data["air_temperature"][0],
+                        valmax=phase_data["air_temperature"][1],
+                    )
+                    + "\n"
+                    + _(ctx, "Air pressure: **{valmax} hPa**").format(
+                        valmax=phase_data["air_pressure"][1],
+                    )
+                    + "\n"
+                    + _(ctx, "Clouds: **{valmax} %**").format(
+                        valmax=phase_data["cloudiness"][1],
+                    )
+                    + "\n"
+                    + _(ctx, "Relative humidity: **{valmax} %**").format(
+                        valmax=phase_data["relative_humidity"][1],
+                    )
+                    + "\n"
+                    + _(ctx, "Wind speed: **{valmax} m/s**").format(
+                        valmax=phase_data["wind_speed"][1],
+                    )
+                )
+                if phase_data["fogginess"][1] > 0:
+                    value += "\n" + _(ctx, "Fogginess: **{valmax}**").format(
+                        valmax=phase_data["fogginess"][1],
+                    )
                 embed.add_field(
-                    name=f"{day_phase}: {weather_info['state']}",
-                    value=_(
-                        ctx, "Temperature: **{real} ˚C** (feels like **{feel} ˚C**)"
-                    ).format(
-                        real=weather_info["temp"],
-                        feel=weather_info["feels_like"],
-                    )
-                    + "\n"
-                    + _(ctx, "Wind speed: **{wind} km/h**").format(
-                        wind=weather_info["wind_speed"],
-                    )
-                    + "\n"
-                    + _(ctx, "Chance of rain: **{rain} %**").format(
-                        rain=weather_info["rain_chance"],
-                    ),
+                    name=self.translate_day_phase(ctx, phase),
+                    value=value,
                     inline=False,
                 )
-
             embeds.append(embed)
-
         return embeds
+
+    # Input validation
+
+    def _is_place_valid(self, name: str) -> bool:
+        for char in ("&", "#", "?"):
+            if char in name:
+                return False
+        if len(name) > 64:
+            return False
+        return True
+
+    # Commands
 
     @commands.guild_only()
     @check.acl2(check.ACLevel.MEMBER)
@@ -313,19 +255,18 @@ class Weather(commands.Cog):
             await ctx.reply(_(ctx, "You have to specify a place or set a preference."))
             return
 
-        lang_preference = translator.get_language_preference(ctx)
         async with ctx.typing():
-            embeds = await self._create_embeds(ctx, place, lang_preference)
+            geo = await self.place_to_geo(place)
+            lat, lon, city, country = geo
+            forecast = await self.geo_to_forecast(lat, lon)
+            filtered_forecast = filter_forecast_data(forecast)
+
+            embeds = self.create_embed_list(
+                ctx, place=city, country=country, data=filtered_forecast
+            )
+
             scroll_embed = utils.ScrollableEmbed(ctx, embeds)
         await scroll_embed.scroll()
-
-    def _is_place_valid(self, name: str) -> bool:
-        for char in ("&", "#", "?"):
-            if char in name:
-                return False
-        if len(name) > 64:
-            return False
-        return True
 
 
 async def setup(bot) -> None:
