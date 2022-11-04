@@ -210,7 +210,7 @@ class Weather(commands.Cog):
     @commands.command(name="set-weather-place")
     async def set_weather_place(self, ctx, *, name: str):
         """Set preferred place for weather and forecast information."""
-        if not self._place_is_valid(name):
+        if not self._is_place_valid(name):
             await ctx.reply(_(ctx, "That's not valid place name."))
             return
         Place.set(ctx.guild.id, ctx.author.id, name)
@@ -239,7 +239,7 @@ class Weather(commands.Cog):
     @commands.command(name="set-guild-weather-place")
     async def set_guild_weather_place(self, ctx, *, name: str):
         """Set guild's preferred place for weather and forecast information."""
-        if not self._place_is_valid(name):
+        if not self._is_place_valid(name):
             await ctx.reply(_(ctx, "That's not valid place name."))
             return
         Place.set(ctx.guild.id, None, name)
@@ -297,29 +297,29 @@ class Weather(commands.Cog):
     @commands.guild_only()
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command(name="weather")
-    async def weather(self, ctx, *, name: Optional[str] = None):
+    async def weather(self, ctx, *, place: Optional[str] = None):
         """Get weather information on any place."""
-        if name is None:
+        if place is None:
             # try to get user preference
-            place = Place.get(ctx.guild.id, ctx.author.id)
-            if place is not None:
-                name = place.name
-        if name is None:
+            place_pref = Place.get(ctx.guild.id, ctx.author.id)
+            if place_pref is not None:
+                place = place_pref.name
+        if place is None:
             # try to get guild preference
-            place = Place.get(ctx.guild.id, None)
-            if place is not None:
-                name = place.name
-        if name is None:
+            place_pref = Place.get(ctx.guild.id, None)
+            if place_pref is not None:
+                place = place_pref.name
+        if place is None:
             await ctx.reply(_(ctx, "You have to specify a place or set a preference."))
             return
 
         lang_preference = translator.get_language_preference(ctx)
         async with ctx.typing():
-            embeds = await self._create_embeds(ctx, name, lang_preference)
+            embeds = await self._create_embeds(ctx, place, lang_preference)
             scroll_embed = utils.ScrollableEmbed(ctx, embeds)
         await scroll_embed.scroll()
 
-    def _place_is_valid(self, name: str) -> bool:
+    def _is_place_valid(self, name: str) -> bool:
         for char in ("&", "#", "?"):
             if char in name:
                 return False
