@@ -2,6 +2,8 @@ import aiohttp
 import urllib.parse
 from typing import Optional, List, Tuple
 
+import ring
+
 import discord
 from discord.ext import commands
 
@@ -24,8 +26,15 @@ class Weather(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
+    def __ring_key__(self):
+        """Allow ring.lru(), as it requires `self` argument."""
+        return "weather"
+
+    @ring.lru(force_asyncio=True)
     async def place_to_geo(self, place: str) -> Tuple[float, float, str, str]:
         """Use OpenStreetMap Nominatim to translate place to geo coordinates.
+
+        The results are cached in LRU cache.
 
         :return: Tuple of latitude, longitude, city, country code.
         """
@@ -50,8 +59,11 @@ class Weather(commands.Cog):
 
         return lat, lon, city, country
 
+    @ring.lru(expire=60 * 60, force_asyncio=True)
     async def geo_to_forecast(self, lat: float, lon: float) -> dict:
         """Use yr.no to translate geo coordinates to forecast.
+
+        The results are cached in LRU cache for an hour.
 
         :return: Result dictionary as per met.no developer documentation.
         """
