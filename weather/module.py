@@ -322,6 +322,11 @@ class Weather(commands.Cog):
                 return
 
             lat, lon, city, country = geo
+
+            # We need to make 'ctx' ring-hashable. As it does not influence
+            # how the function behaves, we can make it static string.
+            ctx.__ring_key__ = lambda: "ctx"
+
             try:
                 forecast = await self.geo_to_forecast(ctx, lat, lon)
             except aiohttp.ContentTypeError as exc:
