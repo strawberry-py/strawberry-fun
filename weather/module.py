@@ -46,8 +46,11 @@ class Weather(commands.Cog):
             "https://nominatim.openstreetmap.org/search"
             f"?city={safe_place}&format=geojson&limit=1&addressdetails=1"
         )
+        headers = {
+            "User-Agent": f"https://github.com/pumpkin-py#bot:{self.bot.user.id}",
+        }
 
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(url) as resp:
                 data = await resp.json()
 
@@ -65,8 +68,15 @@ class Weather(commands.Cog):
 
         return lat, lon, city, country
 
+    # FIXME Handle 'expires' and 'last-modified' properly.
+    #       By only allowing an update once an hour, this should be enough to
+    #       more or less follow the Yr.no requirements. We *should* start
+    #       handling this when the usage grows above some treshold.
+    #       At the time of writing, 'expires' is set to thirty minutes in
+    #       a future; so having one hour LRU cache complies with that, even
+    #       with ignoring the response headers.
     @ring.lru(expire=60 * 60, force_asyncio=True)
-    async def geo_to_forecast(self, lat: float, lon: float) -> dict:
+    async def geo_to_forecast(self, ctx, lat: float, lon: float) -> dict:
         """Use yr.no to translate geo coordinates to forecast.
 
         The results are cached in LRU cache for an hour.
@@ -83,6 +93,13 @@ class Weather(commands.Cog):
         }
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(url) as resp:
+                if resp.status != 200:
+                    await bot_log.warning(
+                        ctx.author,
+                        ctx.channel,
+                        f"api.met.no returned error code {resp.status}.",
+                    )
+
                 data = await resp.json()
 
         return data
@@ -278,6 +295,7 @@ class Weather(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.guild_only()
+    @commands.max_concurrency(1, per=commands.BucketType.default, wait=False)
     @check.acl2(check.ACLevel.MEMBER)
     @commands.command(name="weather")
     async def weather(self, ctx, *, place: Optional[str] = None):
@@ -305,7 +323,7 @@ class Weather(commands.Cog):
 
             lat, lon, city, country = geo
             try:
-                forecast = await self.geo_to_forecast(lat, lon)
+                forecast = await self.geo_to_forecast(ctx, lat, lon)
             except aiohttp.ContentTypeError as exc:
                 await ctx.reply(_(ctx, "Forecast server refused the geolocation."))
                 await bot_log.error(
