@@ -1,5 +1,8 @@
 pre-commit
 
+# tests
+pytest
+
 # static analysis
 black==22.8.0
 flake8==5.0.4
