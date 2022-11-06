@@ -133,9 +133,13 @@ class Weather(commands.Cog):
             minmax = get_day_minmax(day_data)
             minmax_temp = minmax["air_temperature"]
             if minmax_temp[0] == minmax_temp[1]:
-                title = f"{title_date}: {minmax_temp[0]} ˚C"
+                title = _(ctx, "{date}: {upper} ˚C").format(
+                    date=title_date, upper=minmax_temp[0]
+                )
             else:
-                title = f"{title_date}: {minmax_temp[0]} - {minmax_temp[1]} ˚C"
+                title = _(ctx, "{date}: {lower} to {upper} ˚C").format(
+                    date=title_date, lower=minmax_temp[0], upper=minmax_temp[1]
+                )
 
             embed = utils.discord.create_embed(
                 title=title,
@@ -147,11 +151,21 @@ class Weather(commands.Cog):
             )
 
             for phase, phase_data in day_data.items():
-                value = (
-                    _(ctx, "Temperature: **{valmin} - {valmax} ˚C**").format(
-                        valmin=phase_data["air_temperature"][0],
-                        valmax=phase_data["air_temperature"][1],
+                temperature: str
+                if phase_data["air_temperature"][0] != phase_data["air_temperature"][1]:
+                    temperature = _(
+                        ctx, "Temperature: **{lower} to {upper} ˚C**"
+                    ).format(
+                        lower=phase_data["air_temperature"][0],
+                        upper=phase_data["air_temperature"][1],
                     )
+                else:
+                    temperature = _(ctx, "Temperature: **{upper} ˚C**").format(
+                        upper=phase_data["air_temperature"][1],
+                    )
+
+                value = (
+                    temperature
                     + "\n"
                     + _(ctx, "Clouds: **{valmax} %**").format(
                         valmax=phase_data["cloudiness"][1],
@@ -172,7 +186,7 @@ class Weather(commands.Cog):
                 )
 
             extra_value = (
-                _(ctx, "*Air pressure: {valmin} - {valmax} hPa*").format(
+                _(ctx, "*Air pressure: {valmin} to {valmax} hPa*").format(
                     valmin=minmax["air_pressure"][0],
                     valmax=minmax["air_pressure"][1],
                 )

@@ -346,11 +346,20 @@ msgstr Dnes
 msgid Tomorrow
 msgstr Zítra
 
+msgid {date}: {upper} ˚C
+msgstr {date}: {upper} ˚C
+
+msgid {date}: {lower} to {upper} ˚C
+msgstr {date}: {lower} až {upper} ˚C
+
 msgid Weather forecast for **{place}, {country}**
 msgstr Předpověď počasí pro **{place}, {country}**
 
-msgid Temperature: **{valmin} - {valmax} ˚C**
-msgstr Teplota: **{valmin} - {valmax} ˚C**
+msgid Temperature: **{lower} to {upper} ˚C**
+msgstr Teplota: **{lower} až {upper} ˚C**
+
+msgid Temperature: **{upper} ˚C**
+msgstr Teplota: **{upper} ˚C**
 
 msgid Clouds: **{valmax} %**
 msgstr Oblačnost: **{valmax} %**
@@ -361,8 +370,8 @@ msgstr Relativní vlhkost: **{valmax} %**
 msgid Fogginess: **{valmax}**
 msgstr Mlha: **{valmax} %**
 
-msgid *Air pressure: {valmin} - {valmax} hPa*
-msgstr *Tlak: {valmin} - {valmax} hPa*
+msgid *Air pressure: {valmin} to {valmax} hPa*
+msgstr *Tlak: {valmin} až {valmax} hPa*
 
 msgid *Wind speed: up to {valmax} m/s*
 msgstr *Rychlost větru: až {valmax} m/s*

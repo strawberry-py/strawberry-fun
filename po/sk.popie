@@ -346,10 +346,19 @@ msgstr
 msgid Tomorrow
 msgstr
 
+msgid {date}: {upper} ˚C
+msgstr
+
+msgid {date}: {lower} to {upper} ˚C
+msgstr
+
 msgid Weather forecast for **{place}, {country}**
 msgstr
 
-msgid Temperature: **{valmin} - {valmax} ˚C**
+msgid Temperature: **{lower} to {upper} ˚C**
+msgstr
+
+msgid Temperature: **{upper} ˚C**
 msgstr
 
 msgid Clouds: **{valmax} %**
@@ -361,7 +370,7 @@ msgstr
 msgid Fogginess: **{valmax}**
 msgstr
 
-msgid *Air pressure: {valmin} - {valmax} hPa*
+msgid *Air pressure: {valmin} to {valmax} hPa*
 msgstr
 
 msgid *Wind speed: up to {valmax} m/s*
