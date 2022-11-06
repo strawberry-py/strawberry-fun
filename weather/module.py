@@ -31,7 +31,7 @@ class Weather(commands.Cog):
         return "weather"
 
     @ring.lru(force_asyncio=True)
-    async def place_to_geo(self, place: str) -> Tuple[float, float, str, str]:
+    async def place_to_geo(self, ctx, place: str) -> Tuple[float, float, str, str]:
         """Use OpenStreetMap Nominatim to translate place to geo coordinates.
 
         The results are cached in LRU cache.
@@ -61,9 +61,21 @@ class Weather(commands.Cog):
 
         city: str
         address = data["features"][0]["properties"]["address"]
-        for city_kwd in ("city", "town", "village"):
+        # These keywords are some of the possible values of OpenStreetMap for key:place.
+        # I'm not sure if it is possible to trigger more of them; since we are
+        # querying the API via '?city=' parameter, this may be all.
+        # https://wiki.openstreetmap.org/wiki/Key:place
+        for city_kwd in ("city", "town", "village", "hamlet", "isolated_dwelling"):
             if city_kwd in address:
                 city = address[city_kwd]
+                break
+        else:
+            city = place
+            await bot_log.warning(
+                ctx.author,
+                ctx.channel,
+                f"Did not recognize city keyword for place '{place}': {address}.",
+            )
         country = address["country_code"]
 
         return lat, lon, city, country
@@ -329,17 +341,17 @@ class Weather(commands.Cog):
             return
 
         async with ctx.typing():
+            # We need to make 'ctx' ring-hashable. As it does not influence
+            # how the function behaves, we can make it static string.
+            ctx.__ring_key__ = lambda: "ctx"
+
             try:
-                geo = await self.place_to_geo(place)
+                geo = await self.place_to_geo(ctx, place)
             except RuntimeError:
                 await ctx.reply(_(ctx, "Submitted place could not be found."))
                 return
 
             lat, lon, city, country = geo
-
-            # We need to make 'ctx' ring-hashable. As it does not influence
-            # how the function behaves, we can make it static string.
-            ctx.__ring_key__ = lambda: "ctx"
 
             try:
                 forecast = await self.geo_to_forecast(ctx, lat, lon)
