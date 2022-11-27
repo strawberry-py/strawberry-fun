@@ -247,19 +247,34 @@ msgstr
 msgid No enough karma, try to chat more to earn karma.
 msgstr
 
+msgid Change server nickname
+msgstr
+
+msgid Do you want to change your current nickname to **{nick}**?
+msgstr
+
+msgid Your nickname has not been changed.
+msgstr
+
 msgid Cannot change nickname because you have greater privileges.
 msgstr
 
 msgid Congratulations, you have been renamed to **{nickname}**.
 msgstr
 
-msgid Cannot change nickname because mudule karma is not loaded.
-msgstr
-
 msgid Unable to change nickname, **unset** price not configured.
 msgstr
 
 msgid You have no nickname here.
+msgstr
+
+msgid Reset nickname
+msgstr
+
+msgid Do you want to remove your current server nickname?
+msgstr
+
+msgid Your nickname has not been removed.
 msgstr
 
 msgid Congratulations, your nickname has been removed.

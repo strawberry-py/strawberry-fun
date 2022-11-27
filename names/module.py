@@ -114,7 +114,19 @@ class Names(commands.Cog):
             await ctx.reply(_(ctx, "No enough karma, try to chat more to earn karma."))
             return
 
-        # TODO Add ConfirmView
+        dialog = utils.discord.create_embed(
+            author=ctx.author,
+            title=_(ctx, "Change server nickname"),
+            description=_(
+                ctx, "Do you want to change your current nickname to **{nick}**?"
+            ).format(nick=utils.text.sanitise(nickname)),
+        )
+        view = utils.objects.ConfirmView(ctx, dialog)
+        view.timeout = 90
+        answer = await view.send()
+        if answer is not True:
+            await ctx.reply(_(ctx, "Your nickname has not been changed."))
+            return
 
         try:
             await ctx.author.edit(nick=nickname, reason="Nickname purchase")
@@ -149,7 +161,7 @@ class Names(commands.Cog):
                 "Repository boards.karma is not loaded. Cannot reset nickname.",
             )
             await ctx.reply(
-                _(ctx, "Cannot change nickname because mudule karma is not loaded.")
+                _(ctx, "Cannot change nickname because module karma is not loaded.")
             )
             return
 
@@ -169,7 +181,17 @@ class Names(commands.Cog):
             await ctx.reply(_(ctx, "You have no nickname here."))
             return
 
-        # TODO Add ConfirmView
+        dialog = utils.discord.create_embed(
+            author=ctx.author,
+            title=_(ctx, "Reset nickname"),
+            description=_(ctx, "Do you want to remove your current server nickname?"),
+        )
+        view = utils.objects.ConfirmView(ctx, dialog)
+        view.timeout = 90
+        answer = await view.send()
+        if answer is not True:
+            await ctx.reply(_(ctx, "Your nickname has not been removed."))
+            return
 
         try:
             await ctx.author.edit(nick=None, reason="Nickname reset")
