@@ -12,9 +12,6 @@ guild_log = logger.Guild.logger()
 config = pie.database.config.Config.get()
 
 
-# FIXME: unify with the rest of the repo - missing help, different syntax
-
-
 class Seeking(commands.Cog):
     """Look for... stuff"""
 
@@ -24,7 +21,12 @@ class Seeking(commands.Cog):
     @commands.guild_only()
     @check.acl2(check.ACLevel.MEMBER)
     @commands.group(name="seeking")
-    async def seeking(self, ctx):
+    async def seeking_(self, ctx):
+        await utils.discord.send_help(ctx)
+
+    @check.acl2(check.ACLevel.MEMBER)
+    @seeking_.command(name="list")
+    async def seeking_list(self, ctx):
         """List items for current channel"""
         if ctx.invoked_subcommand is not None:
             return
@@ -71,7 +73,7 @@ class Seeking(commands.Cog):
         await scrollable_embed.scroll()
 
     @check.acl2(check.ACLevel.MEMBER)
-    @seeking.command(name="add")
+    @seeking_.command(name="add")
     async def seeking_add(self, ctx, *, text: str):
         """Announce that you're seeking something in under 140 characters"""
         if len(text) > 140:
@@ -91,7 +93,7 @@ class Seeking(commands.Cog):
         await guild_log.info(ctx.author, ctx.channel, f"New seeking item #{item.idx}.")
 
     @check.acl2(check.ACLevel.MEMBER)
-    @seeking.command(name="remove")
+    @seeking_.command(name="remove")
     async def seeking_remove(self, ctx, *, ids: str):
         """Remove seeked items
 
