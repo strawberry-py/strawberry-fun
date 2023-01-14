@@ -6,6 +6,7 @@ from discord.ext import commands
 from discord.abc import PrivateChannel
 
 from pie import check, utils, i18n
+from .database import Details
 
 _ = i18n.Translator("modules/fun").translate
 
@@ -98,7 +99,20 @@ class Weeb(commands.Cog):
                 return
             async with ctx.typing():
                 try:
-                    async with aiohttp.ClientSession() as session:
+                    details = Details.get(ctx.guild.id)
+                    if details is None:
+                        return await ctx.reply(
+                            _(
+                                ctx,
+                                "The request will fail because user-agent and cf_clearance cookie is not set.",
+                            )
+                        )
+                    headers = {
+                        "User-Agent": details.user_agent,
+                        "cookie": "cf_clearance=" + details.cf_clearance,
+                    }
+
+                    async with aiohttp.ClientSession(headers=headers) as session:
                         async with session.get(
                             f"https://nhentai.net/api/gallery/{doujin_id}"
                         ) as response:
@@ -122,6 +136,23 @@ class Weeb(commands.Cog):
     async def on_message(self, message):
         if "omae wa mou shindeiru" in message.content.lower():
             await message.channel.send("NANI")
+
+    @commands.guild_only()
+    @check.acl2(check.ACLevel.MOD)
+    @commands.command(name="weeb-set-connection")
+    async def weeb_set_connection_details(
+        self, ctx, user_agent: str, cf_clearance: str
+    ):
+        """Change connection user-agent and cf_clearance cookie for sauce command. These details must be from same session."""
+        details = Details.set(ctx.guild.id, user_agent, cf_clearance)
+        if details is not None:
+            await ctx.reply(
+                _(ctx, "Connection details have been successfully updated.")
+            )
+        else:
+            await ctx.reply(
+                _(ctx, "Connection details have not been successfully updated.")
+            )
 
 
 async def setup(bot) -> None:

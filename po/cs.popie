@@ -465,3 +465,12 @@ msgstr Počet stran
 
 msgid Supply me with a magic number and I will give you what you desire
 msgstr Dodej mi kouzelné číslo a já ti dám, co si přeješ.
+
+msgid The request will fail because user-agent and cf_clearance cookie is not set.
+msgstr Dotaz selže jelikož není nastavem user-agent a cf_clearance cookie.
+
+msgid Connection details have been successfully updated.
+msgstr Podrobnosti o spojení byly úspěšně aktualizovány.
+
+msgid Connection details have not been successfully updated.
+msgstr Podrobnosti o spojení nebyly úspěšně aktualizovány.
