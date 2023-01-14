@@ -239,9 +239,7 @@ class Rand(commands.Cog):
         """Get random image of a duck"""
         headers = self._get_request_headers()
         async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get(
-                "https://random-d.uk/api/v2/random"
-            ) as response:
+            async with session.get("https://random-d.uk/api/v2/random") as response:
                 if response.status != 200:
                     return await ctx.reply(
                         _(ctx, "Command encountered an error (E{code}).").format(
