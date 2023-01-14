@@ -20,7 +20,7 @@ msgid Channel {channel} added as hash channel with reaction limit **{reaction_li
 msgstr {channel} byl přidán jako hash kanál s limitem **{reaction_limit}** reakcí.
 
 msgid {channel} is not hash channel.
-msgstr {channel} není hash kanál
+msgstr {channel} není hash kanál.
 
 msgid Reaction limit must be higher than 0.
 msgstr Limit reakcí musí být vyšší než 0.
@@ -38,7 +38,7 @@ msgid **LOADING**
 msgstr **NAČÍTÁNÍ**
 
 msgid Downloaded **{count}** messages.
-msgstr Staženo **{count}** zpráv
+msgstr Staženo **{count}** zpráv.
 
 msgid **SCANNING**
 msgstr **SKENOVÁNÍ**
@@ -62,7 +62,7 @@ msgid Message **`{message_id}`**
 msgstr Zpráva **`{message_id}`**
 
 msgid Messages has no associtated hashes.
-msgstr Ke zprávám nepatří žádné hashe
+msgstr Ke zprávám nepatří žádné hashe.
 
 msgid **♻ This is repost!**
 msgstr **♻ Tohle je repost!**
@@ -206,7 +206,7 @@ msgid Macro **{name}** created.
 msgstr Makro **{name}** vytvořeno.
 
 msgid No arguments specified.
-msgstr Nebyly uvedeny žádné argument.y
+msgstr Nebyly uvedeny žádné argumenty.
 
 msgid Macro **{name}** updated.
 msgstr Makro **{name}** aktualizováno.
@@ -218,7 +218,7 @@ msgid Nickname change prices
 msgstr Ceny změn přezdívek
 
 msgid Values are in karma points.
-msgstr Hodnoty jsou v karma bodech
+msgstr Hodnoty jsou v karma bodech.
 
 msgid Set
 msgstr Změna
@@ -284,7 +284,7 @@ msgid Set nor reset price cannot be negative.
 msgstr Cena za nastavení ani zrušení nemůže být negativní.
 
 msgid Prices have been successfully updated.
-msgstr Ceny byly uspěšně aktualizovány.
+msgstr Ceny byly úspěšně aktualizovány.
 
 msgid Prices have not been successfully updated.
 msgstr Ceny nebyly úspěšně aktualizovány.
@@ -463,7 +463,7 @@ msgstr Kategorie
 msgid Number of pages
 msgstr Počet stran
 
-msgid Supply me with a magic number and I will give you what you desire
+msgid Supply me with a magic number and I will give you what you desire.
 msgstr Dodej mi kouzelné číslo a já ti dám, co si přeješ.
 
 msgid The request will fail because user-agent and cf_clearance cookie is not set.
