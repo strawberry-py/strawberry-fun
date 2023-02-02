@@ -1,5 +1,6 @@
 import urllib
 import aiohttp
+import contextlib
 import random
 import re
 import hashlib
@@ -139,10 +140,13 @@ class Rand(commands.Cog):
 
             fact_response: str = ""
             if random.randint(0, 9) == 1:
-                async with session.get("https://meowfacts.herokuapp.com/") as response:
-                    if response.status == 200:
-                        fact_response_ = await response.json()
-                        fact_response = fact_response_["data"][0]
+                with contextlib.suppress(OSError):
+                    async with session.get(
+                        "https://meowfacts.herokuapp.com/"
+                    ) as response:
+                        if response.status == 200:
+                            fact_response_ = await response.json()
+                            fact_response = fact_response_["data"][0]
 
         image_embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
@@ -182,12 +186,11 @@ class Rand(commands.Cog):
 
             fact_response: str = ""
             if random.randint(0, 9) == 1:
-                async with session.get(
-                    "https://www.dogfactsapi.ducnguyen.dev/api/v1/facts/?number=1"
-                ) as response:
-                    if response.status == 200:
-                        fact_response_ = await response.json()
-                        fact_response = fact_response_["facts"][0]
+                with contextlib.suppress(OSError):
+                    async with session.get("https://dogapi.dog/api/facts/") as response:
+                        if response.status == 200:
+                            fact_response_ = await response.json()
+                            fact_response = fact_response_["facts"][0]
 
         image_embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
