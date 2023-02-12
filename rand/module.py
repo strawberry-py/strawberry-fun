@@ -11,7 +11,8 @@ from discord.ext import commands
 
 from pie import check, utils, i18n
 
-_ = i18n.Translator("modules/fun").translate
+TRANSLATOR = i18n.Translator("modules/fun")
+_ = TRANSLATOR.translate
 
 
 class Rand(commands.Cog):
@@ -140,10 +141,12 @@ class Rand(commands.Cog):
 
             fact_response: str = ""
             if random.randint(0, 9) == 1:
+                url: str = "https://meowfacts.herokuapp.com/"
+                if TRANSLATOR.get_language_preference(ctx) in ("cs", "sk"):
+                    url += "?lang=ces"
+
                 with contextlib.suppress(OSError):
-                    async with session.get(
-                        "https://meowfacts.herokuapp.com/"
-                    ) as response:
+                    async with session.get(url) as response:
                         if response.status == 200:
                             fact_response_ = await response.json()
                             fact_response = fact_response_["data"][0]
