@@ -355,6 +355,7 @@ class Rand(commands.Cog):
             result = fetched
 
         embed: discord.Embed = utils.discord.create_embed(
+            title="Dadjoke",
             author=ctx.author,
             description=result["joke"],
             footer="icanhazdadjoke.com",
