@@ -366,6 +366,31 @@ class Rand(commands.Cog):
 
     @commands.cooldown(rate=5, per=60, type=commands.BucketType.channel)
     @check.acl2(check.ACLevel.EVERYONE)
+    @commands.command(name="yo-mamma")
+    async def yo_mamajoke(self, ctx):
+        """Get random Yo mama joke"""
+        headers = self._get_request_headers()
+        async with aiohttp.ClientSession(headers=headers) as session:
+            async with session.get("https://api.yomomma.info/", headers=headers) as response:
+                if response.status != 200:
+                    return await ctx.reply(
+                        _(ctx, "Command encountered an error (E{code}).").format(
+                            code=response.status
+                        )
+                    )
+
+                json_response = await response.json()
+
+        embed: discord.Embed = utils.discord.create_embed(
+            author=ctx.author,
+            description=json_response["joke"],
+            footer="api.yomomma.info",
+        )
+
+        await ctx.reply(embed=embed)
+
+    @commands.cooldown(rate=5, per=60, type=commands.BucketType.channel)
+    @check.acl2(check.ACLevel.EVERYONE)
     @commands.command()
     async def joke(self, ctx, *, keyword: Optional[str] = None):
         """Get random joke
