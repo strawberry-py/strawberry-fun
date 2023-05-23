@@ -172,6 +172,11 @@ class Macro(commands.Cog):
         # and omitted them, they ended up overwriting the true intended values in the
         # database.
         # We have to filter these in the '_add()' function because of that.
+        try:
+            parameters = shlex.split(parameters)
+        except Exception as exc:
+            raise commands.ArgumentParsingError(str(exc)) from exc
+
         parser = MacroParser()
         parser.add_argument("--triggers", type=str, nargs="+")
         parser.add_argument("--responses", type=str, nargs="+")
@@ -181,7 +186,7 @@ class Macro(commands.Cog):
         parser.add_argument("--match", type=str, choices=[m.name for m in MacroMatch])
         parser.add_argument("--channels", type=int, nargs="+")
         parser.add_argument("--users", type=int, nargs="+")
-        args = parser.parse_args(shlex.split(parameters))
+        args = parser.parse_args(parameters)
         if parser.error_message:
             await ctx.reply(
                 _(ctx, "Macro could not be added:")
