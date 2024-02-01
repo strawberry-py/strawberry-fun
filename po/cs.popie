@@ -289,6 +289,12 @@ msgstr Ceny byly úspěšně aktualizovány.
 msgid Prices have not been successfully updated.
 msgstr Ceny nebyly úspěšně aktualizovány.
 
+msgid Command encountered an error (E{code}).
+msgstr Při vykonávání příkazu došlo k chybě (E{code}).
+
+msgid A network error has occurred.
+msgstr Vyskytla se chyba sítě.
+
 msgid You asked a question, but did not add enough options.
 msgstr Ptáš se na otázku, ale nemám dost možností k výběru.
 
@@ -297,9 +303,6 @@ msgstr Ano
 
 msgid No
 msgstr Ne
-
-msgid Command encountered an error (E{code}).
-msgstr Při vykonávání příkazu došlo k chybě (E{code}).
 
 msgid Cat fact
 msgstr Fakt o kočkách

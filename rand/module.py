@@ -1,18 +1,18 @@
 import urllib
 import aiohttp
-import contextlib
 import random
 import re
 import hashlib
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 
 import discord
 from discord.ext import commands
 
-from pie import check, utils, i18n
+from pie import check, utils, i18n, logger
 
 TRANSLATOR = i18n.Translator("modules/fun")
 _ = TRANSLATOR.translate
+guild_log = logger.Guild.logger()
 
 
 class Rand(commands.Cog):
@@ -37,6 +37,49 @@ class Rand(commands.Cog):
         #      to somewhere in the core?
         result["X-pumpkin.py-url"] = "https://github.com/pumpkin-py"
         return result
+
+    async def _get_json_from_api(
+        self,
+        endpoint_url: str,
+        ctx: discord.ext.commands.Context,
+        send_reply: bool = True,
+        params: Optional[Dict[str, Any]] = None,
+    ) -> Optional[Dict[str, Any]]:
+        """Returns json response on success, None otherwise.
+        Sends logs and replies in case of an error."""
+        headers = self._get_request_headers()
+        if params is None or not isinstance(params, dict):
+            params = {}
+        headers["Accept"] = "application/json"
+        try:
+            async with aiohttp.ClientSession(headers=headers) as session:
+                async with session.get(
+                    endpoint_url, headers=headers, params=params
+                ) as response:
+                    if response.status != 200:
+                        guild_log.info(
+                            ctx.author,
+                            ctx.channel,
+                            f"Request to '{endpoint_url}' has status cod {response.status}.",
+                        )
+                        if send_reply:
+                            await ctx.reply(
+                                _(
+                                    ctx, "Command encountered an error (E{code})."
+                                ).format(code=response.status)
+                            )
+                        return
+
+                    return await response.json()
+
+        except aiohttp.ClientError:
+            guild_log.warning(
+                ctx.author,
+                ctx.channel,
+                f"Could not contact '{endpoint_url}' due to a network error.",
+            )
+            if send_reply:
+                await ctx.reply(_(ctx, "A network error has occurred."))
 
     # Commands
 
@@ -125,32 +168,23 @@ class Rand(commands.Cog):
     @commands.command()
     async def cat(self, ctx):
         """Get random image of a cat"""
-        headers = self._get_request_headers()
-        async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get(
-                "https://api.thecatapi.com/v1/images/search"
-            ) as response:
-                if response.status != 200:
-                    await ctx.reply(
-                        _(ctx, "Command encountered an error (E{code}).").format(
-                            code=response.status
-                        )
-                    )
-                    return
-                image_response = await response.json()
+        image_response = await self._get_json_from_api(
+            "https://api.thecatapi.com/v1/images/search", ctx
+        )
+        if not image_response:
+            return
 
-            fact_response: str = ""
-            if random.randint(0, 9) == 1:
-                url: str = "https://meowfacts.herokuapp.com/"
-                if TRANSLATOR.get_language_preference(ctx) in ("cs", "sk"):
-                    url += "?lang=ces"
+        fact_response = ""
+        if random.randint(0, 9) == 1:
+            url: str = "https://meowfacts.herokuapp.com/"
+            if TRANSLATOR.get_language_preference(ctx) in ("cs", "sk"):
+                url += "?lang=ces"
 
-                with contextlib.suppress(OSError):
-                    async with session.get(url) as response:
-                        if response.status == 200:
-                            fact_response_ = await response.json()
-                            fact_response = fact_response_["data"][0]
-
+            fact_response = await self._get_json_from_api(url, ctx, False)
+            if not fact_response:
+                fact_response = ""
+            else:
+                fact_response = fact_response["data"][0]
         image_embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
             footer="thecatapi.com",
@@ -174,26 +208,21 @@ class Rand(commands.Cog):
     @commands.command()
     async def dog(self, ctx):
         """Get random image of a dog"""
-        headers = self._get_request_headers()
-        async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get(
-                "https://api.thedogapi.com/v1/images/search"
-            ) as response:
-                if response.status != 200:
-                    return await ctx.reply(
-                        _(ctx, "Command encountered an error (E{code}).").format(
-                            code=response.status
-                        )
-                    )
-                image_response = await response.json()
+        image_response = await self._get_json_from_api(
+            "https://api.thedogapi.com/v1/images/search", ctx
+        )
+        if not image_response:
+            return
 
-            fact_response: str = ""
-            if random.randint(0, 9) == 1:
-                with contextlib.suppress(OSError):
-                    async with session.get("https://dogapi.dog/api/facts/") as response:
-                        if response.status == 200:
-                            fact_response_ = await response.json()
-                            fact_response = fact_response_["facts"][0]
+        fact_response = ""
+        if random.randint(0, 9) == 1:
+            fact_response = await self._get_json_from_api(
+                "https://dogapi.dog/api/facts/", ctx, False
+            )
+            if not fact_response:
+                fact_response = ""
+            else:
+                fact_response = fact_response["facts"][0]
 
         image_embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
@@ -218,17 +247,12 @@ class Rand(commands.Cog):
     @commands.command()
     async def fox(self, ctx):
         """Get random image of a fox"""
-        headers = self._get_request_headers()
-        async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get("https://randomfox.ca/floof/") as response:
-                if response.status != 200:
-                    return await ctx.reply(
-                        _(ctx, "Command encountered an error (E{code}).").format(
-                            code=response.status
-                        )
-                    )
 
-                json_response = await response.json()
+        json_response = await self._get_json_from_api(
+            "https://randomfox.ca/floof/", ctx
+        )
+        if not json_response:
+            return
 
         embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
@@ -243,17 +267,11 @@ class Rand(commands.Cog):
     @commands.command()
     async def duck(self, ctx):
         """Get random image of a duck"""
-        headers = self._get_request_headers()
-        async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get("https://random-d.uk/api/v2/random") as response:
-                if response.status != 200:
-                    return await ctx.reply(
-                        _(ctx, "Command encountered an error (E{code}).").format(
-                            code=response.status
-                        )
-                    )
-
-                json_response = await response.json()
+        json_response = await self._get_json_from_api(
+            "https://random-d.uk/api/v2/random", ctx
+        )
+        if not json_response:
+            return
 
         embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
@@ -273,21 +291,17 @@ class Rand(commands.Cog):
         ---------
         number: Comics number. Omit to get random one.
         """
-        headers = self._get_request_headers()
         # get maximal
-        async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get("https://xkcd.com/info.0.json") as response:
-                fetched = await response.json()
+        fetched = await self._get_json_from_api("https://xkcd.com/info.0.json", ctx)
 
-                # get random
-                if number is None or number < 1 or number > fetched["num"]:
-                    number: int = random.randint(1, fetched["num"])
-                # fetch requested
-                if number != fetched["num"]:
-                    async with session.get(
-                        f"https://xkcd.com/{number}/info.0.json"
-                    ) as response:
-                        fetched = await response.json()
+        # get random
+        if number is None or number < 1 or number > fetched["num"]:
+            number: int = random.randint(1, fetched["num"])
+        # fetch requested
+        if number != fetched["num"]:
+            fetched = await self._get_json_from_api(
+                f"https://xkcd.com/{number}/info.0.json", ctx
+            )
 
         main_embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
@@ -334,11 +348,9 @@ class Rand(commands.Cog):
             params["term"] = keyword
             url += "/search"
 
-        headers = self._get_request_headers()
-        headers["Accept"] = "application/json"
-        async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get(url, params=params) as response:
-                fetched = await response.json()
+        fetched = await self._get_json_from_api(url, ctx, params=params)
+        if not fetched:
+            return
 
         if keyword is not None:
             res = fetched["results"]
@@ -369,17 +381,11 @@ class Rand(commands.Cog):
     @commands.command(name="yo-mamma")
     async def yo_mamajoke(self, ctx):
         """Get random Yo mama joke"""
-        headers = self._get_request_headers()
-        async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get("https://api.yomomma.info/", headers=headers) as response:
-                if response.status != 200:
-                    return await ctx.reply(
-                        _(ctx, "Command encountered an error (E{code}).").format(
-                            code=response.status
-                        )
-                    )
-
-                json_response = await response.json()
+        json_response = await self._get_json_from_api(
+            "https://www.yomama-jokes.com/api/v1/jokes/random/", ctx
+        )
+        if not json_response:
+            return
 
         embed: discord.Embed = utils.discord.create_embed(
             author=ctx.author,
@@ -393,7 +399,7 @@ class Rand(commands.Cog):
     @check.acl2(check.ACLevel.EVERYONE)
     @commands.command()
     async def joke(self, ctx, *, keyword: Optional[str] = None):
-        """Get random joke
+        """Get a random joke
 
         Arguments
         ---------
@@ -406,12 +412,10 @@ class Rand(commands.Cog):
         url: str = "https://v2.jokeapi.dev/joke/Any"
         if keyword is not None:
             params["contains"] = urllib.parse.quote(keyword.encode("utf8"))
-        headers: Dict[str, str] = {"Accept": "application/json"}
 
-        headers = self._get_request_headers()
-        async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get(url, headers=headers, params=params) as response:
-                result = await response.json()
+        result = await self._get_json_from_api(url, ctx, params=params)
+        if not result:
+            return
 
         if keyword is not None:
             if result["error"]:

@@ -289,6 +289,12 @@ msgstr
 msgid Prices have not been successfully updated.
 msgstr
 
+msgid Command encountered an error (E{code}).
+msgstr Príkaz narazil na chybu (E{code}).
+
+msgid A network error has occurred.
+msgstr Chyba siete.
+
 msgid You asked a question, but did not add enough options.
 msgstr Opýtal si sa otázku, ale nemám na výber dostatok možností.
 
@@ -297,9 +303,6 @@ msgstr Áno
 
 msgid No
 msgstr Nie
-
-msgid Command encountered an error (E{code}).
-msgstr Príkaz narazil na chybu (E{code}).
 
 msgid Cat fact
 msgstr Fakt o mačkách
