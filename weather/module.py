@@ -47,7 +47,7 @@ class Weather(commands.Cog):
             f"?city={safe_place}&format=geojson&limit=1&addressdetails=1"
         )
         headers = {
-            "User-Agent": f"https://github.com/pumpkin-py#bot:{self.bot.user.id}",
+            "User-Agent": f"https://github.com/strawberry-py#bot:{self.bot.user.id}",
         }
 
         async with aiohttp.ClientSession(headers=headers) as session:
@@ -101,7 +101,7 @@ class Weather(commands.Cog):
         )
         headers = {
             "Accept": "application/json",
-            "User-Agent": f"https://github.com/pumpkin-py#bot:{self.bot.user.id}",
+            "User-Agent": f"https://github.com/strawberry-py#bot:{self.bot.user.id}",
         }
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(url) as resp:

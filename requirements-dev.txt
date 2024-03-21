@@ -9,5 +9,5 @@ flake8==5.0.4
 flake8-print==5.0.0
 flake8-todo==0.7
 
-# pumpkin.py tools
-git+https://github.com/pumpkin-py/pumpkin-tools.git
+# strawberry.py tools
+git+https://github.com/strawberry-py/strawberry-tools.git
