@@ -17,7 +17,7 @@ repos:
     hooks:
     - id: flake8
 
-  - repo: https://github.com/pumpkin-py/pumpkin-tools
+  - repo: https://github.com/strawberry-py/strawberry-tools
     rev: v1.9.0
     hooks:
     - id: popie

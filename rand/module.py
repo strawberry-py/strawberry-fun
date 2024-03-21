@@ -32,10 +32,10 @@ class Rand(commands.Cog):
         sent.
         """
         result: Dict[str, str] = {}
-        result["X-pumpkin.py-bot"] = str(self.bot.user.id)
+        result["X-strawberry.py-bot"] = str(self.bot.user.id)
         # TODO The URL also appears in mgmt/verify. Should we move it
         #      to somewhere in the core?
-        result["X-pumpkin.py-url"] = "https://github.com/pumpkin-py"
+        result["X-strawberry.py-url"] = "https://github.com/strawberry-py"
         return result
 
     async def _get_json_from_api(

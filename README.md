@@ -1,3 +1,3 @@
-# Pumpkin Fun
+# Strawberry Fun
 
-A set of [pumpkin.py](https://github.com/pumpkin-py) modules.
+A set of [strawberry.py](https://github.com/strawberry-py) modules.
