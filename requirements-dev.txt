@@ -4,7 +4,7 @@ pre-commit
 pytest
 
 # static analysis
-black==22.8.0
+black==24.3.0
 flake8==5.0.4
 flake8-print==5.0.0
 flake8-todo==0.7
