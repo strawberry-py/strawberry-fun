@@ -6,6 +6,10 @@ on:
     paths:
       - "**/*.py"
       - "**/*.yml"
+      - "**/*.yaml"
+      - "requirements.txt"
+      - "requirements-dev.txt"
+      - "**/*.popie"
   pull_request:
     types: [opened, reopened, synchronize]
 
