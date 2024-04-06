@@ -365,7 +365,7 @@ class Dhash(commands.Cog):
         for report in messages:
             if not report.author.bot:
                 continue
-            if len(report.embeds) != 1 or type(report.embeds[0].footer.text) != str:
+            if len(report.embeds) != 1 or type(report.embeds[0].footer.text) is not str:
                 continue
             if str(message.id) != report.embeds[0].footer.text.split(" | ")[1]:
                 continue
