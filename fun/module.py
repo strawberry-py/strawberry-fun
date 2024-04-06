@@ -67,12 +67,12 @@ class Fun(commands.Cog):
             source = ctx.author
             target = user
 
-        if type(target) == discord.Role:
+        if type(target) is discord.Role:
             Relation.add(ctx.guild.id, source.id, None, "hug")
         else:
             Relation.add(ctx.guild.id, source.id, target.id, "hug")
 
-        border: str = "***" if type(target) == discord.Role else "**"
+        border: str = "***" if type(target) is discord.Role else "**"
 
         source_name: str = utils.text.sanitise(source.display_name)
         if type(target) is discord.Member:
@@ -390,7 +390,7 @@ class Fun(commands.Cog):
 
         target_name: str
         border: str
-        if type(target) == discord.Role:
+        if type(target) is discord.Role:
             Relation.add(ctx.guild.id, source.id, None, "slap")
             target_name = target.name
             border = "***"
