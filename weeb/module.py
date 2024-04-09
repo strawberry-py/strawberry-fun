@@ -1,11 +1,12 @@
-import aiohttp
 from typing import Optional
 
+import aiohttp
 import discord
-from discord.ext import commands
 from discord.abc import PrivateChannel
+from discord.ext import commands
 
-from pie import check, utils, i18n
+from pie import check, i18n, utils
+
 from .database import Details
 
 _ = i18n.Translator("modules/fun").translate

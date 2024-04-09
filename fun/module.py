@@ -1,19 +1,18 @@
-import aiohttp
 import asyncio
 import contextlib
 import random
 from io import BytesIO
-from typing import List, Set, Tuple, Optional, Union
 from pathlib import Path
+from typing import List, Optional, Set, Tuple, Union
 
+import aiohttp
+import discord
 import numpy as np
+from discord.ext import commands
 from PIL import Image, ImageDraw, ImageFont
 
-import discord
-from discord.ext import commands
-
 import pie.database.config
-from pie import check, logger, utils, i18n
+from pie import check, i18n, logger, utils
 
 from .database import Relation, RelationOverwrite
 from .image_utils import ImageUtils

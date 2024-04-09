@@ -4,10 +4,12 @@ Filter function. Moved from the main module for testing reasons.
 The received met.no report contains daily report for at least next three days,
 then quarter-day report for next five days. That is too much.
 """
+
 import datetime
-import dateutil.parser
 from collections import defaultdict
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
+
+import dateutil.parser
 
 
 def filter_forecast_data(

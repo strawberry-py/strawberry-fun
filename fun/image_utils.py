@@ -1,11 +1,10 @@
-from PIL import Image, ImageDraw
-from typing import Tuple, List, Union
+from collections import defaultdict
+from itertools import chain
+from random import randrange
+from typing import List, Tuple, Union
 
 import numpy as np
-
-from collections import defaultdict
-from random import randrange
-from itertools import chain
+from PIL import Image, ImageDraw
 
 
 class ImageUtils:

@@ -1,16 +1,17 @@
-import aiohttp
 import asyncio
-import dhash
 import re
 import time
 from io import BytesIO
-from PIL import Image
 
+import aiohttp
 import discord
 from discord.ext import commands
+from PIL import Image
 
-from pie import utils, i18n, logger, check
-from .database import HashChannel, ImageHash, HashConfig
+import dhash
+from pie import check, i18n, logger, utils
+
+from .database import HashChannel, HashConfig, ImageHash
 
 _ = i18n.Translator("modules/fun").translate
 guild_log = logger.Guild.logger()
@@ -507,7 +508,7 @@ class Dhash(commands.Cog):
                             hash=str(hex(h)),
                         )
                         yield h
-            except (aiohttp.ClientError):
+            except aiohttp.ClientError:
                 continue
 
     async def _check_message(self, message: discord.Message):

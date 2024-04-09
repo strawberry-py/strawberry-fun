@@ -1,14 +1,14 @@
-import urllib
-import aiohttp
+import hashlib
 import random
 import re
-import hashlib
-from typing import Optional, List, Dict, Any
+import urllib
+from typing import Any, Dict, List, Optional
 
+import aiohttp
 import discord
 from discord.ext import commands
 
-from pie import check, utils, i18n, logger
+from pie import check, i18n, logger, utils
 
 TRANSLATOR = i18n.Translator("modules/fun")
 _ = TRANSLATOR.translate
