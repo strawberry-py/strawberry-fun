@@ -2,13 +2,13 @@ import argparse
 import random
 import shlex
 from collections import defaultdict
-from typing import Any, Dict, Iterable, List, Optional, Generator
+from typing import Any, Dict, Generator, Iterable, List, Optional
 
 from discord.ext import commands
 
 from pie import check, i18n, logger, utils
 
-from .database import TextMacro, MacroMatch
+from .database import MacroMatch, TextMacro
 
 _ = i18n.Translator("modules/fun").translate
 guild_log = logger.Guild.logger()
@@ -246,9 +246,9 @@ class Macro(commands.Cog):
             triggers=args.triggers,
             responses=args.responses,
             dm=args.dm if args.dm is not None else False,
-            delete_trigger=args.delete_trigger
-            if args.delete_trigger is not None
-            else False,
+            delete_trigger=(
+                args.delete_trigger if args.delete_trigger is not None else False
+            ),
             sensitive=args.sensitive if args.sensitive is not None else False,
             match=getattr(MacroMatch, args.match.upper()),
             channels=args.channels if args.users.__class__ is int else args.channels,

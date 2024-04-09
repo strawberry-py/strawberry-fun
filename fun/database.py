@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Tuple, Optional, List
+from typing import List, Optional, Tuple
 
 from sqlalchemy import BigInteger, Column, Integer, String, func
 

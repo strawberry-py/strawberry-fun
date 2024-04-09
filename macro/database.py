@@ -3,8 +3,7 @@ from __future__ import annotations
 import enum
 from typing import Dict, List, Optional, Union
 
-from sqlalchemy import BigInteger, Boolean, Column, Enum, Integer, String
-from sqlalchemy import ForeignKey
+from sqlalchemy import BigInteger, Boolean, Column, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from pie.database import database, session
@@ -57,9 +56,9 @@ class TextMacro(database.base):
             dm=dm,
             delete_trigger=delete_trigger,
             match=match,
-            channels=[TextMacroChannel(channel_id=c) for c in channels]
-            if channels
-            else [],
+            channels=(
+                [TextMacroChannel(channel_id=c) for c in channels] if channels else []
+            ),
             users=[TextMacroUser(user_id=u) for u in users] if users else [],
         )
         session.add(macro)

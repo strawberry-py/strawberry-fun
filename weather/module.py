@@ -1,10 +1,9 @@
-import aiohttp
 import urllib.parse
-from typing import Optional, List, Tuple
+from typing import List, Optional, Tuple
 
-import ring
-
+import aiohttp
 import discord
+import ring
 from discord.ext import commands
 
 import pie.database.config
