@@ -343,6 +343,39 @@ msgstr Položka bola odstránená.
 msgid All items were deleted.
 msgstr Všetky položky boli odstránené.
 
+msgid Message must be at least 10 characters long.
+msgstr Správa musí mať aspoň 10 znakov.
+
+msgid Message must be shorter than 100 characters.
+msgstr Správa musí byť kratšia ako 100 znakov.
+
+msgid {user} said: `{message}`
+msgstr {user} povedal: `{message}`
+
+msgid My brain is not in great shape right now. Might answer later...
+msgstr Môj mozog je teraz trochu na kaši. Možno odpoviem neskôr...
+
+msgid API Key is set.
+msgstr API kľúč je nastavený.
+
+msgid Current model: `{model}`.
+msgstr Aktuálny model: `{model}`.
+
+msgid Invalid config. Allowed values are APIKEY or MODEL.
+msgstr Neplatná konfigurácia. Povolené hodnoty sú APIKEY alebo MODEL.
+
+msgid Config {config} successfuly set.
+msgstr Konfigurácia {config} bola úspešne nastavená.
+
+msgid An error occured during model check.
+msgstr Počas kontroly modelu sa vyskytla chyba.
+
+msgid Unknown / unsupported model. See https://openrouter.ai/models
+msgstr Neznámy / nepodporovaný model. Pozri https://openrouter.ai/models
+
+msgid API key not set. See `/talkadmin set` or ask Discord admin to set this up.
+msgstr API kľúč nie je nastavený. Pozri si `/talkadmin set` alebo požiadej Discord admina, aby ho nastavil.
+
 msgid Ask me what you want to know and I will answer.
 msgstr Opýtaj sa ma čo chceš vedieť a ja ti odpoviem.
 

@@ -3,3 +3,5 @@ Pillow
 dhash
 python-dateutil
 aiohttp
+ring
+openai
