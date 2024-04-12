@@ -361,6 +361,9 @@ msgstr API kľúč je nastavený.
 msgid Current model: `{model}`.
 msgstr Aktuálny model: `{model}`.
 
+msgid Working on it...
+msgstr Pracujem na tom...
+
 msgid Invalid config. Allowed values are APIKEY or MODEL.
 msgstr Neplatná konfigurácia. Povolené hodnoty sú APIKEY alebo MODEL.
 

@@ -124,7 +124,7 @@ class Talk(commands.Cog):
         config: app_commands.Choice[str],
         value: str = None,
     ):
-        await itx.response.defer(thinking=True, ephemeral=True)
+        await itx.response.send_message(_(itx, "Working on it..."), ephemeral=True)
         if config.value == "APIKEY":
             storage.set(self, itx.guild_id, key="APIKEY", value=value)
         elif config.value == "MODEL":
@@ -134,7 +134,7 @@ class Talk(commands.Cog):
                 return
         else:
             await itx.response.edit_message(
-                _(itx, "Invalid config. Allowed values are APIKEY or MODEL.")
+                content=_(itx, "Invalid config. Allowed values are APIKEY or MODEL.")
             )
         await itx.response.edit_message(
             _(itx, "Config {config} successfuly set.").format(config=config.value)
@@ -178,13 +178,14 @@ class Talk(commands.Cog):
     async def _get_key(self, itx: discord.Interaction) -> str | None:
         key = storage.get(self, itx.guild_id, "APIKEY", None)
         if not key:
-            await itx.response.send_message(
-                _(
-                    itx,
-                    "API key not set. See `/talkadmin set` or ask Discord admin to set this up.",
-                ),
-                ephemeral=True,
+            message = _(
+                itx,
+                "API key not set. See `/talkadmin set` or ask Discord admin to set this up.",
             )
+            if itx.response.is_done():
+                await itx.response.edit_message(content=message)
+            else:
+                itx.response.send_message(message, ephemeral=True)
             return None
         return key
 
