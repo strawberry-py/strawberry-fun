@@ -91,7 +91,7 @@ class Talk(commands.Cog):
         name="info", description="Get info on current talk configuration."
     )
     async def talk_admin_info(self, itx: discord.Interaction):
-        key = self._get_key(itx)
+        key = await self._get_key(itx)
         if not key:
             return
         message = (
@@ -121,7 +121,7 @@ class Talk(commands.Cog):
     async def talk_admin_set(
         self, itx: discord.Interaction, config: app_commands.Choice[str], value: str
     ):
-        await itx.response.defer(thinking=True)
+        await itx.response.defer(thinking=True, ephemeral=True)
         if config.value == "APIKEY":
             storage.set(self, itx.guild_id, key="APIKEY", value=value)
         elif config.value == "MODEL":
@@ -131,12 +131,10 @@ class Talk(commands.Cog):
                 return
         else:
             await itx.response.edit_message(
-                _(itx, "Invalid config. Allowed values are APIKEY or MODEL."),
-                ephemeral=True,
+                _(itx, "Invalid config. Allowed values are APIKEY or MODEL.")
             )
         await itx.response.edit_message(
-            _(itx, "Config {config} successfuly set.").format(config=config.value),
-            ephemeral=True,
+            _(itx, "Config {config} successfuly set.").format(config=config.value)
         )
 
     async def _verify_model(self, itx: discord.Interaction, model: str):
@@ -148,7 +146,6 @@ class Talk(commands.Cog):
         except Exception as ex:
             await itx.response.edit_message(
                 _(itx, "An error occured during model check."),
-                ephemeral=True,
             )
             await guild_log.error(
                 itx.user, itx.channel, "An error occured.", exception=ex
@@ -158,7 +155,6 @@ class Talk(commands.Cog):
         if model not in models:
             await itx.response.edit_message(
                 _(itx, "Unknown / unsupported model. See https://openrouter.ai/models"),
-                ephemeral=True,
             )
             return False
 
