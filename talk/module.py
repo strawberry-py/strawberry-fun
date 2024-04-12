@@ -137,7 +137,9 @@ class Talk(commands.Cog):
                 content=_(itx, "Invalid config. Allowed values are APIKEY or MODEL.")
             )
         await itx.response.edit_message(
-            _(itx, "Config {config} successfuly set.").format(config=config.value)
+            content=_(itx, "Config {config} successfuly set.").format(
+                config=config.value
+            )
         )
 
     async def _verify_model(self, itx: discord.Interaction, model: str):
@@ -148,7 +150,7 @@ class Talk(commands.Cog):
             models: List[str] = await self._list_models(key)
         except Exception as ex:
             await itx.response.edit_message(
-                _(itx, "An error occured during model check."),
+                content=_(itx, "An error occured during model check."),
             )
             await guild_log.error(
                 itx.user, itx.channel, "An error occured.", exception=ex
@@ -157,7 +159,9 @@ class Talk(commands.Cog):
 
         if model not in models:
             await itx.response.edit_message(
-                _(itx, "Unknown / unsupported model. See https://openrouter.ai/models"),
+                content=_(
+                    itx, "Unknown / unsupported model. See https://openrouter.ai/models"
+                ),
             )
             return False
 
