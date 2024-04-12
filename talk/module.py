@@ -124,7 +124,7 @@ class Talk(commands.Cog):
         config: app_commands.Choice[str],
         value: str = None,
     ):
-        await itx.response.send_message(_(itx, "Working on it..."))
+        await itx.response.send_message(_(itx, "Working on it..."), ephemeral=True)
         if config.value == "APIKEY":
             storage.set(self, itx.guild_id, key="APIKEY", value=value)
         elif config.value == "MODEL":
@@ -136,7 +136,7 @@ class Talk(commands.Cog):
             )
             return
         await (await itx.original_response()).edit(
-            content=_(itx, "Config {config} successfuly set."), ephemeral=True
+            content=_(itx, "Config {config} successfuly set.")
         )
 
     async def _verify_model(self, itx: discord.Interaction, model: str):
