@@ -136,7 +136,9 @@ class Talk(commands.Cog):
             )
             return
         await (await itx.original_response()).edit(
-            content=_(itx, "Config {config} successfuly set.")
+            content=_(itx, "Config {config} successfuly set.").format(
+                config=config.value
+            )
         )
 
     async def _verify_model(self, itx: discord.Interaction, model: str):
