@@ -185,7 +185,7 @@ class Talk(commands.Cog):
             if itx.response.is_done():
                 await itx.response.edit_message(content=message)
             else:
-                itx.response.send_message(message, ephemeral=True)
+                await itx.response.send_message(message, ephemeral=True)
             return None
         return key
 
