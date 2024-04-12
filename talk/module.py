@@ -127,19 +127,18 @@ class Talk(commands.Cog):
         await itx.response.send_message(_(itx, "Working on it..."), ephemeral=True)
         if config.value == "APIKEY":
             storage.set(self, itx.guild_id, key="APIKEY", value=value)
+            return
         elif config.value == "MODEL":
             if await self._verify_model(itx, value):
                 storage.set(self, itx.guild.id, key="MODEL", value=value)
-            else:
                 return
         else:
-            await itx.response.edit_message(
+            await (await itx.original_response()).edit(
                 content=_(itx, "Invalid config. Allowed values are APIKEY or MODEL.")
             )
-        await itx.response.edit_message(
-            content=_(itx, "Config {config} successfuly set.").format(
-                config=config.value
-            )
+            return
+        await (await itx.original_response()).edit(
+            content=_(itx, "Config {config} successfuly set."), ephemeral=True
         )
 
     async def _verify_model(self, itx: discord.Interaction, model: str):
@@ -149,7 +148,7 @@ class Talk(commands.Cog):
         try:
             models: List[str] = await self._list_models(key)
         except Exception as ex:
-            await itx.response.edit_message(
+            await (await itx.original_response()).edit(
                 content=_(itx, "An error occured during model check."),
             )
             await guild_log.error(
@@ -158,7 +157,7 @@ class Talk(commands.Cog):
             return False
 
         if model not in models:
-            await itx.response.edit_message(
+            await (await itx.original_response()).edit(
                 content=_(
                     itx, "Unknown / unsupported model. See https://openrouter.ai/models"
                 ),
@@ -182,14 +181,13 @@ class Talk(commands.Cog):
     async def _get_key(self, itx: discord.Interaction) -> str | None:
         key = storage.get(self, itx.guild_id, "APIKEY", None)
         if not key:
-            message = _(
-                itx,
-                "API key not set. See `/talkadmin set` or ask Discord admin to set this up.",
+            await itx.response.send_message(
+                _(
+                    itx,
+                    "API key not set. See `/talkadmin set` or ask Discord admin to set this up.",
+                ),
+                ephemeral=True,
             )
-            if itx.response.is_done():
-                await itx.response.edit_message(content=message)
-            else:
-                await itx.response.send_message(message, ephemeral=True)
             return None
         return key
 
