@@ -124,7 +124,7 @@ class Talk(commands.Cog):
         config: app_commands.Choice[str],
         value: str = None,
     ):
-        await itx.response.send_message(_(itx, "Working on it..."), ephemeral=True)
+        await itx.response.send_message(_(itx, "Working on it..."))
         if config.value == "APIKEY":
             storage.set(self, itx.guild_id, key="APIKEY", value=value)
             return
