@@ -119,7 +119,10 @@ class Talk(commands.Cog):
         ]
     )
     async def talk_admin_set(
-        self, itx: discord.Interaction, config: app_commands.Choice[str], value: str = None
+        self,
+        itx: discord.Interaction,
+        config: app_commands.Choice[str],
+        value: str = None,
     ):
         await itx.response.defer(thinking=True, ephemeral=True)
         if config.value == "APIKEY":
