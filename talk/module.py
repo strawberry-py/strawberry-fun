@@ -124,14 +124,12 @@ class Talk(commands.Cog):
         config: app_commands.Choice[str],
         value: str = None,
     ):
-        await itx.response.send_message(_(itx, "Working on it..."))
+        await itx.response.send_message(_(itx, "Working on it..."), ephemeral=True)
         if config.value == "APIKEY":
             storage.set(self, itx.guild_id, key="APIKEY", value=value)
-            return
         elif config.value == "MODEL":
             if await self._verify_model(itx, value):
                 storage.set(self, itx.guild.id, key="MODEL", value=value)
-                return
         else:
             await (await itx.original_response()).edit(
                 content=_(itx, "Invalid config. Allowed values are APIKEY or MODEL.")
