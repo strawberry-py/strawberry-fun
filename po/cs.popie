@@ -364,8 +364,8 @@ msgstr Současný model: `{model}`
 msgid Working on it...
 msgstr Pracuji na tom...
 
-msgid Invalid config. Allowed values are APIKEY or MODEL.
-msgstr Neplatné nastavení. Povolené hodnoty jsou APIKEY nebo MODEL.
+msgid Invalid config {config}. Allowed values are: {configs}.
+msgstr Neplatné nastavení {config}. Povolené hodnoty jsou: {configs}.
 
 msgid Config {config} successfuly set.
 msgstr Nastavení {config} úspěšně nastaveno.

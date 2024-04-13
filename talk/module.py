@@ -1,3 +1,4 @@
+import enum
 from typing import List
 
 import discord
@@ -14,14 +15,28 @@ bot_log = logger.Bot.logger()
 guild_log = logger.Guild.logger()
 
 
+class TalkConfig(enum.Enum):
+    MODEL = app_commands.Choice(name="MODEL", value="MODEL")
+    APIKEY = app_commands.Choice(name="APIKEY", value="APIKEY")
+
+    @staticmethod
+    def values() -> List[app_commands.Choice]:
+        return [e.value for e in TalkConfig]
+
+    @staticmethod
+    def names() -> List[str]:
+        return [str(e.name) for e in TalkConfig]
+
+
 class Talk(commands.Cog):
-    def __init__(self, bot):
-        self.bot: commands.Bot = bot
-        self.url = "https://openrouter.ai/api/v1/chat/completions"
 
     talk_admin = app_commands.Group(
         name="talkadmin", description="Talk management commands."
     )
+
+    def __init__(self, bot):
+        self.bot: commands.Bot = bot
+        self.url = "https://openrouter.ai/api/v1/chat/completions"
 
     @check.acl2(check.ACLevel.MEMBER)
     @app_commands.command(name="talk", description="Talk with the bot.")
@@ -113,12 +128,7 @@ class Talk(commands.Cog):
 
     @check.acl2(check.ACLevel.MOD)
     @talk_admin.command(name="set", description="Set talk configuration.")
-    @app_commands.choices(
-        config=[
-            app_commands.Choice(name="MODEL", value="MODEL"),
-            app_commands.Choice(name="APIKEY", value="APIKEY"),
-        ]
-    )
+    @app_commands.choices(config=TalkConfig.values())
     async def talk_admin_set(
         self,
         itx: discord.Interaction,
@@ -126,14 +136,16 @@ class Talk(commands.Cog):
         value: str = None,
     ):
         await itx.response.send_message(_(itx, "Working on it..."), ephemeral=True)
-        if config.value == "APIKEY":
-            storage.set(self, itx.guild_id, key="APIKEY", value=value)
-        elif config.value == "MODEL":
+        if config == TalkConfig.APIKEY:
+            storage.set(self, itx.guild_id, key=TalkConfig.APIKEY.name, value=value)
+        elif config == TalkConfig.MODEL:
             if await self._verify_model(itx, value):
-                storage.set(self, itx.guild.id, key="MODEL", value=value)
+                storage.set(self, itx.guild.id, key=TalkConfig.MODEL.name, value=value)
         else:
             await (await itx.original_response()).edit(
-                content=_(itx, "Invalid config. Allowed values are APIKEY or MODEL.")
+                content=_(
+                    itx, "Invalid config {config}. Allowed values are: {configs}."
+                ).format(config=config.value, configs=", ".join(TalkConfig.names()))
             )
             return
         await (await itx.original_response()).edit(
