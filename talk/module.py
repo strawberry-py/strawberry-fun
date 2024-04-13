@@ -48,6 +48,17 @@ class Talk(commands.Cog):
         if not key:
             return
 
+        model = storage.get(self, guild_id=itx.guild_id, key="MODEL")
+
+        if not model:
+            await itx.response.send_message(
+                _(
+                    itx,
+                    "Language model not set. See `/talkadmin set` or ask Discord admin to set this up.",
+                )
+            )
+            return
+
         if not message or len(message) < 10:
             await itx.response.send_message(
                 _(itx, "Message must be at least 10 characters long.")
@@ -79,7 +90,7 @@ class Talk(commands.Cog):
                         "HTTP-Referer": "https://github.com/strawberry-py",
                         "X-Title": "Strawberry.py - " + self.bot.user.name,
                     },
-                    model=storage.get(self, guild_id=itx.guild_id, key="MODEL"),
+                    model=model,
                     messages=[
                         {
                             "role": "user",
