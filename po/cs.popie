@@ -382,6 +382,9 @@ msgstr Neplatné nastavení {config}. Povolené hodnoty jsou: {configs}.
 msgid Config {config} successfuly set.
 msgstr Nastavení {config} úspěšně nastaveno.
 
+msgid Config {config} successfuly unset.
+msgstr Nastavení {config} úspěšně zrušeno.
+
 msgid An error occured during model check.
 msgstr Nastala chyba během kontroly modelu.
 

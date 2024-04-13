@@ -160,7 +160,7 @@ class Talk(commands.Cog):
         self,
         itx: discord.Interaction,
         config: app_commands.Choice[str],
-        value: str = None,
+        value: str,
     ):
         await itx.response.send_message(_(itx, "Working on it..."), ephemeral=True)
         if config == TalkConfig.APIKEY:
@@ -196,6 +196,36 @@ class Talk(commands.Cog):
             return
         await (await itx.original_response()).edit(
             content=_(itx, "Config {config} successfuly set.").format(
+                config=config.value
+            )
+        )
+
+    @check.acl2(check.ACLevel.MOD)
+    @talk_admin.command(name="unset", description="Unset talk configuration.")
+    @app_commands.choices(config=[TalkConfig.APIKEY.value, TalkConfig.MAXTOKENS.value])
+    async def talk_admin_unset(
+        self,
+        itx: discord.Interaction,
+        config: app_commands.Choice[str],
+    ):
+        if config == TalkConfig.APIKEY:
+            storage.unset(self, itx.guild.id, TalkConfig.APIKEY.name)
+        elif config == TalkConfig.MAXTOKENS:
+            storage.unset(self, itx.guild.id, TalkConfig.MAXTOKENS.name)
+        else:
+            await (await itx.original_response()).edit(
+                content=_(
+                    itx, "Invalid config {config}. Allowed values are: {configs}."
+                ).format(
+                    config=config.value,
+                    configs=", ".join(
+                        [TalkConfig.APIKEY.value, TalkConfig.MAXTOKENS.value]
+                    ),
+                )
+            )
+
+        await itx.response.send_message(
+            content=_(itx, "Config {config} successfuly unset.").format(
                 config=config.value
             )
         )
