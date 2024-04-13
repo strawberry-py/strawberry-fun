@@ -4,9 +4,10 @@ import time
 from io import BytesIO
 
 import aiohttp
+from PIL import Image
+
 import discord
 from discord.ext import commands
-from PIL import Image
 
 import dhash
 from pie import check, i18n, logger, utils

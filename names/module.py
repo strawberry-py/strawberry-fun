@@ -1,7 +1,8 @@
-import discord
-from discord.ext import commands
 from modules.base.admin.database import BaseAdminModule
 from modules.boards.karma.database import KarmaMember
+
+import discord
+from discord.ext import commands
 
 from pie import check, i18n, logger, utils
 
