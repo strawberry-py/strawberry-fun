@@ -3,12 +3,13 @@ from __future__ import annotations
 import enum
 from typing import List
 
-import discord
 import requests
 import ring
+from openai import AsyncOpenAI, _types
+
+import discord
 from discord import app_commands
 from discord.ext import commands
-from openai import AsyncOpenAI, _types
 
 from pie import check, i18n, logger, storage, utils
 

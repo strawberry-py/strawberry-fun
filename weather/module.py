@@ -2,8 +2,9 @@ import urllib.parse
 from typing import List, Optional, Tuple
 
 import aiohttp
-import discord
 import ring
+
+import discord
 from discord.ext import commands
 
 import pie.database.config
