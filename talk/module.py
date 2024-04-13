@@ -6,7 +6,7 @@ import requests
 import ring
 from discord import app_commands
 from discord.ext import commands
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, _types
 
 from pie import check, i18n, logger, storage, utils
 
@@ -17,6 +17,7 @@ guild_log = logger.Guild.logger()
 
 class TalkConfig(enum.Enum):
     MODEL = app_commands.Choice(name="MODEL", value="MODEL")
+    MAXTOKENS = app_commands.Choice(name="MAXTOKENS", value="MAXTOKENS")
     APIKEY = app_commands.Choice(name="APIKEY", value="APIKEY")
 
     @staticmethod
@@ -78,6 +79,12 @@ class Talk(commands.Cog):
         )
         response = await itx.original_response()
 
+        max_tokens = storage.get(
+            self, guild_id=itx.guild.id, key="MAXTOKENS", default_value=_types.NOT_GIVEN
+        )
+        if not max_tokens or max_tokens < 1:
+            max_tokens = _types.NOT_GIVEN
+
         async with itx.channel.typing():
             client = AsyncOpenAI(
                 base_url="https://openrouter.ai/api/v1",
@@ -91,6 +98,7 @@ class Talk(commands.Cog):
                         "X-Title": "Strawberry.py - " + self.bot.user.name,
                     },
                     model=model,
+                    max_tokens=max_tokens,
                     messages=[
                         {
                             "role": "user",
@@ -119,6 +127,12 @@ class Talk(commands.Cog):
     )
     async def talk_admin_info(self, itx: discord.Interaction):
         key = await self._get_key(itx)
+
+        tokens = storage.get(self, guild_id=itx.guild.id, key="MAXTOKENS")
+
+        if not tokens:
+            tokens = _(itx, "default")
+
         if not key:
             return
         message = (
@@ -127,6 +141,8 @@ class Talk(commands.Cog):
             + _(itx, "Current model: `{model}`.").format(
                 model=storage.get(self, guild_id=itx.guild_id, key="MODEL")
             )
+            + "\n"
+            + _(itx, "Max tokens: `{tokens}`.").format(tokens=tokens)
         )
         await itx.response.send_message(message, ephemeral=True)
 
@@ -152,6 +168,25 @@ class Talk(commands.Cog):
         elif config == TalkConfig.MODEL:
             if await self._verify_model(itx, value):
                 storage.set(self, itx.guild.id, key=TalkConfig.MODEL.name, value=value)
+        elif config == TalkConfig.MAXTOKENS:
+            try:
+                value = int(value)
+            except ValueError:
+                await (await itx.original_response()).edit(
+                    content=_(
+                        itx, "Value of MAXTOKENS must be a number higher or equal 1."
+                    )
+                )
+                return
+            if value < 1:
+                await (await itx.original_response()).edit(
+                    content=_(
+                        itx, "Value of MAXTOKENS must be a number higher or equal 1."
+                    )
+                )
+                return
+
+            storage.set(self, itx.guild_id, key=TalkConfig.MAXTOKENS.name, value=value)
         else:
             await (await itx.original_response()).edit(
                 content=_(

@@ -358,14 +358,23 @@ msgstr {user} povedal: `{message}`
 msgid My brain is not in great shape right now. Might answer later...
 msgstr Môj mozog je teraz trochu na kaši. Možno odpoviem neskôr...
 
+msgid default
+msgstr východisková
+
 msgid API Key is set.
 msgstr API kľúč je nastavený.
 
 msgid Current model: `{model}`.
 msgstr Aktuálny model: `{model}`.
 
+msgid Max tokens: `{tokens}`.
+msgstr Maximálny počet tokenov: `{tokens}`
+
 msgid Working on it...
 msgstr Pracujem na tom...
+
+msgid Value of MAXTOKENS must be a number higher or equal 1.
+msgstr Hodnota MAXTOKENS musí byť číslo vyššie alebo rovné 1.
 
 msgid Invalid config {config}. Allowed values are: {configs}.
 msgstr Neplatná konfigurácia {config}. Povolené hodnoty sú: {configs}.
