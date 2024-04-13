@@ -7,7 +7,7 @@ from discord import app_commands
 from discord.ext import commands
 from openai import AsyncOpenAI
 
-from pie import check, i18n, logger, storage
+from pie import check, i18n, logger, storage, utils
 
 _ = i18n.Translator("modules/fun").translate
 bot_log = logger.Bot.logger()
@@ -72,6 +72,10 @@ class Talk(commands.Cog):
                         },
                     ],
                 )
+                message = completion.choices[0].message.content
+                for part in utils.text.split(message):
+                    response = await response.reply(part)
+
             except Exception as ex:
                 await response.reply(
                     _(
@@ -82,9 +86,6 @@ class Talk(commands.Cog):
                 await guild_log.error(
                     itx.user, itx.channel, "An error occured.", exception=ex
                 )
-                return
-            message = completion.choices[0].message.content
-            await response.reply(message)
 
     @check.acl2(check.ACLevel.MOD)
     @talk_admin.command(
