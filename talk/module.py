@@ -177,12 +177,12 @@ class Talk(commands.Cog):
         value: str,
     ):
         await itx.response.send_message(_(itx, "Working on it..."), ephemeral=True)
-        if config == TalkConfig.APIKEY:
+        if config == TalkConfig.APIKEY.value:
             storage.set(self, itx.guild_id, key=TalkConfig.APIKEY.name, value=value)
-        elif config == TalkConfig.MODEL:
+        elif config == TalkConfig.MODEL.value:
             if await self._verify_model(itx, value):
                 storage.set(self, itx.guild.id, key=TalkConfig.MODEL.name, value=value)
-        elif config == TalkConfig.MAXTOKENS:
+        elif config == TalkConfig.MAXTOKENS.value:
             try:
                 value = int(value)
             except ValueError:
@@ -222,9 +222,9 @@ class Talk(commands.Cog):
         itx: discord.Interaction,
         config: app_commands.Choice[str],
     ):
-        if config == TalkConfig.APIKEY:
+        if config == TalkConfig.APIKEY.value:
             storage.unset(self, itx.guild.id, TalkConfig.APIKEY.name)
-        elif config == TalkConfig.MAXTOKENS:
+        elif config == TalkConfig.MAXTOKENS.value:
             storage.unset(self, itx.guild.id, TalkConfig.MAXTOKENS.name)
         else:
             await (await itx.original_response()).edit(
