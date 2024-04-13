@@ -343,6 +343,9 @@ msgstr Položka bola odstránená.
 msgid All items were deleted.
 msgstr Všetky položky boli odstránené.
 
+msgid Language model not set. See `/talkadmin set` or ask Discord admin to set this up.
+msgstr Jazykový model nie je nastavený. Pozri si `/talkadmin set` alebo požiadej Discord admina, aby ho nastavil.
+
 msgid Message must be at least 10 characters long.
 msgstr Správa musí mať aspoň 10 znakov.
 
