@@ -227,8 +227,8 @@ class Talk(commands.Cog):
         elif config == TalkConfig.MAXTOKENS.value:
             storage.unset(self, itx.guild.id, TalkConfig.MAXTOKENS.name)
         else:
-            await (await itx.original_response()).edit(
-                content=_(
+            await itx.response.send_message(
+                _(
                     itx, "Invalid config {config}. Allowed values are: {configs}."
                 ).format(
                     config=config.value,
@@ -237,11 +237,10 @@ class Talk(commands.Cog):
                     ),
                 )
             )
+            return
 
         await itx.response.send_message(
-            content=_(itx, "Config {config} successfuly unset.").format(
-                config=config.value
-            )
+            _(itx, "Config {config} successfuly unset.").format(config=config.value)
         )
 
     async def _verify_model(self, itx: discord.Interaction, model: str):
