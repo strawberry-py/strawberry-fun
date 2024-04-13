@@ -346,11 +346,11 @@ msgstr Všechny položky byly vymazány.
 msgid Language model not set. See `/talkadmin set` or ask Discord admin to set this up.
 msgstr Jazykový model není nastavený. Viz `/talkadmin set` nebo požádej Discord admina o nastavení.
 
-msgid Message must be at least 10 characters long.
-msgstr Zpráva musí být alespoň 10 znaků dlouhá.
+msgid Message must be at least {} characters long.
+msgstr Zpráva musí být alespoň {} znaků dlouhá.
 
-msgid Message must be shorter than 100 characters.
-msgstr Zpráva musí být kratší než 100 znaků.
+msgid Message must be shorter than {} characters.
+msgstr Zpráva musí být kratší než {} znaků.
 
 msgid {user} said: `{message}`
 msgstr {user} řekl: `{message}`

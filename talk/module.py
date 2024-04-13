@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import enum
 from typing import List
 
@@ -31,6 +33,9 @@ class TalkConfig(enum.Enum):
 
 class Talk(commands.Cog):
 
+    MIN_LENGTH = 5
+    MAX_LENGTH = 200
+
     talk_admin = app_commands.Group(
         name="talkadmin", description="Talk management commands."
     )
@@ -41,7 +46,11 @@ class Talk(commands.Cog):
 
     @check.acl2(check.ACLevel.MEMBER)
     @app_commands.command(name="talk", description="Talk with the bot.")
-    @app_commands.describe(message="Message with length between 10 and 100 characters.")
+    @app_commands.describe(
+        message="Message with length between {} and {} characters.".format(
+            MIN_LENGTH, MAX_LENGTH
+        )
+    )
     @app_commands.checks.cooldown(1, 30, key=lambda i: (i.guild_id, i.user.id))
     @app_commands.checks.cooldown(10, 60, key=lambda i: i.guild_id)
     async def talk(self, itx: discord.Interaction, message: str):
@@ -60,15 +69,19 @@ class Talk(commands.Cog):
             )
             return
 
-        if not message or len(message) < 10:
+        if not message or len(message) < Talk.MIN_LENGTH:
             await itx.response.send_message(
-                _(itx, "Message must be at least 10 characters long.")
+                _(itx, "Message must be at least {} characters long.").format(
+                    Talk.MIN_LENGTH
+                )
             )
             return
 
-        if len(message) > 100:
+        if len(message) > Talk.MAX_LENGTH:
             await itx.response.send_message(
-                _(itx, "Message must be shorter than 100 characters.")
+                _(itx, "Message must be shorter than {} characters.").format(
+                    Talk.MAX_LENGTH
+                )
             )
             return
 
