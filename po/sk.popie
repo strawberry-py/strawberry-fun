@@ -382,6 +382,9 @@ msgstr Neplatná konfigurácia {config}. Povolené hodnoty sú: {configs}.
 msgid Config {config} successfuly set.
 msgstr Konfigurácia {config} bola úspešne nastavená.
 
+msgid Config {config} successfuly unset.
+msgstr Konfigurácia {config} bola úspešne zrušená.
+
 msgid An error occured during model check.
 msgstr Počas kontroly modelu sa vyskytla chyba.
 
