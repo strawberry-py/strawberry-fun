@@ -361,10 +361,9 @@ class Dhash(commands.Cog):
             return
 
         # try to find and delete repost report embed, because we don't have it cached
-        messages = await message.channel.history(
+        async for report in message.channel.history(
             after=message, limit=3, oldest_first=True
-        ).flatten()
-        for report in messages:
+        ):
             if not report.author.bot:
                 continue
             if len(report.embeds) != 1 or type(report.embeds[0].footer.text) is not str:
