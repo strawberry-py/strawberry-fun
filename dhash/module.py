@@ -4,12 +4,12 @@ import time
 from io import BytesIO
 
 import aiohttp
+import dhash
 from PIL import Image
 
 import discord
 from discord.ext import commands
 
-import dhash
 from pie import check, i18n, logger, utils
 
 from .database import HashChannel, HashConfig, ImageHash
