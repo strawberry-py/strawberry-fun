@@ -38,7 +38,9 @@ class Talk(commands.Cog):
     MAX_LENGTH = 200
 
     talk_admin = app_commands.Group(
-        name="talkadmin", description="Talk management commands."
+        name="talkadmin",
+        description="Talk management commands.",
+        default_permissions=discord.Permissions(administrator=True),
     )
 
     def __init__(self, bot):
