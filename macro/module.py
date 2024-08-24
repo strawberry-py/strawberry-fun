@@ -329,7 +329,7 @@ class Macro(commands.Cog):
     async def on_message(self, message: str):
         if message.author.bot:
             return
-        if message.guild.id not in self._triggers.keys():
+        if not message.guild or message.guild.id not in self._triggers.keys():
             return None
 
         content = message.content.lower()
