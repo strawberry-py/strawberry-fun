@@ -1,5 +1,5 @@
 numpy
-Pillow>=10.4.0,<11.0.0
+Pillow>=10.4.0,<12.0.0
 dhash
 python-dateutil
 aiohttp
