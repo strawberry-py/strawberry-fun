@@ -20,7 +20,7 @@ class ZodiacSign(Enum):
     LIBRA = app_commands.Choice(name="Libra", value=7)
     SCORPIUS = app_commands.Choice(name="Scorpius", value=8)
     SAGITTARIUS = app_commands.Choice(name="Sagittarius", value=9)
-    CAPRICORNUS = app_commands.Choice(name="Capricornus", value=10)
+    CAPRICORN = app_commands.Choice(name="Capricorn", value=10)
     AQUARIUS = app_commands.Choice(name="Aquarius", value=11)
     PISCES = app_commands.Choice(name="Pisces", value=12)
 
@@ -50,15 +50,18 @@ class ZodiacSign(Enum):
             return _(utx, "Scorpius")
         if self == ZodiacSign.SAGITTARIUS:
             return _(utx, "Sagittarius")
-        if self == ZodiacSign.CAPRICORNUS:
-            return _(utx, "Capricornus")
+        if self == ZodiacSign.CAPRICORN:
+            return _(utx, "Capricorn")
         if self == ZodiacSign.AQUARIUS:
             return _(utx, "Aquarius")
         if self == ZodiacSign.PISCES:
             return _(utx, "Pisces")
 
     def emoji(self) -> str:
-        """Function that returns the zodiac emoji."""
+        """Function that returns the zodiac emoji.
+        
+        :return: utf-8 emoji
+        """
         if self == ZodiacSign.ARIES:
             return "♈"
         if self == ZodiacSign.TAURUS:
@@ -77,7 +80,7 @@ class ZodiacSign(Enum):
             return "♏"
         if self == ZodiacSign.SAGITTARIUS:
             return "♐"
-        if self == ZodiacSign.CAPRICORNUS:
+        if self == ZodiacSign.CAPRICORN:
             return "♑"
         if self == ZodiacSign.AQUARIUS:
             return "♒"

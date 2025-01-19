@@ -13,7 +13,7 @@ ZODIAC_URL = {
     ZodiacSign.LIBRA: "vahy",
     ZodiacSign.SCORPIUS: "stir",
     ZodiacSign.SAGITTARIUS: "strelec",
-    ZodiacSign.CAPRICORNUS: "kozoroh",
+    ZodiacSign.CAPRICORN: "kozoroh",
     ZodiacSign.AQUARIUS: "vodnar",
     ZodiacSign.PISCES: "ryby",
 }
