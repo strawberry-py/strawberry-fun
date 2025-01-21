@@ -4,9 +4,11 @@ import shlex
 from collections import defaultdict
 from typing import Any, Dict, Generator, Iterable, List, Optional
 
+import discord
 from discord.ext import commands
 
 from pie import check, i18n, logger, utils
+from pie.bot import Strawberry
 
 from .database import MacroMatch, TextMacro
 
@@ -46,7 +48,7 @@ class MacroParser(argparse.ArgumentParser):
 class Macro(commands.Cog):
     """Automatic bot replies"""
 
-    def __init__(self, bot):
+    def __init__(self, bot: Strawberry):
         self.bot = bot
 
         self._triggers: Dict[int, Dict[str, str]] = {}
@@ -68,13 +70,13 @@ class Macro(commands.Cog):
     @commands.guild_only()
     @check.acl2(check.ACLevel.SUBMOD)
     @commands.group(name="macro")
-    async def macro_(self, ctx):
+    async def macro_(self, ctx: commands.Context):
         """Manage automatic bot replies"""
         await utils.discord.send_help(ctx)
 
     @check.acl2(check.ACLevel.SUBMOD)
     @macro_.command(name="list")
-    async def macro_list(self, ctx):
+    async def macro_list(self, ctx: commands.Context):
         """List macros defined on this server."""
         macros = TextMacro.get_all(ctx.guild.id)
         if not macros:
@@ -102,7 +104,7 @@ class Macro(commands.Cog):
 
     @check.acl2(check.ACLevel.SUBMOD)
     @macro_.command(name="get")
-    async def macro_get(self, ctx, *, name: str):
+    async def macro_get(self, ctx: commands.Context, *, name: str):
         """Display full macro details."""
         macro = TextMacro.get(guild_id=ctx.guild.id, name=name)
         if macro is None:
@@ -212,7 +214,7 @@ class Macro(commands.Cog):
 
     @check.acl2(check.ACLevel.MOD)
     @macro_.command(name="add")
-    async def macro_add(self, ctx, name: str, *, parameters: str):
+    async def macro_add(self, ctx: commands.Context, name: str, *, parameters: str):
         """Add new macro.
 
         Args:
@@ -261,7 +263,7 @@ class Macro(commands.Cog):
 
     @check.acl2(check.ACLevel.MOD)
     @macro_.command(name="update")
-    async def macro_update(self, ctx, name: str, *, parameters: str):
+    async def macro_update(self, ctx: commands.Context, name: str, *, parameters: str):
         """Update existing macro.
 
         Only include the arguments you want to change.
@@ -311,7 +313,7 @@ class Macro(commands.Cog):
 
     @check.acl2(check.ACLevel.MOD)
     @macro_.command(name="remove")
-    async def macro_remove(self, ctx, name: str):
+    async def macro_remove(self, ctx: commands.Context, name: str):
         """Remove existing macro."""
         removed: int = TextMacro.remove(ctx.guild.id, name)
 
@@ -326,7 +328,7 @@ class Macro(commands.Cog):
     #
 
     @commands.Cog.listener()
-    async def on_message(self, message: str):
+    async def on_message(self, message: discord.Message):
         if message.author.bot:
             return
         if not message.guild or message.guild.id not in self._triggers.keys():
@@ -345,7 +347,7 @@ class Macro(commands.Cog):
             if triggered:
                 break
 
-    async def _process_macro(self, message, macro_name: str) -> bool:
+    async def _process_macro(self, message: discord.Message, macro_name: str) -> bool:
         """Process macro.
 
         Returns:
@@ -394,11 +396,11 @@ class Macro(commands.Cog):
 
         # send
         if macro.dm:
-            await message.author.send(response)
+            await utils.discord.send_dm(user=message.author, text=response)
         else:
             await message.reply(response, mention_author=False)
         return True
 
 
-async def setup(bot) -> None:
+async def setup(bot: Strawberry) -> None:
     await bot.add_cog(Macro(bot))
