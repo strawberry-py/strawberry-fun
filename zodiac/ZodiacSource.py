@@ -7,5 +7,5 @@ class ZodiacSource:
     def __init__(self, sign: ZodiacSign):
         self.sign = sign
 
-    def get(self) -> discord.Embed:
+    async def get(self) -> discord.Embed:
         raise NotImplementedError("ZodiacSign scrape not overwritten!")

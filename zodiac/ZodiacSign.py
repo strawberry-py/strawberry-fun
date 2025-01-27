@@ -59,7 +59,7 @@ class ZodiacSign(Enum):
 
     def emoji(self) -> str:
         """Function that returns the zodiac emoji.
-        
+
         :return: utf-8 emoji
         """
         if self == ZodiacSign.ARIES:
