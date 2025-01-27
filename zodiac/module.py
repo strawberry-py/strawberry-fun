@@ -16,7 +16,7 @@ class Zodiac(commands.Cog):
     @check.acl2(check.ACLevel.MEMBER)
     @app_commands.command(name="zodiac")
     async def zodiac(self, itx: discord.Interaction):
-        embed = await HoroskopyCZ(ZodiacSign.ARIES).get()
+        embed = await HoroskopyCZ(ZodiacSign.ARIES, tx=itx).get()
         await itx.response.send_message(embed=embed) 
 
 async def setup(bot: Strawberry):
