@@ -8,7 +8,9 @@ from .ZodiacSign import ZodiacSign
 
 
 class ZodiacSource:
-    def __init__(self, sign: ZodiacSign, tx: Union[discord.Interaction, TranslationContext]):
+    def __init__(
+        self, sign: ZodiacSign, tx: Union[discord.Interaction, TranslationContext]
+    ):
         self.sign = sign
         self.tx = tx
 

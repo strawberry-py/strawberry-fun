@@ -1,7 +1,10 @@
-import discord
+import re
+
 import aiohttp
 from bs4 import BeautifulSoup
-import re
+
+import discord
+
 from pie import utils
 
 from ..ZodiacSign import ZodiacSign
