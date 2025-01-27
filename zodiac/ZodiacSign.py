@@ -57,6 +57,7 @@ class ZodiacSign(Enum):
         if self == ZodiacSign.PISCES:
             return _(utx, "Pisces")
 
+    @property
     def emoji(self) -> str:
         """Function that returns the zodiac emoji.
 
