@@ -13,4 +13,4 @@ class ZodiacSource:
         self.tx = tx
 
     async def get(self) -> discord.Embed:
-        raise NotImplementedError("ZodiacSign scrape not overwritten!")
+        raise NotImplementedError("ZodiacSource get function not overwritten!")
