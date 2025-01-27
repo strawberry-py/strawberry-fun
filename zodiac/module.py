@@ -5,7 +5,7 @@ from discord.ext import commands
 from pie import check, i18n
 from pie.bot import Strawberry
 
-from .sources.HoroskopyCZ import HoroskopyCZ
+from .sources import ZodiacSource, sources
 from .ZodiacSign import ZodiacSign
 
 _ = i18n.Translator("modules/fun").translate
@@ -18,8 +18,10 @@ class Zodiac(commands.Cog):
     @app_commands.guild_only()
     @check.acl2(check.ACLevel.MEMBER)
     @app_commands.command(name="zodiac")
-    async def zodiac(self, itx: discord.Interaction):
-        embed = await HoroskopyCZ(ZodiacSign.ARIES, tx=itx).get()
+    @app_commands.choices(source=[source.choice() for source in sources.values()])
+    async def zodiac(self, itx: discord.Interaction, source: str):
+        source_instance: ZodiacSource = sources[source](ZodiacSign.ARIES, tx=itx)
+        embed = await source_instance.get()
         await itx.response.send_message(embed=embed)
 
 

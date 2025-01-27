@@ -8,7 +8,7 @@ import discord
 from pie import utils
 
 from ..ZodiacSign import ZodiacSign
-from ..ZodiacSource import ZodiacSource
+from .ZodiacSource import ZodiacSource
 
 ZODIAC_URL = {
     ZodiacSign.ARIES: "beran",
@@ -27,6 +27,8 @@ ZODIAC_URL = {
 
 
 class HoroskopyCZ(ZodiacSource):
+    name = "Horoskopy.CZ"
+
     @property
     def url(self):
         return "https://horoskopy.cz/" + ZODIAC_URL[self.sign]
