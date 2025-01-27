@@ -4,7 +4,7 @@ import discord
 
 from pie.i18n import TranslationContext
 
-from .ZodiacSign import ZodiacSign
+from ..ZodiacSign import ZodiacSign
 
 
 class ZodiacSource:
