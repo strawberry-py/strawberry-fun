@@ -45,7 +45,6 @@ class Talk(commands.Cog):
 
     def __init__(self, bot):
         self.bot: commands.Bot = bot
-        self.url = "https://openrouter.ai/api/v1/chat/completions"
 
     @check.app_acl(check.ACLevel.MEMBER)
     @app_commands.command(name="talk", description="Talk with the bot.")
@@ -61,7 +60,7 @@ class Talk(commands.Cog):
         if not key:
             return
 
-        model = storage.get(self, guild_id=itx.guild_id, key="MODEL")
+        model = storage.get(self, guild_id=itx.guild_id, key=TalkConfig.MODEL.name)
 
         if not model:
             await itx.response.send_message(
@@ -96,7 +95,10 @@ class Talk(commands.Cog):
         response = await itx.original_response()
 
         max_tokens = storage.get(
-            self, guild_id=itx.guild.id, key="MAXTOKENS", default_value=_types.NOT_GIVEN
+            self,
+            guild_id=itx.guild.id,
+            key=TalkConfig.MAXTOKENS.name,
+            default_value=_types.NOT_GIVEN,
         )
         if not max_tokens or max_tokens < 1:
             max_tokens = _types.NOT_GIVEN
@@ -144,7 +146,7 @@ class Talk(commands.Cog):
     async def talk_admin_info(self, itx: discord.Interaction):
         key = await self._get_key(itx)
 
-        tokens = storage.get(self, guild_id=itx.guild.id, key="MAXTOKENS")
+        tokens = storage.get(self, guild_id=itx.guild.id, key=TalkConfig.MAXTOKENS.name)
 
         if not tokens:
             tokens = _(itx, "default")
@@ -155,7 +157,9 @@ class Talk(commands.Cog):
             _(itx, "API Key is set.")
             + "\n"
             + _(itx, "Current model: `{model}`.").format(
-                model=storage.get(self, guild_id=itx.guild_id, key="MODEL")
+                model=storage.get(
+                    self, guild_id=itx.guild_id, key=TalkConfig.MODEL.name
+                )
             )
             + "\n"
             + _(itx, "Max tokens: `{tokens}`.").format(tokens=tokens)
@@ -184,6 +188,8 @@ class Talk(commands.Cog):
         elif config == TalkConfig.MODEL.value:
             if await self._verify_model(itx, value):
                 storage.set(self, itx.guild.id, key=TalkConfig.MODEL.name, value=value)
+            else:
+                return
         elif config == TalkConfig.MAXTOKENS.value:
             try:
                 value = int(value)
@@ -248,7 +254,7 @@ class Talk(commands.Cog):
     async def _verify_model(self, itx: discord.Interaction, model: str):
         key = await self._get_key(itx=itx)
         if not key:
-            return
+            return False
         try:
             models: List[str] = await self._list_models(key)
         except Exception as ex:
