@@ -250,7 +250,16 @@ class Talk(commands.Cog):
             _(itx, "Config {config} successfuly unset.").format(config=config.value)
         )
 
-    async def _verify_model(self, itx: discord.Interaction, model: str):
+    async def _verify_model(self, itx: discord.Interaction, model: str) -> bool:
+        """Verifies model in the interaction context.
+        If key is not set or the model is not valid,
+        the function responds to the interaction
+        and returns False.
+
+        :param itx: Discord interaction to verify against
+        :param model: Model name to verify
+
+        :returns: True if model is valid and key is set, False otherwise"""
         key = await self._get_key(itx=itx)
         if not key:
             return False
@@ -276,7 +285,11 @@ class Talk(commands.Cog):
         return True
 
     @ring.lru(expire=60, force_asyncio=True)
-    async def _list_models(self, key):
+    async def _list_models(self, key) -> list[str]:
+        """Gets model list from the OpenRouter.
+
+        :param key: Auhtorization key
+        :returns: List of model IDs"""
         url = "https://openrouter.ai/api/v1/models"
         headers = {
             "Authorization": f"Bearer {key}",
@@ -288,6 +301,13 @@ class Talk(commands.Cog):
         return [model["id"] for model in models]
 
     async def _get_key(self, itx: discord.Interaction) -> str | None:
+        """Get key based on the interaction. The function responds to the message
+        and returns None if no key is set.
+
+        :param itx: Discord interaction to get key for
+
+        :returns: Key if set, None otherwise
+        """
         key = storage.get(self, itx.guild_id, "APIKEY", None)
         if not key:
             await itx.response.send_message(
