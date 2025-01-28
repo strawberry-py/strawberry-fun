@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import enum
-from typing import List
 
 import requests
 import ring
@@ -24,11 +23,11 @@ class TalkConfig(enum.Enum):
     APIKEY = app_commands.Choice(name="APIKEY", value="APIKEY")
 
     @staticmethod
-    def values() -> List[app_commands.Choice]:
+    def values() -> list[app_commands.Choice]:
         return [e.value for e in TalkConfig]
 
     @staticmethod
-    def names() -> List[str]:
+    def names() -> list[str]:
         return [str(e.name) for e in TalkConfig]
 
 
@@ -256,7 +255,7 @@ class Talk(commands.Cog):
         if not key:
             return False
         try:
-            models: List[str] = await self._list_models(key)
+            models: list[str] = await self._list_models(key)
         except Exception as ex:
             await (await itx.original_response()).edit(
                 content=_(itx, "An error occured during model check."),
