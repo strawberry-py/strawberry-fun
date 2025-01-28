@@ -119,7 +119,7 @@ class Talk(commands.Cog):
                     messages=[
                         {
                             "role": "user",
-                            "content": message,
+                            "content": [{"type": "text", "text": message}],
                         },
                     ],
                 )
