@@ -123,7 +123,14 @@ class Talk(commands.Cog):
                         },
                     ],
                 )
-                message = completion.choices[0].message.content
+                message = (
+                    completion.choices[0].message.content
+                    if completion.choices
+                    else _(
+                        itx,
+                        "My brain is not in great shape right now. Might answer later...",
+                    )
+                )
                 for part in utils.text.split(message):
                     response = await response.reply(part)
 
