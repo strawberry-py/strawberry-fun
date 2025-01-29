@@ -5,3 +5,4 @@ python-dateutil
 aiohttp
 ring
 openai
+beautifulsoup4
