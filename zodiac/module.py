@@ -17,9 +17,14 @@ class Zodiac(commands.Cog):
 
     @app_commands.guild_only()
     @check.acl2(check.ACLevel.MEMBER)
-    @app_commands.command(name="zodiac")
+    @app_commands.command(
+        name="zodiac", description="Show horoscope for chosen zodiac sign!"
+    )
     @app_commands.choices(source=[source.choice() for source in sources.values()])
     @app_commands.choices(sign=ZodiacSign.values())
+    @app_commands.describe(
+        source="Horoscope source.", sign="Sign you want to show horoscope for."
+    )
     async def zodiac(self, itx: discord.Interaction, source: str, sign: str):
         source_instance: ZodiacSource = sources[source](ZodiacSign[sign], utx=itx)
         embed = await source_instance.get()
