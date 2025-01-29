@@ -11,18 +11,24 @@ _ = i18n.Translator("modules/fun").translate
 
 
 class ZodiacSign(Enum):
-    ARIES = app_commands.Choice(name="Aries", value=1)
-    TAURUS = app_commands.Choice(name="Taurus", value=2)
-    GEMINI = app_commands.Choice(name="Gemini", value=3)
-    CANCER = app_commands.Choice(name="Cancer", value=4)
-    LEO = app_commands.Choice(name="Leo", value=5)
-    VIRGO = app_commands.Choice(name="Virgo", value=6)
-    LIBRA = app_commands.Choice(name="Libra", value=7)
-    SCORPIUS = app_commands.Choice(name="Scorpius", value=8)
-    SAGITTARIUS = app_commands.Choice(name="Sagittarius", value=9)
-    CAPRICORN = app_commands.Choice(name="Capricorn", value=10)
-    AQUARIUS = app_commands.Choice(name="Aquarius", value=11)
-    PISCES = app_commands.Choice(name="Pisces", value=12)
+    """Enum of zodiac signs"""
+
+    ARIES = app_commands.Choice(name="Aries", value="ARIES")
+    TAURUS = app_commands.Choice(name="Taurus", value="TAURUS")
+    GEMINI = app_commands.Choice(name="Gemini", value="GEMINI")
+    CANCER = app_commands.Choice(name="Cancer", value="CANCER")
+    LEO = app_commands.Choice(name="Leo", value="LEO")
+    VIRGO = app_commands.Choice(name="Virgo", value="VIRGO")
+    LIBRA = app_commands.Choice(name="Libra", value="LIBRA")
+    SCORPIUS = app_commands.Choice(name="Scorpius", value="SCORPIUS")
+    SAGITTARIUS = app_commands.Choice(name="Sagittarius", value="SAGITTARIUS")
+    CAPRICORN = app_commands.Choice(name="Capricorn", value="CAPRICORN")
+    AQUARIUS = app_commands.Choice(name="Aquarius", value="AQUARIUS")
+    PISCES = app_commands.Choice(name="Pisces", value="PISCES")
+
+    @staticmethod
+    def values() -> list[app_commands.Choice]:
+        return [e.value for e in ZodiacSign]
 
     def translate(
         self, utx: Union[commands.Context, discord.Interaction, i18n.TranslationContext]

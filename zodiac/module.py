@@ -19,8 +19,9 @@ class Zodiac(commands.Cog):
     @check.acl2(check.ACLevel.MEMBER)
     @app_commands.command(name="zodiac")
     @app_commands.choices(source=[source.choice() for source in sources.values()])
-    async def zodiac(self, itx: discord.Interaction, source: str):
-        source_instance: ZodiacSource = sources[source](ZodiacSign.ARIES, tx=itx)
+    @app_commands.choices(sign=ZodiacSign.values())
+    async def zodiac(self, itx: discord.Interaction, source: str, sign: str):
+        source_instance: ZodiacSource = sources[source](ZodiacSign[sign], utx=itx)
         embed = await source_instance.get()
         await itx.response.send_message(embed=embed)
 

@@ -12,10 +12,13 @@ class ZodiacSource:
     name: str = __name__  # Can be overwriten
 
     def __init__(
-        self, sign: ZodiacSign, tx: Union[discord.Interaction, TranslationContext]
+        self, sign: ZodiacSign, utx: Union[discord.Interaction, TranslationContext]
     ):
         self.sign = sign
-        self.tx = tx
+        self.utx = utx
+
+    def __ring_key__(self):
+        return self.sign.name
 
     @classmethod
     def choice(cls) -> tuple[str, app_commands.Choice]:
