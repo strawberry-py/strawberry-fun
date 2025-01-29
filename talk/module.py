@@ -47,7 +47,7 @@ class Talk(commands.Cog):
         self.bot: commands.Bot = bot
         self.url = "https://openrouter.ai/api/v1/chat/completions"
 
-    @check.app_acl(check.ACLevel.MEMBER)
+    @check.acl2(check.ACLevel.MEMBER)
     @app_commands.command(name="talk", description="Talk with the bot.")
     @app_commands.describe(
         message="Message with length between {} and {} characters.".format(
@@ -137,7 +137,7 @@ class Talk(commands.Cog):
                     itx.user, itx.channel, "An error occured.", exception=ex
                 )
 
-    @check.app_acl(check.ACLevel.MOD)
+    @check.acl2(check.ACLevel.MOD)
     @talk_admin.command(
         name="info", description="Get info on current talk configuration."
     )
@@ -162,14 +162,14 @@ class Talk(commands.Cog):
         )
         await itx.response.send_message(message, ephemeral=True)
 
-    @check.app_acl(check.ACLevel.MOD)
+    @check.acl2(check.ACLevel.MOD)
     @talk_admin.command(name="models", description="Get list of models.")
     async def talk_admin_models(self, itx: discord.Interaction):
         await itx.response.send_message(
             "See: https://openrouter.ai/models", ephemeral=True
         )
 
-    @check.app_acl(check.ACLevel.MOD)
+    @check.acl2(check.ACLevel.MOD)
     @talk_admin.command(name="set", description="Set talk configuration.")
     @app_commands.choices(config=TalkConfig.values())
     async def talk_admin_set(
@@ -216,7 +216,7 @@ class Talk(commands.Cog):
             )
         )
 
-    @check.app_acl(check.ACLevel.MOD)
+    @check.acl2(check.ACLevel.MOD)
     @talk_admin.command(name="unset", description="Unset talk configuration.")
     @app_commands.choices(config=[TalkConfig.APIKEY.value, TalkConfig.MAXTOKENS.value])
     async def talk_admin_unset(
