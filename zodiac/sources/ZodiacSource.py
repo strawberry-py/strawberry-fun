@@ -9,13 +9,14 @@ from ..ZodiacSign import ZodiacSign
 
 
 class ZodiacSource:
-   """Base class for Zodiac sources. The method `get` must be overwritten.
-   Any subclass in the sources folder is considered a source and added to
-   sources variable in __init__.py.
+    """Base class for Zodiac sources. The method `get` must be overwritten.
+    Any subclass in the sources folder is considered a source and added to
+    sources variable in __init__.py.
 
-   :param sign: Zodiac sign to generate embed for
-   :param utx: Translation context
-   """
+    :param sign: Zodiac sign to generate embed for
+    :param utx: Translation context
+    """
+
     name: str = __name__  # Can be overwriten
 
     def __init__(

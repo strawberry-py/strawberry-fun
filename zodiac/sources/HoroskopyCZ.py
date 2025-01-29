@@ -63,7 +63,7 @@ class HoroskopyCZ(ZodiacSource):
         :return: Horoscope embed."""
         soup = BeautifulSoup(web_content, "html.parser")
         embed: discord.Embed = utils.discord.create_embed(
-            title=f"Horoskop na dnešní den - {self.sign.translate(self.tx)} {self.sign.emoji}",
+            title=f"Horoskop na dnešní den - {self.sign.translate(self.utx)} {self.sign.emoji}",
             description=self.get_text(soup=soup, header_text="Horoskop na dnešní den"),
             url=self.url,
         )
