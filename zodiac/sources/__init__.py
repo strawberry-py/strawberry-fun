@@ -2,15 +2,17 @@ import importlib
 import inspect
 import os
 
-from .ZodiacSource import ZodiacSource
+from .HoroscopeSource import HoroscopeSource
 
 
-def is_zodiacsource(o):
-    return inspect.isclass(o) and issubclass(o, ZodiacSource) and o != ZodiacSource
+def is_horoscopesource(o):
+    return (
+        inspect.isclass(o) and issubclass(o, HoroscopeSource) and o != HoroscopeSource
+    )
 
 
 # Generate sources from content of the sources folder
-source_classes: list[ZodiacSource] = []
+source_classes: list[HoroscopeSource] = []
 dirname = os.path.dirname(os.path.abspath(__file__))
 for file in os.listdir(dirname):
     if (
@@ -20,10 +22,12 @@ for file in os.listdir(dirname):
     ):
         module = importlib.import_module(f".{file[:-3]}", __name__)
         members = [
-            cls[1] for cls in inspect.getmembers(module, predicate=is_zodiacsource)
+            cls[1] for cls in inspect.getmembers(module, predicate=is_horoscopesource)
         ]
         if members:
             source_classes += members
 
 # Dictionary of source names and the class
-sources: dict[str, ZodiacSource] = {cls.name: cls for cls in source_classes}
+horoscope_sources: dict[str, HoroscopeSource] = {
+    cls.name: cls for cls in source_classes
+}
