@@ -34,4 +34,4 @@ class HoroscopeSource:
         return app_commands.Choice(name=cls.name, value=cls.name)
 
     async def get(self) -> discord.Embed:
-        raise NotImplementedError("ZodiacSource get function not overwritten!")
+        raise NotImplementedError("HoroscopeSource get function not overwritten!")
