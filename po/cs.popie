@@ -365,10 +365,10 @@ msgid API Key is set.
 msgstr API klíč je nastavený.
 
 msgid Current model: `{model}`.
-msgstr Současný model: `{model}`
+msgstr Současný model: `{model}`.
 
 msgid Max tokens: `{tokens}`.
-msgstr Maximální počet tokenů: `{tokens}`
+msgstr Maximální počet tokenů: `{tokens}`.
 
 msgid Working on it...
 msgstr Pracuji na tom...

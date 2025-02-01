@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import enum
-from typing import List
 
 import requests
 import ring
@@ -24,11 +23,11 @@ class TalkConfig(enum.Enum):
     APIKEY = app_commands.Choice(name="APIKEY", value="APIKEY")
 
     @staticmethod
-    def values() -> List[app_commands.Choice]:
+    def values() -> list[app_commands.Choice]:
         return [e.value for e in TalkConfig]
 
     @staticmethod
-    def names() -> List[str]:
+    def names() -> list[str]:
         return [str(e.name) for e in TalkConfig]
 
 
@@ -45,7 +44,6 @@ class Talk(commands.Cog):
 
     def __init__(self, bot):
         self.bot: commands.Bot = bot
-        self.url = "https://openrouter.ai/api/v1/chat/completions"
 
     @check.acl2(check.ACLevel.MEMBER)
     @app_commands.command(name="talk", description="Talk with the bot.")
@@ -61,7 +59,7 @@ class Talk(commands.Cog):
         if not key:
             return
 
-        model = storage.get(self, guild_id=itx.guild_id, key="MODEL")
+        model = storage.get(self, guild_id=itx.guild_id, key=TalkConfig.MODEL.name)
 
         if not model:
             await itx.response.send_message(
@@ -96,7 +94,10 @@ class Talk(commands.Cog):
         response = await itx.original_response()
 
         max_tokens = storage.get(
-            self, guild_id=itx.guild.id, key="MAXTOKENS", default_value=_types.NOT_GIVEN
+            self,
+            guild_id=itx.guild.id,
+            key=TalkConfig.MAXTOKENS.name,
+            default_value=_types.NOT_GIVEN,
         )
         if not max_tokens or max_tokens < 1:
             max_tokens = _types.NOT_GIVEN
@@ -118,11 +119,18 @@ class Talk(commands.Cog):
                     messages=[
                         {
                             "role": "user",
-                            "content": message,
+                            "content": [{"type": "text", "text": message}],
                         },
                     ],
                 )
-                message = completion.choices[0].message.content
+                message = (
+                    completion.choices[0].message.content
+                    if completion.choices
+                    else _(
+                        itx,
+                        "My brain is not in great shape right now. Might answer later...",
+                    )
+                )
                 for part in utils.text.split(message):
                     response = await response.reply(part)
 
@@ -144,7 +152,7 @@ class Talk(commands.Cog):
     async def talk_admin_info(self, itx: discord.Interaction):
         key = await self._get_key(itx)
 
-        tokens = storage.get(self, guild_id=itx.guild.id, key="MAXTOKENS")
+        tokens = storage.get(self, guild_id=itx.guild.id, key=TalkConfig.MAXTOKENS.name)
 
         if not tokens:
             tokens = _(itx, "default")
@@ -155,7 +163,9 @@ class Talk(commands.Cog):
             _(itx, "API Key is set.")
             + "\n"
             + _(itx, "Current model: `{model}`.").format(
-                model=storage.get(self, guild_id=itx.guild_id, key="MODEL")
+                model=storage.get(
+                    self, guild_id=itx.guild_id, key=TalkConfig.MODEL.name
+                )
             )
             + "\n"
             + _(itx, "Max tokens: `{tokens}`.").format(tokens=tokens)
@@ -184,6 +194,8 @@ class Talk(commands.Cog):
         elif config == TalkConfig.MODEL.value:
             if await self._verify_model(itx, value):
                 storage.set(self, itx.guild.id, key=TalkConfig.MODEL.name, value=value)
+            else:
+                return
         elif config == TalkConfig.MAXTOKENS.value:
             try:
                 value = int(value)
@@ -245,12 +257,21 @@ class Talk(commands.Cog):
             _(itx, "Config {config} successfuly unset.").format(config=config.value)
         )
 
-    async def _verify_model(self, itx: discord.Interaction, model: str):
+    async def _verify_model(self, itx: discord.Interaction, model: str) -> bool:
+        """Verifies model in the interaction context.
+        If key is not set or the model is not valid,
+        the function responds to the interaction
+        and returns False.
+
+        :param itx: Discord interaction to verify against
+        :param model: Model name to verify
+
+        :returns: True if model is valid and key is set, False otherwise"""
         key = await self._get_key(itx=itx)
         if not key:
-            return
+            return False
         try:
-            models: List[str] = await self._list_models(key)
+            models: list[str] = await self._list_models(key)
         except Exception as ex:
             await (await itx.original_response()).edit(
                 content=_(itx, "An error occured during model check."),
@@ -271,7 +292,11 @@ class Talk(commands.Cog):
         return True
 
     @ring.lru(expire=60, force_asyncio=True)
-    async def _list_models(self, key):
+    async def _list_models(self, key) -> list[str]:
+        """Gets model list from the OpenRouter.
+
+        :param key: Auhtorization key
+        :returns: List of model IDs"""
         url = "https://openrouter.ai/api/v1/models"
         headers = {
             "Authorization": f"Bearer {key}",
@@ -283,6 +308,13 @@ class Talk(commands.Cog):
         return [model["id"] for model in models]
 
     async def _get_key(self, itx: discord.Interaction) -> str | None:
+        """Get key based on the interaction. The function responds to the message
+        and returns None if no key is set.
+
+        :param itx: Discord interaction to get key for
+
+        :returns: Key if set, None otherwise
+        """
         key = storage.get(self, itx.guild_id, "APIKEY", None)
         if not key:
             await itx.response.send_message(
