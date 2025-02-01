@@ -9,7 +9,7 @@ from ..ZodiacSign import ZodiacSign
 
 
 class HoroscopeSource:
-    """Base class for Zodiac sources. The method `get` must be overwritten.
+    """Base class for Horoscope sources. The method `get` must be overwritten.
     Any subclass in the sources folder is considered a source and added to
     sources variable in __init__.py.
 
