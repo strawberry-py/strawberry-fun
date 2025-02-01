@@ -10,7 +10,7 @@ import discord
 from pie import i18n, utils
 
 from ..ZodiacSign import ZodiacSign
-from .ZodiacSource import ZodiacSource
+from .HoroscopeSource import HoroscopeSource
 
 _ = i18n.Translator("modules/fun").translate
 
@@ -31,7 +31,7 @@ ZODIAC_URL = {
 }
 
 
-class HoroskopyCZ(ZodiacSource):
+class HoroskopyCZ(HoroscopeSource):
     name = "Horoskopy.CZ"
 
     @property
